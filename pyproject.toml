@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "textflow"
 version = "0.1.0"
-description = ""
-authors = ["Jaime Collado <jcollado@ujaen.es>"]
+description = "A text analysis library for Python"
+authors = ["Jaime Collado <jcollado@ujaen.es>", "Estrella Vallecillo <mevr0003@red.ujaen.es>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
