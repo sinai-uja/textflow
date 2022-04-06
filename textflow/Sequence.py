@@ -23,7 +23,7 @@ class Sequence:
             self.id = object
         else:
             self.id = "collection"
-        self.sequences = ["subcollection_1", "subcollection_2", "subcollection_2"]
+        self.sequences = ["subcollection_1", "subcollection_2", "subcollection_3"]
 
     def __str__(self):
         return f"id: {self.id}, sequences: {self.sequences}"
@@ -52,7 +52,7 @@ class Sequence:
                 raise IndexError(f"Sequence index '{i}' out of range")
             else:
                 return self.sequences[i]
-        else:   # TODO: Support slices (e.g. [2:4])?
+        else:   # TODO: Should it support slices (e.g. [2:4])?
             invalid_type = type(i)
             raise TypeError(
                 f"Sequence indices must be integers or strings, not {invalid_type.__name__}"
@@ -63,17 +63,3 @@ class Sequence:
 
     def filter(self, level, criteria):
         pass    # TODO
-
-# TODO: Move these tests to the ./tests folder
-if __name__ == "__main__":
-    sequence_from_folder = Sequence("../tests/data/doc_1") # File loading
-    sequence_from_file = Sequence("lorem ipsum") # String loading
-
-    sequence_from_folder.sequences.append(sequence_from_file)
-
-    print(sequence_from_folder)
-    print(sequence_from_folder[2])
-    print(sequence_from_folder["lorem ipsum"])
-    for s in sequence_from_folder:
-        print(s)
-    print(sequence_from_folder[20]) # This should fail
