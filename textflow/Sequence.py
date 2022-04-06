@@ -1,3 +1,7 @@
+import os
+from typing import Optional
+
+
 class SequenceIterator:
     def __init__(self, sequences):
         self.idx = 0
@@ -16,21 +20,58 @@ class SequenceIterator:
 
 
 class Sequence:
-    def __init__(self, object):
-        # TODO: Extraer id y sequences a partir del object de cualquier forma que se nos ocurra
-        # ver: https://huggingface.co/docs/datasets/v2.0.0/en/package_reference/loading_methods#datasets.load_dataset
-        if isinstance(object, str):
-            self.id = object
-        else:
-            self.id = "collection"
-        self.sequences = ["subcollection_1", "subcollection_2", "subcollection_3"]
+    """Summary of class here.
+
+    Longer class information...
+    Longer class information...
+
+    Attributes:
+        id: ...
+        text: ...
+        sequences: ...
+    """
+    def __init__(self, format: str, item: object, id: Optional[str] = None):
+        """Creates a sequence from an input object.
+
+        Args:
+            format: A string containing the input data's type.
+            item: An object representing the input data. It can be a string for a
+            string format or a file path for a text format.
+            id: A string to overwrite the default's sequence id.
+        """
+        VALID_FORMATS = ("string", "text")
+        
+        if format not in VALID_FORMATS:
+            raise ValueError(
+                f"{format} is not a valid format. Valid formats: {VALID_FORMATS}"
+            )
+
+        # Splits string text by whitespace
+        if format == "string":
+            if not isinstance(item, str):
+                raise ValueError(f"{item} is not an instance of string")
+            self.id = id if id else "string"
+            self.text = item
+            self.sequences = item.split(" ")
+
+        # Splits file text by \n
+        if format == "text":
+            self.id = id if id else os.path.basename(item).split(".")[0]
+            with open(item, "r") as f:
+                self.text = f.read()
+            self.sequences = self.text.split("\n")
 
     def __str__(self):
-        return f"id: {self.id}, sequences: {self.sequences}"
+        return self.text
 
     def __repr__(self):
         values = ", ".join([sequence.__repr__() for sequence in self.sequences])
-        return f"Sequence({values})"
+        return (
+            "Sequence(\n"
+            f"  id: {self.id}\n"
+            f"  sequences: {values}\n"
+            ")"
+        )
 
     def __len__(self):
         return len(self.sequences)

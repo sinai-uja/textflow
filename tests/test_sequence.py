@@ -1,32 +1,110 @@
 import pytest
 from textflow.Sequence import Sequence
 
-class CustomSequence(Sequence):
-    def __init__(self, text: str):
-        self.id = "root"
-        self.sequences = text.split(" ")
 
-@pytest.fixture
-def sequence():
-    return CustomSequence("Esto es una prueba")
+def test_sequence_wrong_format():
+    with pytest.raises(Exception):
+        sequence = Sequence("csv", "Lorem ipsum dolor sit amet")
 
-def test_str(sequence):
-    assert str(sequence) == "id: root, sequences: ['Esto', 'es', 'una', 'prueba']"
 
-def test_repr(sequence):
-    assert repr(sequence) == "Sequence('Esto', 'es', 'una', 'prueba')"
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            "Lorem ipsum dolor sit amet"
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            "Lorem ipsum dolor sit amet\nNam lectus turpis"
+        )
+    ]
+)
+def test_str(sequence, expected):
+    assert str(sequence) == expected
 
-def test_len(sequence):
-    assert len(sequence) == 4
 
-def test_iter(sequence):
-    assert list(sequence) == ["Esto", "es", "una", "prueba"]
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            (
+                "Sequence(\n"
+                "  id: string\n"
+                "  sequences: 'Lorem', 'ipsum', 'dolor', 'sit', 'amet'\n"
+                ")"
+            )
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            (
+                "Sequence(\n"
+                "  id: doc_1\n"
+                "  sequences: 'Lorem ipsum dolor sit amet', 'Nam lectus turpis'\n"
+                ")"
+            )
+        )
+    ]
+)
+def test_repr(sequence, expected):
+    assert repr(sequence) == expected
 
-def test_getitem(sequence):
-    assert sequence[0] == "Esto"
+
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            5
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            2
+        )
+    ]
+)
+def test_len(sequence, expected):
+    assert len(sequence) == expected
+
+
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            ["Lorem", "ipsum", "dolor", "sit", "amet"]
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            ["Lorem ipsum dolor sit amet", "Nam lectus turpis"]
+        )
+    ]
+)
+def test_iter(sequence, expected):
+    assert list(sequence) == expected
+
+
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            "Lorem"
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            "Lorem ipsum dolor sit amet"
+        )
+    ]
+)
+def test_getitem(sequence, expected):
+    assert sequence[0] == expected
+
 
 def test_get_depth():
     pass
+
 
 def test_filter():
     pass
