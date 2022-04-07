@@ -17,7 +17,7 @@ class SequenceIterator:
             #return self.data[self.idx-1]
             return {
                 "child": self.children[self.idx-1],
-                "sequences": self.sequences[self.idx-1]
+                "sequence": self.sequences[self.idx-1]
             }
         except IndexError:
             self.idx = 0
@@ -109,7 +109,7 @@ class Sequence:
             for cont, sequence in enumerate(self.sequences):
                 if sequence.id == idx: return {
                     "child": self.children[cont],
-                    "sequences": self.sequences[cont]
+                    "sequence": self.sequences[cont]
                 }
             raise ValueError(f"Sequence id '{idx}' not found in {self}")
 
@@ -122,7 +122,7 @@ class Sequence:
             
             return {
                 "child": self.children[idx],
-                "sequences": self.sequences[idx]
+                "sequence": self.sequences[idx]
             }
         else:   # TODO: Should it support slices (e.g. [2:4])?
             raise TypeError(
