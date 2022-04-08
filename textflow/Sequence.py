@@ -137,7 +137,12 @@ class Sequence:
         self.sequences = new_sequence.sequences
 
     def get_depth(self):
-        pass    # TODO
+        depth = 0
+        sequence = self.sequences
+        while sequence[0].id != None:
+            depth += 1
+            sequence = sequence[0].sequences
+        return depth
 
     def filter(self, level, criteria):
         pass    # TODO
