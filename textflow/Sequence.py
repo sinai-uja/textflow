@@ -2,29 +2,39 @@ import os
 from typing import Optional
 
 
-class SequenceIterator:
-    def __init__(self, children, sequences):
+class SequenceIterator: #TODO documentar
+    def __init__(self, children):
+        """
+        Creates a sequenceIterator from a Secuence.
+        Args:
+            children: A list with the values of the attribute children of a Sequence.
+        """
         self.idx = 0
         self.children = children
-        self.sequences = sequences
     
     def __iter__(self):
+        """
+
+        Return:
+            The secuence where the iterator is point.
+        """
         return self
 
     def __next__(self):
+        """
+        Move the iterator to the next position.
+        Return:
+            children: A list with the values of the attribute children of a Sequence.
+        """
         self.idx += 1
         try:
-            #return self.data[self.idx-1]
-            return {
-                "child": self.children[self.idx-1],
-                "sequence": self.sequences[self.idx-1]
-            }
+            return self.children[self.idx-1]
         except IndexError:
             self.idx = 0
             raise StopIteration
 
 
-_VALID_FORMATS = ["string", "text", "token", None]
+_VALID_FORMATS = ["directory","string", "text", "token", None]
 
 class Sequence:
     """Summary of class here.
@@ -37,82 +47,146 @@ class Sequence:
         text: ...
         sequences: ...
     """
-    def __init__(self, format: Optional[str] = None, src: Optional[object] = None, id: Optional[str] = None):
+    def __init__(self, format: Optional[str] = None, src: Optional[object] = None):
         """Creates a sequence from an input object.
 
         Args:
             format: A string containing the input data's type.
             src: An object representing the input data. It can be a string for a
             string format or a file path for a text format.
-            id: A string to overwrite the default's sequence id.
-        """
-        
+        Raises:
+            ValueError: If the format is wrong.    
+        """ 
         if format not in _VALID_FORMATS:
             raise ValueError(
                 f"{format} is not a valid format. Valid formats: {_VALID_FORMATS}"
             )
-
+        
+        self.format = format
+        self.children = {}
+        self.metadata = {}
         if format == "token":
-            raise ValueError(
-                f"Tokens can not be split"
-            )
-
-        # Empty sequence
-        if format is None:
-            self.id = id
-            self.text = None
-            self.children = []
-            self.sequences = []
-
-        # Splits string text by whitespace
-        if format == "string":
             if not isinstance(src, str):
-                raise ValueError(f"{src} is not an instance of string")
-            self.id = id if id else "string"
-            self.text = src
-            self.children = [("token", token_src) for token_src in src.split(" ")]
-            self.sequences = [Sequence() for _ in self.children]
-
-        # Splits file text by \n
+                raise ValueError(f"{src} is not an instance of token")
+            self.metadata["text"] = src
+        if format == "string":
+            self.initFromString(src,"tokens","token")
         if format == "text":
-            self.id = id if id else os.path.basename(src).split(".")[0]
-            with open(src, "r") as f:
-                self.text = f.read()
-            self.children = [("string", line_src) for line_src in self.text.split("\n")]
-            self.sequences = [Sequence() for _ in self.children]
+            self.initFromDocument(src,"tokens","token")
+        if format == "directory":
+            self.initFromDirectory(src,"directory","files")
+
+    def initFromDirectory(self, directory, labelDirectory, labelFile ): #TODO Inicializador por defecto para un directorio
+        '''
+        Initialize a Sequence from a directory 
+        Args:
+            directory: the path of a directory as string
+            labelDirectory: the name of the children dictionary entry for the subpaths
+            labelFile: the name of the children dictionary entry for the files
+        '''
+        #print(os.path.abspath((os.getcwd())))
+        self.format = "directory"
+        self.metadata["nameFiles"] = []
+        self.metadata["directoriesPath"] = []
+        contenido = os.listdir(directory)
+        #print(contenido)
+        for file in contenido:
+            #print(file)
+            if os.path.isfile(directory+"/"+file):
+                self.metadata["nameFiles"].append(file)
+                if labelFile in self.children:
+                    self.children[labelFile].append(Sequence("text", directory+"/"+file ))
+                else:
+                    self.children[labelFile]= [Sequence("text", directory+"/"+file)]
+            else:
+                self.metadata["directoriesPath"].append(directory+"/"+file)
+                if labelDirectory in self.children:
+                    self.children[labelDirectory].append(Sequence("directory", directory+"/"+file ))
+                else:
+                    self.children[labelDirectory]= [Sequence("directory", directory+"/"+file)]
+        
+
+    def initFromDocument(self, documentPath, labelSubSequence, formatSubsequence):
+        '''
+        Initialize a Sequence from a document 
+        Args:
+            documentPath: the path of a document as string
+            labelSubSequence: the name of the children dictionary entry for the subsequence as string
+            formatSubSequence: the format of the subsequence in children dictionary entry as string
+        '''
+        self.format = "text"
+        with open(documentPath, "r") as f:
+            txt = f.read()
+        self.children[labelSubSequence] = [Sequence(formatSubsequence,token_src) for token_src in txt.split(" ")]
+        self.metadata["text"] = txt
+
+    def initFromString(self, srcString, labelSubSequence, formatSubsequence):
+        '''
+        Initialize a Sequence from a string 
+        Args:
+            srcString: source string of the sequence
+            labelSubSequence: the name of the children dictionary entry for the subsequence as string
+            formatSubSequence: the format of the subsequence in children dictionary entry as string
+        Raises:
+            ValueError: If srcString isn't a string .
+        '''
+        if not isinstance(srcString, str):
+            raise ValueError(f"{srcString} is not an instance of string")
+        self.format = "string"
+        self.children[labelSubSequence]= [Sequence(formatSubsequence,token_src) for token_src in srcString.split(" ")]
+        self.metadata["text"]= srcString
+
 
     def __str__(self):
-        return self.text
+        '''
+         Convert a Sequence to a string
+        
+        Returns:
+           A string that contains the text of a Sequence  
+        '''
+        return str(self.metadata["text"])
 
     def __repr__(self):
-        children = ", ".join([child.__repr__() for child in self.children])
-        sequences = ", ".join([sequence.__repr__() for sequence in self.sequences])
+        '''
+        Convert a Sequence to a string
+        
+        Returns:
+           A string with the formal representation of a Sequence  
+        '''
+        format = self.format
         return (
             "Sequence(\n"
-            f"  id: {self.id}\n"
-            f"  text: {self.text}\n"
-            f"  children: {children}\n"
-            f"  sequences: {sequences}\n"
+            f"  format: {self.format}\n"
+            f"  metadata: {str(self.metadata)}\n"
+            f"  children: {str(self.children)}\n"
             ")"
         )
 
     def __len__(self):
+        '''
+        Calculate the length of a Sequence
+        The length of a Secuence is the length of the children.
+        Returns:
+            A number with the length of the Secuence
+        '''
         return len(self.children)
 
     def __iter__(self):
-        return SequenceIterator(self.children, self.sequences)
+        '''
+        Iterate in a Sequence
+        To do this, we iterates througth the children dictionary 
+        Returns:
+            A Sequence Iterator  
+        '''
+        return SequenceIterator(list(self.children.values()))
     
-    def __getitem__(self, idx):
+    def __getitem__(self, idx): #TODO Documentacion
+        
         if isinstance(idx, str):  # Get src by string (e.g. seq["doc1"])
-            if self.sequences[0] is None:
-                    raise ValueError(f"Sequence id '{idx}' not found in {self.sequences}")
-            for cont, sequence in enumerate(self.sequences):
-                if sequence.id == idx: return {
-                    "child": self.children[cont],
-                    "sequence": self.sequences[cont]
-                }
-            raise ValueError(f"Sequence id '{idx}' not found in {self}")
-
+            if self.children:
+                if idx in self.children: 
+                    return self.children[idx]
+            raise ValueError(f"Sequence id '{idx}' not found in {self.children.keys()}")
         elif isinstance(idx, int):  # Get src by int (e.g. seq[0])
             if abs(idx) >= len(self.children):
                 raise IndexError(f"Sequence index '{idx}' out of range")
@@ -120,29 +194,62 @@ class Sequence:
             if idx < 0:
                 idx = len(self.children) + idx
             
-            return {
-                "child": self.children[idx],
-                "sequence": self.sequences[idx]
-            }
-        else:   # TODO: Should it support slices (e.g. [2:4])?
-            raise TypeError(
-                f"Sequence indices must be integers or strings, not {type(idx).__name__}"
-            )
+            return list(self.children.values())[idx]
+        else: # TODO: Should it support slices (e.g. [2:4])?
+            raise ValueError(f"Sequence id '{idx}' not found in {self.children}")
 
-    def set_sequence(self, new_sequence):
-        print("Setting value...")
-        self.id = new_sequence.id
-        self.text = new_sequence.text
-        self.children = new_sequence.children
-        self.sequences = new_sequence.sequences
 
-    def get_depth(self):
-        depth = 0
-        sequence = self.sequences
-        while sequence[0].id != None:
-            depth += 1
-            sequence = sequence[0].sequences
-        return depth
+    def depth(self,diccionaryList: Optional[list] = None):
+        '''
+        Calculate the maximum depth of a Sequence
+
+        Args:
+            diccionaryList: the inicial list to calculate the depth.
+
+        Returns:
+            A tuple that contains a number (the depth of a Secuence) and a list (the route of the max depth) 
+        '''
+        profMax = 0
+        rutaMax = []
+        if diccionaryList == None:
+            diccionaryList = [self.children]
+        for elemento in diccionaryList: #Recorre todos los elementos de la lista (diccionarios)
+            for child in elemento: #Recorremos todas las claves del diccionario
+                prof=0
+                ruta=[child]
+                if elemento[child] and isinstance(elemento[child], list):
+                    listaDic = [seq.children for seq in elemento[child]]
+                    depthChildren = self.depth(listaDic)
+                    prof += depthChildren[0] + 1
+                    ruta.extend(depthChildren[1])
+                    if profMax < prof :
+                        profMax = prof 
+                        rutaMax = ruta
+        return (profMax, rutaMax)
+    
 
     def filter(self, level, criteria):
-        pass    # TODO
+        '''
+        Filter the children of a Sequence according to a criteria
+
+        Args:
+            level: the route of the level as string, separating each level with "/" 
+            criteria: the filter function
+
+        Returns:
+            A generator with the result of the filter
+        '''
+        ruta = level.split("/")
+        children = [self.children]
+        results=[]
+        for r in ruta:
+            for child in children:
+                if r in child:
+                    if r == ruta[-1]:
+                        results.extend(child[r])
+                    else:
+                        children = [c.children for c in child[r]]
+                else:
+                    raise ValueError(f"Sequence level '{r}' not found in {child}")
+        yield criteria(results)
+        
