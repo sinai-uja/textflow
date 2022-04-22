@@ -5,7 +5,7 @@ from typing import Optional
 class SequenceIterator: #TODO documentar
     def __init__(self, children):
         """
-        Creates a sequenceIterator from a Secuence.
+        Creates a sequenceIterator from a Sequence.
         Args:
             children: A list with the values of the attribute children of a Sequence.
         """
@@ -16,7 +16,7 @@ class SequenceIterator: #TODO documentar
         """
 
         Return:
-            The secuence where the iterator is point.
+            The sequence where the iterator is point.
         """
         return self
 
@@ -165,9 +165,9 @@ class Sequence:
     def __len__(self):
         '''
         Calculate the length of a Sequence
-        The length of a Secuence is the length of the children.
+        The length of a Sequence is the length of the children.
         Returns:
-            A number with the length of the Secuence
+            A number with the length of the Sequence
         '''
         return len(self.children)
 
@@ -207,7 +207,7 @@ class Sequence:
             diccionaryList: the inicial list to calculate the depth.
 
         Returns:
-            A tuple that contains a number (the depth of a Secuence) and a list (the route of the max depth) 
+            A tuple that contains a number (the depth of a Sequence) and a list (the route of the max depth) 
         '''
         profMax = 0
         rutaMax = []
