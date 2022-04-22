@@ -64,7 +64,7 @@ class Sequence:
         
         self.format = format
         self.children = {}
-        self.metadata = {}
+        self.metadata = {"text": " "}
         if format == "token":
             if not isinstance(src, str):
                 raise ValueError(f"{src} is not an instance of token")

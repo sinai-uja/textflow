@@ -18,6 +18,11 @@ def test_sequence_wrong_format():
             Sequence("text", "tests/data/doc_1.txt"),
             "Lorem ipsum dolor sit amet\nNam lectus turpis"
         )
+        , 
+        pytest.param(
+            Sequence("directory", "tests/data"),
+            " "
+        )
     ]
 )
 def test_str(sequence, expected):
@@ -57,10 +62,14 @@ def test_str(sequence, expected):
     [
         pytest.param(
             Sequence("string", "Lorem ipsum dolor sit amet"),
-            5
+            1
         ), 
         pytest.param(
             Sequence("text", "tests/data/doc_1.txt"),
+            1
+        ),
+        pytest.param(
+            Sequence("directory","tests/data" ), 
             2
         )
     ]
@@ -74,10 +83,7 @@ def test_len(sequence, expected):
     [
         pytest.param(
             Sequence("string", "Lorem ipsum"),
-            {
-                "child": ("token", "Lorem"),
-                "sequence": Sequence()
-            }
+            [Sequence() for _ in range(2)]
         ), 
         pytest.param(
             Sequence("text", "tests/data/doc_1.txt"),
@@ -85,6 +91,10 @@ def test_len(sequence, expected):
                 "child": [("string", "Lorem ipsum dolor sit amet"), ("string", "Nam lectus turpis")],
                 "sequence": [Sequence() for _ in range(2)]
             }
+        ),
+        pytest.param(
+            Sequence("directory","tests/data" ), 
+            2
         )
     ]
 )
@@ -96,17 +106,15 @@ def test_iter(sequence, expected):
     [
         pytest.param(
             Sequence("string", "Lorem ipsum dolor sit amet"),
-            {
-                "child": ("token", "Lorem"),
-                "sequence": Sequence()
-            }
+            [Sequence() for _ in range(5)]
         ), 
         pytest.param(
             Sequence("text", "tests/data/doc_1.txt"),
-            {
-                "chile": ("string", "Lorem ipsum dolor sit amet"),
-                "sequence": Sequence()
-            }
+            [Sequence() for _ in range(8)]
+        ),
+        pytest.param(
+            Sequence("directory","tests/data" ), 
+            2
         )
     ]
 )
@@ -114,8 +122,25 @@ def test_getitem(sequence, expected):
     assert sequence[0] == expected
 
 
-def test_get_depth():
-    pass
+@pytest.mark.parametrize(
+    "sequence, expected", 
+    [
+        pytest.param(
+            Sequence("string", "Lorem ipsum dolor sit amet"),
+            (1,["tokens"])
+        ), 
+        pytest.param(
+            Sequence("text", "tests/data/doc_1.txt"),
+            (1, ["tokens"])
+        ),
+        pytest.param(
+            Sequence("directory","tests/data" ), 
+            (2, ["files", "tokens"])
+        )
+    ]
+)
+def test_get_depth(sequence, expected):
+    assert sequence.depth() == expected
 
 
 def test_filter():
