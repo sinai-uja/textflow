@@ -83,44 +83,41 @@ def test_len(sequence, expected):
     [
         pytest.param(
             Sequence("string", "Lorem ipsum"),
-            [Sequence() for _ in range(2)]
+            [Sequence("token",tkn) for tkn in "Lorem ipsum".split(" ")]
         ), 
         pytest.param(
             Sequence("text", "tests/data/doc_1.txt"),
-            {
-                "child": [("string", "Lorem ipsum dolor sit amet"), ("string", "Nam lectus turpis")],
-                "sequence": [Sequence() for _ in range(2)]
-            }
+            [Sequence("token",tkn) for tkn in "Lorem ipsum".split(" ")]
         ),
         pytest.param(
             Sequence("directory","tests/data" ), 
-            2
+            [Sequence().initFromDocument("tests/data/doc_1.txt","tokens","token")]
         )
     ]
 )
 def test_iter(sequence, expected):
     assert iter(sequence).__next__() == expected
 
+
 @pytest.mark.parametrize(
     "sequence, expected", 
     [
         pytest.param(
             Sequence("string", "Lorem ipsum dolor sit amet"),
-            [Sequence() for _ in range(5)]
+            Sequence("string", "Lorem ipsum dolor sit amet").children["tokens"]
         ), 
         pytest.param(
             Sequence("text", "tests/data/doc_1.txt"),
-            [Sequence() for _ in range(8)]
+            Sequence("text", "tests/data/doc_1.txt").children["tokens"]
         ),
         pytest.param(
             Sequence("directory","tests/data" ), 
-            2
+            Sequence("directory","tests/data" ).children["files"]
         )
     ]
 )
 def test_getitem(sequence, expected):
     assert sequence[0] == expected
-
 
 @pytest.mark.parametrize(
     "sequence, expected", 

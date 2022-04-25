@@ -1,8 +1,12 @@
 import os
 from typing import Optional
+from nltk.tokenize import TreebankWordTokenizer
+from nltk.tokenize import WhitespaceTokenizer
+from nltk.tokenize import SpaceTokenizer
+from nltk.tokenize import WordPunctTokenizer
 
 
-class SequenceIterator: #TODO documentar
+class SequenceIterator:
     def __init__(self, children):
         """
         Creates a sequenceIterator from a Sequence.
@@ -47,7 +51,7 @@ class Sequence:
         text: ...
         sequences: ...
     """
-    def __init__(self, format: Optional[str] = None, src: Optional[object] = None):
+    def __init__(self, format: Optional[str] = None, src: Optional[object] = None, tokenizer: Optional[object] = None ):
         """Creates a sequence from an input object.
 
         Args:
@@ -61,6 +65,8 @@ class Sequence:
             raise ValueError(
                 f"{format} is not a valid format. Valid formats: {_VALID_FORMATS}"
             )
+        if tokenizer == None:
+            tokenizer = WhitespaceTokenizer()
         
         self.format = format
         self.children = {}
@@ -70,13 +76,13 @@ class Sequence:
                 raise ValueError(f"{src} is not an instance of token")
             self.metadata["text"] = src
         if format == "string":
-            self.initFromString(src,"tokens","token")
+            self.initFromString(src,"tokens","token",tokenizer)
         if format == "text":
-            self.initFromDocument(src,"tokens","token")
+            self.initFromDocument(src,"tokens","token", tokenizer)
         if format == "directory":
-            self.initFromDirectory(src,"directory","files")
+            self.initFromDirectory(src,"directory","files",tokenizer)
 
-    def initFromDirectory(self, directory, labelDirectory, labelFile ): #TODO Inicializador por defecto para un directorio
+    def initFromDirectory(self, directory, labelDirectory, labelFile, tokenizer):
         '''
         Initialize a Sequence from a directory 
         Args:
@@ -101,12 +107,12 @@ class Sequence:
             else:
                 self.metadata["directoriesPath"].append(directory+"/"+file)
                 if labelDirectory in self.children:
-                    self.children[labelDirectory].append(Sequence("directory", directory+"/"+file ))
+                    self.children[labelDirectory].append(Sequence("directory", directory+"/"+file,tokenizer ))
                 else:
-                    self.children[labelDirectory]= [Sequence("directory", directory+"/"+file)]
+                    self.children[labelDirectory]= [Sequence("directory", directory+"/"+file, tokenizer)]
         
 
-    def initFromDocument(self, documentPath, labelSubSequence, formatSubsequence):
+    def initFromDocument(self, documentPath, labelSubSequence, formatSubsequence, tokenizer):
         '''
         Initialize a Sequence from a document 
         Args:
@@ -117,10 +123,10 @@ class Sequence:
         self.format = "text"
         with open(documentPath, "r") as f:
             txt = f.read()
-        self.children[labelSubSequence] = [Sequence(formatSubsequence,token_src) for token_src in txt.split(" ")]
+        self.children[labelSubSequence] = [Sequence(formatSubsequence,token_src) for token_src in tokenizer.tokenize(txt)]
         self.metadata["text"] = txt
 
-    def initFromString(self, srcString, labelSubSequence, formatSubsequence):
+    def initFromString(self, srcString, labelSubSequence, formatSubsequence, tokenizer):
         '''
         Initialize a Sequence from a string 
         Args:
@@ -133,7 +139,7 @@ class Sequence:
         if not isinstance(srcString, str):
             raise ValueError(f"{srcString} is not an instance of string")
         self.format = "string"
-        self.children[labelSubSequence]= [Sequence(formatSubsequence,token_src) for token_src in srcString.split(" ")]
+        self.children[labelSubSequence]= [Sequence(formatSubsequence,token_src) for token_src in tokenizer.tokenize(srcString)]
         self.metadata["text"]= srcString
 
 
@@ -180,8 +186,15 @@ class Sequence:
         '''
         return SequenceIterator(list(self.children.values()))
     
-    def __getitem__(self, idx): #TODO Documentacion
-        
+    def __getitem__(self, idx):
+        '''
+        Get the value of a key from the dictionary of children 
+        Args:
+            idx: a string that represent the key of the children dictionary
+                 or an integer that represent the position of the key in children dictionary keys 
+        Returns:
+            A List of Sequences 
+        '''
         if isinstance(idx, str):  # Get src by string (e.g. seq["doc1"])
             if self.children:
                 if idx in self.children: 
@@ -197,6 +210,12 @@ class Sequence:
             return list(self.children.values())[idx]
         else: # TODO: Should it support slices (e.g. [2:4])?
             raise ValueError(f"Sequence id '{idx}' not found in {self.children}")
+
+    def __eq__(self, other):
+        if self.format == other.format and self.metadata == other.metadata and self.children == other.children:
+            return True
+        else:
+            return False
 
 
     def depth(self,diccionaryList: Optional[list] = None):
