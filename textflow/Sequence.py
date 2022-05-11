@@ -270,5 +270,46 @@ class Sequence:
                         children = [c.children for c in child[r]]
                 else:
                     raise ValueError(f"Sequence level '{r}' not found in {child}")
-        yield criteria(results)
+        cont=0
+        gen = criteria(results)
+        for r in gen:
+            yield gen[cont]
+            cont+=1
+
+    def filterMetadata(self, level, criteria): #TODO
+        '''
+        Filter the children of a Sequence according to a criteria
+
+        Args:
+            level: the route of the level as string, separating each level with "/" 
+            criteria: the filter function
+
+        Returns:
+            A generator with the result of the filter
+        '''
+        ruta = level.split("/")
+        children = [self.children]
+        metadata = [self.metadata]
+        results=[]
+        if len(ruta) == 1 and ruta[0] in metadata[0]:
+            results.append(metadata[0][ruta[0]])
+        else:
+            for r in ruta:
+                if r == ruta[-1]:
+                    for m in metadata:
+                        if r in m:
+                            results.append(m[r])
+                else:
+                    for child in children:
+                        if r in child:
+                            children = [c.children for c in child[r]]
+                            metadata = [c.metadata for c in child[r]]
+                        else:
+                            raise ValueError(f"Sequence level '{r}' not found in {child}")
+        #yield criteria(results)
+        cont=0
+        gen = criteria(results)
+        for r in gen:
+            yield gen[cont]
+            cont+=1
         
