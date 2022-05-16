@@ -5,13 +5,15 @@ description = "A text analysis library for Python"
 authors = ["Jaime Collado <jcollado@ujaen.es>", "Estrella Vallecillo <mevr0003@red.ujaen.es>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "3.8"
 nltk = "^3.7"
 spacy = "^3.3.0"
-transformers = "^4.18.0"
+transformers = "^4.19.0"
+torch = {version = "^1.11.0", python = "^3.7", platform = "linux"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

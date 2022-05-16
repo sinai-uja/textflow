@@ -4,6 +4,7 @@ from nltk.tokenize import TreebankWordTokenizer
 from nltk.tokenize import WhitespaceTokenizer
 from nltk.tokenize import SpaceTokenizer
 from nltk.tokenize import WordPunctTokenizer
+from nltk.tokenize import RegexpTokenizer
 
 
 class SequenceIterator:

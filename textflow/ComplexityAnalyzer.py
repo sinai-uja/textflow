@@ -7,11 +7,13 @@ import re
 import numpy as np
 import math
 from functools import reduce
+from textflow.Analyzer import Analyzer
+
 
 creaPath = os.path.join(os.path.dirname(__file__), 'Crea-5000.txt')
 
-class ComplexityAnalyzer:
-    def __init__(self, lang = "es"):
+class ComplexityAnalyzer(Analyzer):
+    def __init__(self, rutaArchivoCrea = creaPath,lang = "es"):
         """Creates an analyzer from an input object.
 
         Args:
@@ -22,11 +24,7 @@ class ComplexityAnalyzer:
             spacy.cli.download("es_core_news_sm")
             self.nlp = spacy.load("es_core_news_sm")
             #Vamos a cargar CREA:
-            self.dicFreqWords=self.read(creaPath)
-            self.function = self.complexity
-        '''elif lang == "en":
-            spacy.cli.download("en_core_web_sm")
-            self.nlp = spacy.load("en_core_web_sm")'''
+            self.dicFreqWords=self.read(rutaArchivoCrea)
 
     #Este analizador, solo puede analizar cadenas de texto, por lo que solo tiene sentido que use el atributo text de metadata
     def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): #TODO
@@ -42,7 +40,8 @@ class ComplexityAnalyzer:
         Raises:
             ValueError if the levelOfResult is incorrect
         """
-        if levelOfResult == "":
+        super().analyze(self.complexity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+        '''if levelOfResult == "":
             analyzeResult = sequence.filterMetadata(levelOfAnalyzer,self.function)#TODO
             resultOfAnalisys= []
             for i in analyzeResult:
@@ -64,7 +63,7 @@ class ComplexityAnalyzer:
                         else:
                             children = [c.children for c in child[r]]
                     else:
-                        raise ValueError(f"Sequence level '{r}' not found in {child}") 
+                        raise ValueError(f"Sequence level '{r}' not found in {child}") '''
 
 
     def read(self,fichero):

@@ -1,54 +1,88 @@
+import string
 from typing import Optional
 
-import spacy
-import spacy.cli
+#import spacy
+#import spacy.cli
+from nltk.text import Text
+from nltk.tokenize import WhitespaceTokenizer
+import math
 
+from textflow.Analyzer import Analyzer
 
-class StylometryyAnalyzer: #TODO
-    def __init__(self, lang = "es"):
-        if lang == "es":
-            spacy.cli.download("es_core_news_sm")
-            self.nlp = spacy.load("es_core_news_sm")
-        self.function = self.stylometry
-        pass
+class StylometryAnalyzer(Analyzer): #TODO
+
+    def __init__(self,stopwords, puntuation = string.punctuation,tokenizer = WhitespaceTokenizer()):
+        self.stopwords = stopwords
+        self.puntuation = puntuation
+        self.tokenizer = tokenizer
 
     #Este analizador, solo puede analizar cadenas de texto, por lo que solo tiene sentido que use el atributo text de metadata
-    def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): #TODO
-        """Analyze a sequence
+    def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str]= ""):
+        super().analyze(self.stylometry,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
-        Args:
-            sequence: the Sequence we want to analyze
-            tag: the label to store the analysis resut
-            levelOfAnalyzer: the path of the sequence level to analyze inside of the result(la subsequencia a analizar dentro de la sequencia en la que queremos almacenar el resultado)
-            levelOfResult: the path of the sequence level to store the result. (Podemos querer analizar los tokens pero almacenarlo a nivel de oracion)
-            analyzeMetadata: boolean, if the result of the analyzer is applied in metadata (True) or in children(False)
+    def stylometry(self, arrayText):
+        resultsList = []
+        for t in arrayText:
+            #doc = self.nlp(text)
+            t.lower()
+            tokens = self.tokenizer.tokenize (t)
+            text= [token.lower() for token in tokens]
+            self.freqWords(text,self.stopwords,self.puntuation)
+            self.funcionesTTR(text)
+            result={
+                "uniqueWords": len(self.uniqueWords),
+                "TTR": self.TTR,
+                "RTTR": self.RTTR,
+                "Herdan": self.herdan,
+                "Mass": self.mass,
+                "Somers": self.somers,
+                "Dugast": self.dugast,
+                "Honore": self.honore,
+                "FreqStopWords": self.freqStopWords,
+                "FreqPuntuationMarks": self.freqPuntuationMarks,
+                "FreqWords": self.freqWord
+            }
+            resultsList.append(result)
+        return resultsList
 
-        Raises:
-            ValueError if the levelOfResult is incorrect
-        """
-        if levelOfResult == "":
-            analyzeResult = sequence.filterMetadata(levelOfAnalyzer,self.function)#TODO
-            resultOfAnalisys= []
-            for i in analyzeResult:
-                resultOfAnalisys.append(i)
-            sequence.metadata[tag] = resultOfAnalisys
+    def funcionesTTR(self, text):
+        self.uniqueWords = [token[0] for token in self.freqWord]
+        self.numWordFreqOne = len( [token[0] for token in self.freqWord if token[1] == 1 ])
+        self.TTR = len(self.uniqueWords) / len(text)
+        self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
+        self.herdan = math.log(len(self.uniqueWords),10) / math.log(len(text),10)
+        self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10)) /  pow(math.log(len(self.uniqueWords),10),2)
+        self.somers = math.log(math.log(len(self.uniqueWords),10),10) / math.log(math.log(len(text),10),10)
+        if math.log(len(text),10)- math.log(len(self.uniqueWords),10) == 0:
+            self.dugast = pow(math.log(len(text),10),2)
         else:
-            children = [sequence.children]
-            ruta = levelOfResult.split("/")
-            for r in ruta: #Para cada nivel de la ruta
-                for child in children: #Miramos en todas las secuencias disponibles
-                    if r in child: #Si dentro de la secuencia actual está r
-                        if r == ruta[-1]:
-                            for seq in child[r]:
-                                analyzeResult = seq.filterMetadata(levelOfAnalyzer,self.function)  
-                                resultOfAnalisys= []
-                                for i in analyzeResult:
-                                    resultOfAnalisys.append(i)
-                                seq.metadata[tag] = resultOfAnalisys                           
-                        else:
-                            children = [c.children for c in child[r]]
-                    else:
-                        raise ValueError(f"Sequence level '{r}' not found in {child}") 
+            self.dugast = pow(math.log(len(text),10),2) / (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
+        if 1-(self.numWordFreqOne/len(self.uniqueWords)) == 0:
+            self.honore = 100*(math.log(len(text),10))
+        else:
+            self.honore = 100*(math.log(len(text),10)/(1-(self.numWordFreqOne/len(self.uniqueWords))))    
 
-    def stylometry(self):
-        pass
+
+    def freqWords(self,tokens, stopWords, puntuationMarks):
+        freqStopWords = {}
+        freqPuntuationMarks = {}
+        freqWord ={} 
+        for token in tokens:
+            if token in stopWords:
+                if token in freqStopWords:
+                    freqStopWords[token] += 1
+                else:
+                    freqStopWords[token] = 1
+            elif token in puntuationMarks:
+                if token in freqPuntuationMarks:
+                    freqPuntuationMarks[token] += 1
+                else:
+                    freqPuntuationMarks[token] = 1
+            else: 
+                if token in freqWord:
+                    freqWord[token] += 1
+                else:
+                    freqWord[token] = 1
+        self.freqWord = sorted(freqWord.items(), reverse = True)
+        self.freqPuntuationMarks = sorted(freqPuntuationMarks.items(), reverse = True)
+        self.freqStopWords = sorted(freqStopWords.items(), reverse = True)   
