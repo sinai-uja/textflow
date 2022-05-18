@@ -10,7 +10,7 @@ from nltk.tokenize import RegexpTokenizer
 class SequenceIterator:
     def __init__(self, children):
         """
-        Creates a sequenceIterator from a Sequence.
+        Create a sequenceIterator from a Sequence.
         Args:
             children: A list with the values of the attribute children of a Sequence.
         """
@@ -39,7 +39,7 @@ class SequenceIterator:
             raise StopIteration
 
 
-_VALID_FORMATS = ["directory","string", "text", "token", None]
+_VALID_FORMATS = ["directory","string", "file", "token", None]
 
 class Sequence:
     """Summary of class here.
@@ -59,6 +59,7 @@ class Sequence:
             format: A string containing the input data's type.
             src: An object representing the input data. It can be a string for a
             string format or a file path for a text format.
+
         Raises:
             ValueError: If the format is wrong.    
         """ 
@@ -71,14 +72,14 @@ class Sequence:
         
         self.format = format
         self.children = {}
-        self.metadata = {"text": " "}
+        self.metadata = {}
         if format == "token":
             if not isinstance(src, str):
                 raise ValueError(f"{src} is not an instance of token")
             self.metadata["text"] = src
         if format == "string":
             self.initFromString(src,"tokens","token",tokenizer)
-        if format == "text":
+        if format == "file":
             self.initFromDocument(src,"tokens","token", tokenizer)
         if format == "directory":
             self.initFromDirectory(src,"directory","files",tokenizer)
@@ -86,12 +87,12 @@ class Sequence:
     def initFromDirectory(self, directory, labelDirectory, labelFile, tokenizer):
         '''
         Initialize a Sequence from a directory 
+
         Args:
             directory: the path of a directory as string
             labelDirectory: the name of the children dictionary entry for the subpaths
             labelFile: the name of the children dictionary entry for the files
         '''
-        #print(os.path.abspath((os.getcwd())))
         self.format = "directory"
         self.metadata["nameFiles"] = []
         self.metadata["directoriesPath"] = []
@@ -102,9 +103,9 @@ class Sequence:
             if os.path.isfile(directory+"/"+file):
                 self.metadata["nameFiles"].append(file)
                 if labelFile in self.children:
-                    self.children[labelFile].append(Sequence("text", directory+"/"+file ))
+                    self.children[labelFile].append(Sequence("file", directory+"/"+file ))
                 else:
-                    self.children[labelFile]= [Sequence("text", directory+"/"+file)]
+                    self.children[labelFile]= [Sequence("file", directory+"/"+file)]
             else:
                 self.metadata["directoriesPath"].append(directory+"/"+file)
                 if labelDirectory in self.children:
@@ -116,12 +117,13 @@ class Sequence:
     def initFromDocument(self, documentPath, labelSubSequence, formatSubsequence, tokenizer):
         '''
         Initialize a Sequence from a document 
+
         Args:
             documentPath: the path of a document as string
             labelSubSequence: the name of the children dictionary entry for the subsequence as string
             formatSubSequence: the format of the subsequence in children dictionary entry as string
         '''
-        self.format = "text"
+        self.format = "file"
         with open(documentPath, "r") as f:
             txt = f.read()
         self.children[labelSubSequence] = [Sequence(formatSubsequence,token_src) for token_src in tokenizer.tokenize(txt)]
@@ -130,10 +132,12 @@ class Sequence:
     def initFromString(self, srcString, labelSubSequence, formatSubsequence, tokenizer):
         '''
         Initialize a Sequence from a string 
+
         Args:
             srcString: source string of the sequence
             labelSubSequence: the name of the children dictionary entry for the subsequence as string
             formatSubSequence: the format of the subsequence in children dictionary entry as string
+
         Raises:
             ValueError: If srcString isn't a string .
         '''
@@ -171,8 +175,9 @@ class Sequence:
 
     def __len__(self):
         '''
-        Calculate the length of a Sequence
+        Calculate the length of a Sequence.
         The length of a Sequence is the length of the children.
+
         Returns:
             A number with the length of the Sequence
         '''
@@ -190,6 +195,7 @@ class Sequence:
     def __getitem__(self, idx):
         '''
         Get the value of a key from the dictionary of children 
+
         Args:
             idx: a string that represent the key of the children dictionary
                  or an integer that represent the position of the key in children dictionary keys 
@@ -307,7 +313,6 @@ class Sequence:
                             metadata = [c.metadata for c in child[r]]
                         else:
                             raise ValueError(f"Sequence level '{r}' not found in {child}")
-        #yield criteria(results)
         cont=0
         gen = criteria(results)
         for r in gen:

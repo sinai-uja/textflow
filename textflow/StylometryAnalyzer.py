@@ -9,21 +9,46 @@ import math
 
 from textflow.Analyzer import Analyzer
 
-class StylometryAnalyzer(Analyzer): #TODO
+class StylometryAnalyzer(Analyzer): 
 
     def __init__(self,stopwords, puntuation = string.punctuation,tokenizer = WhitespaceTokenizer()):
+        """
+        Create a stylometry analyzer from an input object.
+
+        Args:
+            stopwords: a list with stopwords
+            puntuation: a list with puntuationMarks
+            tokenizer: a function to tokenize the text
+        """
         self.stopwords = stopwords
         self.puntuation = puntuation
         self.tokenizer = tokenizer
 
-    #Este analizador, solo puede analizar cadenas de texto, por lo que solo tiene sentido que use el atributo text de metadata
+    
     def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str]= ""):
+        """
+        Analyze a sequence with a stylometry function.
+
+        Args:
+            sequence: the Sequence we want to analyze.
+            tag: the label to store the analysis result.
+            levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+            levelOfResult: the path of the sequence level to store the result.
+        """
         super().analyze(self.stylometry,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
     def stylometry(self, arrayText):
+        '''
+        Function that get the stylometry (somes index, frequence of words ) of a list of texts.
+
+        Args:
+            arrayText: list that contains the texts that we want to analyze
+        Returns:
+            A list with the dictionaries. Each dictionary contains the result
+            of the analysis of the corresponding text.
+        '''
         resultsList = []
         for t in arrayText:
-            #doc = self.nlp(text)
             t.lower()
             tokens = self.tokenizer.tokenize (t)
             text= [token.lower() for token in tokens]
@@ -46,6 +71,12 @@ class StylometryAnalyzer(Analyzer): #TODO
         return resultsList
 
     def funcionesTTR(self, text):
+        """
+        Function that calculate different TTR index.
+
+        Args:
+            text: a string with the text to analyze.
+        """
         self.uniqueWords = [token[0] for token in self.freqWord]
         self.numWordFreqOne = len( [token[0] for token in self.freqWord if token[1] == 1 ])
         self.TTR = len(self.uniqueWords) / len(text)
@@ -64,6 +95,14 @@ class StylometryAnalyzer(Analyzer): #TODO
 
 
     def freqWords(self,tokens, stopWords, puntuationMarks):
+        """
+        Function that count the frequence of stopWords, puntuationMarks and words of a list of tokens.
+
+        Args:
+            tokens: a list of tokens that we want to count the frequence.
+            stopwords: a list with the stopwords.
+            puntuationMarks: a list with the puntuation marks.
+        """
         freqStopWords = {}
         freqPuntuationMarks = {}
         freqWord ={} 

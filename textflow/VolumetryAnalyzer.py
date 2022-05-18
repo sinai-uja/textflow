@@ -5,16 +5,25 @@ from textflow.Analyzer import Analyzer
 
 class VolumetryAnalyzer(Analyzer):
     def __init__(self, tokenizer= WhitespaceTokenizer()):
-        """Creates an analyzer from an input object.
-
-        Args:
-            function: the function of the analyzer like count word, files...
-            isMetadata: boolean, if the result of the analyzer is stored in metadata (True) or in children(False)
+        """
+        Create a volumetry analyzer from an input object.
+            Args:
+                tokenizer: the way to split a text into token 
         """
         self.tokenizer = tokenizer
 
 
     def volumetry(self, arrayText):
+        """
+        Function that analyzes the volumetry of a list of texts.
+
+        Args:
+            arrayText: list that contains the texts that we want to analyze.
+        
+        Returns:
+            A list with the dictionaries. Each dictionary contains the result
+            of the analysis of the corresponding text.
+        """
         arrayResults =[]
         for texts in arrayText:
             text = self.tokenizer.tokenize(texts)
@@ -27,33 +36,18 @@ class VolumetryAnalyzer(Analyzer):
             arrayResults.append(dicResults)
         return arrayResults
 
-    #La secuencia siempre debe tener un atributo texto(metadata) para que este funcione
-    #Contar el numero de palabras, numero de palabras unicas, numero de caracteres y numero medio de caracteres
+    
     def analyze(self,sequence,tag,levelOfAnalyzer,levelOfResult:Optional[str] = ""):
-        super().analyze(self.volumetry,sequence, tag, levelOfAnalyzer, levelOfResult, True)
-        '''children = [sequence.children]
-        ruta = levelOfAnalyze.split("/")
-        for r in ruta: #Para cada nivel de la ruta
-            for child in children: #Miramos en todas las secuencias disponibles
-                if r in child: #Si dentro de la secuencia actual está r
-                    if r == ruta[-1]:
-                        for seq in child[r]:
-                            if "text" not in seq.metadata:
-                                raise ValueError(f"Level text not found in {seq.metadata.keys()}")
-                            else:
-                                text = seq.metadata["text"].split(" ")
-                            
-                                volumetry= {
-                                    "words" : len(text),
-                                    "uniqueWords" : len(set(text)),
-                                    "chars" : len(seq.metadata["text"]),
-                                    "avgWordsLen" : round(volumetry["chars"] / volumetry["words"])
-                                }
+        """
+        Analyze a sequence with a volumetry function.
 
-                                seq.metadata["volumetry"] = volumetry
-                    else:
-                        children = [c.children for c in child[r]]
-                else:
-                    raise ValueError(f"Sequence level '{r}' not found in {child}")'''
+        Args:
+            sequence: the Sequence we want to analyze.
+            tag: the label to store the analysis result.
+            levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+            levelOfResult: the path of the sequence level to store the result.
+        """
+        super().analyze(self.volumetry,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+        
 
    

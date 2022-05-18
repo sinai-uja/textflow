@@ -10,14 +10,16 @@ class Analyzer(ABC):
 
     @abstractmethod
     def analyze(self, functionAnalyzer,sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = "", analyzeMetadata: Optional[bool] = False): #TODO
-        """Analyze a sequence
+        """
+        Abstract Class that analyze a sequence.
 
         Args:
-            sequence: the Sequence we want to analyze
-            tag: the label to store the analysis resut
-            levelOfAnalyzer: the path of the sequence level to analyze inside of the result(la subsequencia a analizar dentro de la sequencia en la que queremos almacenar el resultado)
-            levelOfResult: the path of the sequence level to store the result. (Podemos querer analizar los tokens pero almacenarlo a nivel de oracion)
-            analyzeMetadata: boolean, if the result of the analyzer is applied in metadata (True) or in children(False)
+            functionAnalyzer: the function of the analyzer.
+            sequence: the Sequence we want to analyze.
+            tag: the label to store the analysis resut.
+            levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+            levelOfResult: the path of the sequence level to store the result. 
+            analyzeMetadata: boolean, if the result of the analyzer is applied in metadata (True) or in children(False).
 
         Raises:
             ValueError if the levelOfResult is incorrect
@@ -65,7 +67,7 @@ class Analyzer(ABC):
                     else:
                         raise ValueError(f"Sequence level '{r}' not found in {child}")
 
-        
+
     
 
     

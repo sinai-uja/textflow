@@ -11,62 +11,47 @@ from textflow.Analyzer import Analyzer
 
 
 creaPath = os.path.join(os.path.dirname(__file__), 'Crea-5000.txt')
+spacy.cli.download("es_core_news_sm")
 
 class ComplexityAnalyzer(Analyzer):
-    def __init__(self, rutaArchivoCrea = creaPath,lang = "es"):
-        """Creates an analyzer from an input object.
+    def __init__(self, rutaArchivoCrea = creaPath, nlp = spacy.load("es_core_news_sm")):
+        """
+        Create a complexity analyzer from an input object.
 
         Args:
-            function: the function of the analyzer like count word, files...
+            rutaArchivoCrea: the file that contains the most frequence words of spanish language
             isMetadata: boolean, if the result of the analyzer is stored in metadata (True) or in children(False)
         """
-        if lang == "es":
-            spacy.cli.download("es_core_news_sm")
-            self.nlp = spacy.load("es_core_news_sm")
-            #Vamos a cargar CREA:
-            self.dicFreqWords=self.read(rutaArchivoCrea)
+        self.nlp = nlp
+        #Vamos a cargar CREA:
+        self.dicFreqWords=self.read(rutaArchivoCrea)
 
-    #Este analizador, solo puede analizar cadenas de texto, por lo que solo tiene sentido que use el atributo text de metadata
-    def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): #TODO
-        """Analyze a sequence
+    
+    def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
+        """
+        Analyze a sequence with a complexity function.
 
         Args:
-            sequence: the Sequence we want to analyze
-            tag: the label to store the analysis resut
-            levelOfAnalyzer: the path of the sequence level to analyze inside of the result(la subsequencia a analizar dentro de la sequencia en la que queremos almacenar el resultado)
-            levelOfResult: the path of the sequence level to store the result. (Podemos querer analizar los tokens pero almacenarlo a nivel de oracion)
-            analyzeMetadata: boolean, if the result of the analyzer is applied in metadata (True) or in children(False)
+            sequence: the Sequence we want to analyze.
+            tag: the label to store the analysis result.
+            levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+            levelOfResult: the path of the sequence level to store the result. 
+            analyzeMetadata: boolean, if the result of the analyzer is applied in metadata (True) or in children(False).
 
         Raises:
             ValueError if the levelOfResult is incorrect
         """
         super().analyze(self.complexity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
-        '''if levelOfResult == "":
-            analyzeResult = sequence.filterMetadata(levelOfAnalyzer,self.function)#TODO
-            resultOfAnalisys= []
-            for i in analyzeResult:
-                resultOfAnalisys.append(i)
-            sequence.metadata[tag] = resultOfAnalisys
-        else:
-            children = [sequence.children]
-            ruta = levelOfResult.split("/")
-            for r in ruta: #Para cada nivel de la ruta
-                for child in children: #Miramos en todas las secuencias disponibles
-                    if r in child: #Si dentro de la secuencia actual está r
-                        if r == ruta[-1]:
-                            for seq in child[r]:
-                                analyzeResult = seq.filterMetadata(levelOfAnalyzer,self.function)  
-                                resultOfAnalisys= []
-                                for i in analyzeResult:
-                                    resultOfAnalisys.append(i)
-                                seq.metadata[tag] = resultOfAnalisys                           
-                        else:
-                            children = [c.children for c in child[r]]
-                    else:
-                        raise ValueError(f"Sequence level '{r}' not found in {child}") '''
 
 
     def read(self,fichero):
+        """
+        Function that read a txt File.
+
+        Args:
+            fichero: the path of the file to read.
+
+        """
         with open(fichero,'r',encoding='latin-1') as file:
             next(file)
             lines = file.readlines()
@@ -80,6 +65,16 @@ class ComplexityAnalyzer(Analyzer):
 
 
     def complexity(self, arrayText):
+        """
+        Function that analyzes the complexity of a list of texts.
+            
+        Args:
+            arrayText: list that contains the texts that we want to analyze.
+
+        Returns:
+            A list with the dictionaries. Each dictionary contains the result
+            of the analysis of the corresponding text.
+        """
         arrayResults =[]
         for text in arrayText:
             doc= self.nlp (text)
@@ -123,7 +118,12 @@ class ComplexityAnalyzer(Analyzer):
 
 
     def simplesMetrics(self, doc):
-        #Simple metrics son los signos de puntuación, el numero de frases, el numero de frases con contenido...
+        """
+        Function that calculate of a doc.
+            
+        Args:
+            doc: sequence of tokens object.
+        """
         self.sentences = [s for s in doc.sents]
         self.numSentences = len(self.sentences)
         pcs = []
@@ -155,13 +155,19 @@ class ComplexityAnalyzer(Analyzer):
         self.numChars = numChars
 
     def analyzeLegibility(self,doc):
+        """
+        Function that analyze the legibility of a text.
+
+        Args:
+            doc: a sequence of tokens.
+        """
         self.readabilityFH = 206.84 - 0.60*(self.numSyllabes/self.numWords) - 1.02*(self.numWords/self.numSentences)
         self.perspicuityIFSZ = 206.835 - ((62.3*self.numSyllabes)/self.numWords) - (self.numWords/self.numSentences)
         
         numLetters = 0
         listLenLetters =[]
         for token in doc:
-            if token.text.isalpha(): #Si es una palabra
+            if token.text.isalpha(): 
                 numLetters += len(token.text)
                 listLenLetters.append(len(token.text))
         
@@ -172,6 +178,9 @@ class ComplexityAnalyzer(Analyzer):
         self.muLegibility = (self.numWords/(self.numWords-1))*(avgLettersWords/listLenLetters.var())*100
         
     def lexicalIndex(self):
+        """
+        Function that calculate different lexical index of a text.
+        """
         self.numContentWords = reduce((lambda a, b: a + b), [len(s) for s in self.posContentSentences])
         self.numDistinctContentWords = len(set([w.text.lower() for s in self.posContentSentences for w in s]))
         if self.numContentWords == 0:
@@ -184,10 +193,16 @@ class ComplexityAnalyzer(Analyzer):
         
 
     def readability(self):
+        """
+        Function that calculate the readability of a text.
+        """
         self.autoReadabilityIndex = 4.71 * self.numChars / self.numWords + 0.5 * self.numWords/self.numContentSentences
         self.spauldingScore = 1.609*(self.numWords / self.numContentSentences) + 331.8* (self.numRareWord /self.numWords) + 22.0
 
     def countRareAndLowWord(self):
+        """
+        Function that count the rare and low words of a text.
+        """
         freqWord = sorted(self.dicFreqWords, key = self.dicFreqWords.__getitem__, reverse = True)[:1500]
         countRareWord = 0
         countLowWord = 0
@@ -201,6 +216,9 @@ class ComplexityAnalyzer(Analyzer):
         self.numLowWord = countLowWord          
 
     def sentenceComplexity(self):
+        """
+        Function that calculate the complexity at sentence level.
+        """
         numComplexSentence=0
         for sentence in self.sentences:
             verb = False
@@ -224,6 +242,12 @@ class ComplexityAnalyzer(Analyzer):
         
 
     def countSyllabes(self, text):
+        """
+        Function that count the syllabes of a text.
+
+        Args:
+            text: a string with the text to analyze.
+        """
         t = re.sub(r'y([aáeéiíoóuú])', '\\1', text.lower())
         t = re.sub(r'[aáeéioóu][iuy]', 'A', t.lower())
         t = re.sub(r'[iu][aáeyéioóu]', 'A', t).lower()
@@ -240,6 +264,9 @@ class ComplexityAnalyzer(Analyzer):
             return 1 + max(self.treeHeight(x, cont) for x in root.children)
 
     def embeddingDepth(self):
+        """
+        Function that calculate the depth of the embedding of a text.
+        """
         roots = [sent.root for sent in self.sentences]
         max_list = []
         max_list = [self.treeHeight(root,0) for root in roots]
@@ -251,9 +278,12 @@ class ComplexityAnalyzer(Analyzer):
         return self.max_max_list,  self.min_max_list, self.mean_max_list
 
     def ageReadability(self):
+        """
+        Function that calculate the age readability of a text.
+        """
         self.solReadability = -2.51 + 0.74*(3.1291+1.0430*math.sqrt(self.numWords3Syllabes*(30/self.numSentences)))
         self.minAge = 0.2495* (self.numWords/self.numSentences) + 6.4763*(self.numSyllabes/self.numWords) - 7.1395
         self.crawford = -20.5*(self.numSentences/self.numWords)+4.9*(self.numSyllabes/self.numWords)-3.407
-        pass
+        
 
 
