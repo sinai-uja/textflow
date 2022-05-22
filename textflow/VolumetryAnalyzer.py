@@ -4,6 +4,12 @@ from nltk.tokenize import WhitespaceTokenizer
 from textflow.Analyzer import Analyzer
 
 class VolumetryAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the volumetry of the text of a sequence.
+
+    Attributes:
+        tokenizer: the way to split the text of a sequence in tokens.
+    """
     def __init__(self, tokenizer= WhitespaceTokenizer()):
         """
         Create a volumetry analyzer from an input object.

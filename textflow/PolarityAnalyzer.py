@@ -4,6 +4,13 @@ from transformers import pipeline
 import torch
 
 class PolarityAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the polarity of the text of a sequence.
+
+    Attributes:
+        polarityClassifier: a pipeline that uses a model for inference the polarity of the text of a sequence.
+    """
+
     def __init__(self, task = "text-classification",modelPolarity = 'finiteautomata/beto-sentiment-analysis', allScores = True):
         """
         Create a polarity analyzer.

@@ -14,6 +14,40 @@ creaPath = os.path.join(os.path.dirname(__file__), 'Crea-5000.txt')
 spacy.cli.download("es_core_news_sm")
 
 class ComplexityAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the complexity of the text of a sequence.
+
+    Attributes:
+        nlp: a model of language.
+        dicFreqWords: a dictionary with the most frequence words of spanish language.
+        numContentSentences: the number of the content sentences in the text.
+        numComplexSents: the nomber of complex sentences in the text.
+        avgLenSentence: the average length of the sentences in the text. 
+        numPuntuationMark: the number of punctuation marks in the text.
+        numWords: the number of words in the text.
+        numRareWord: the number of rare words in the text.
+        numSyllabes: the number of syllabes in the text.
+        numChars: the number of chars in the text.
+        indexLowFreqWords: the index of low frequence words of a text.           
+        lexicalDistributionIndex: the index of lexical distribution of a text.               
+        lexicalComplexity: the index of lexical complexity of a text.
+        spauldingScore: the Spaulding's readability score.
+        sentenceComplexityIndex: the index of sentence complexity.
+        autoReadabilityIndex: the autoreadability index of a text.                  
+        readabilityFH: the Fernandez Huerta readability of a text.
+        perspicuityIFSZ: the Flesch-Szigriszt perspicuity of a text. 
+        poliniComprensibility: the Polini comprehensibility of a text.
+        muLegibility: the Mu legibility of a text.
+        minAge: the minimum age to read a text. 
+        solReadability: the SOL readability of a text.
+        crawford: the Crawford's years of a text.
+        min_max_list: the minimum of maximum tree depths.
+        max_max_list: the maximum of maximum tree depths.
+        mean_max_list: the mean of maximum tree depths.
+        
+    """
+
+
     def __init__(self, rutaArchivoCrea = creaPath, nlp = spacy.load("es_core_news_sm")):
         """
         Create a complexity analyzer from an input object.

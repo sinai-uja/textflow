@@ -7,6 +7,13 @@ from transformers import pipeline
 import torch
 
 class EmotionAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the emotions of the text of a sequence.
+
+    Attributes:
+        polarityClassifier: a pipeline that uses a model for inference the emotions of the text of a sequence.
+    """
+
     def __init__(self, task = "text-classification",modelEmotions = 'pysentimiento/robertuito-emotion-analysis', allScores = True):
         """
         Create a emotions analyzer.

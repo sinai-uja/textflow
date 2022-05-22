@@ -7,6 +7,9 @@ from abc import ABC, abstractmethod
 
 
 class Analyzer(ABC):
+    """
+    Abstract class that provides methods to analyze sequences
+    """
 
     @abstractmethod
     def analyze(self, functionAnalyzer,sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = "", analyzeMetadata: Optional[bool] = False): #TODO

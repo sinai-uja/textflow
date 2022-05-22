@@ -10,7 +10,26 @@ import math
 from textflow.Analyzer import Analyzer
 
 class StylometryAnalyzer(Analyzer): 
+    """
+    A class that provides methods to analyze the stylometry of the text of a sequence.
 
+    Attributes:
+        stopwords: a list with stopwords.
+        puntuation: a list with puntuationMarks.
+        tokenizer: a function to tokenize the text.
+        uniqueWords: a list with the vocabulary of a text.
+        numWordFreqOne: the numbers of words that only appear one time in the text. 
+        TTR: type-token ratio.
+        RTTR: root type-token ratio.
+        herdan: the index of Herdan.
+        mass: the index of Mass.
+        somers: the index of Somers.
+        dugast: the index of Dugast.
+        honore: the index of Honoré.
+        freqStopWords: the frequence of the stopwords in the text.
+        freqPuntuationMarks: the frequence of the different puntuations marks in the text.
+        freqWord: the frequence of the different words in the text.
+    """
     def __init__(self,stopwords, puntuation = string.punctuation,tokenizer = WhitespaceTokenizer()):
         """
         Create a stylometry analyzer from an input object.

@@ -7,6 +7,15 @@ from textflow.Analyzer import Analyzer
 spacy.cli.download("es_core_news_sm")
 
 class LemmaAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the lemmas of the text of a sequence.
+
+    Attributes:
+        nlp: a model of language.
+        posNoContent: a list with the POS tag from which we don't want to get the lemma. 
+                      Some of the POS tag that haven't content are "PUNCT", "SPACE", "SYM".
+    """
+
     def __init__(self, nlp = spacy.load("es_core_news_sm"), posNoContent = ["PUNCT", "SPACE", "SYM"]):
         """Create an analyzer from an input object.
 

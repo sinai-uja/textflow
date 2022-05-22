@@ -1,13 +1,15 @@
-import os
 from typing import Optional
-from nltk.tokenize import TreebankWordTokenizer
-from nltk.tokenize import WhitespaceTokenizer
-from nltk.tokenize import SpaceTokenizer
-from nltk.tokenize import WordPunctTokenizer
-from nltk.tokenize import RegexpTokenizer
-
+from abc import ABC, abstractmethod
 
 class SequenceIterator:
+    """
+    A class that provides methods to iterate over the children of a sequence
+
+    Attributes:
+        idx: an integer with the position of the iterator.
+        children: a dictionary with the subsequence of a sequence.  
+    """
+
     def __init__(self, children):
         """
         Create a sequenceIterator from a Sequence.
@@ -39,115 +41,30 @@ class SequenceIterator:
             raise StopIteration
 
 
-_VALID_FORMATS = ["directory","string", "file", "token", None]
-
-class Sequence:
-    """Summary of class here.
-
-    Longer class information...
-    Longer class information...
+class Sequence(ABC):
+    """
+    Abstract class that provides methods to create a sequence from different formats
 
     Attributes:
-        id: ...
-        text: ...
-        sequences: ...
+        format: a string with the origin format of a sequence.
+        metadata: a dictionary with the metadata of a sequence.
+        children: a dictionary with the subsequence of a sequence. 
     """
-    def __init__(self, format: Optional[str] = None, src: Optional[object] = None, tokenizer: Optional[object] = None ):
-        """Creates a sequence from an input object.
+
+    @abstractmethod
+    def inicializeSequence(self,format):
+        '''
+        Initializes the attributes of a sequence.
 
         Args:
-            format: A string containing the input data's type.
-            src: An object representing the input data. It can be a string for a
-            string format or a file path for a text format.
-
-        Raises:
-            ValueError: If the format is wrong.    
-        """ 
-        if format not in _VALID_FORMATS:
-            raise ValueError(
-                f"{format} is not a valid format. Valid formats: {_VALID_FORMATS}"
-            )
-        if tokenizer == None:
-            tokenizer = WhitespaceTokenizer()
-        
+            format: a string with the origin format of the sequence.
+        '''
         self.format = format
-        self.children = {}
-        self.metadata = {}
-        if format == "token":
-            if not isinstance(src, str):
-                raise ValueError(f"{src} is not an instance of token")
-            self.metadata["text"] = src
-        if format == "string":
-            self.initFromString(src,"tokens","token",tokenizer)
-        if format == "file":
-            self.initFromDocument(src,"tokens","token", tokenizer)
-        if format == "directory":
-            self.initFromDirectory(src,"directory","files",tokenizer)
-
-    def initFromDirectory(self, directory, labelDirectory, labelFile, tokenizer):
-        '''
-        Initialize a Sequence from a directory 
-
-        Args:
-            directory: the path of a directory as string
-            labelDirectory: the name of the children dictionary entry for the subpaths
-            labelFile: the name of the children dictionary entry for the files
-        '''
-        self.format = "directory"
-        self.metadata["nameFiles"] = []
-        self.metadata["directoriesPath"] = []
-        contenido = os.listdir(directory)
-        #print(contenido)
-        for file in contenido:
-            #print(file)
-            if os.path.isfile(directory+"/"+file):
-                self.metadata["nameFiles"].append(file)
-                if labelFile in self.children:
-                    self.children[labelFile].append(Sequence("file", directory+"/"+file ))
-                else:
-                    self.children[labelFile]= [Sequence("file", directory+"/"+file)]
-            else:
-                self.metadata["directoriesPath"].append(directory+"/"+file)
-                if labelDirectory in self.children:
-                    self.children[labelDirectory].append(Sequence("directory", directory+"/"+file,tokenizer ))
-                else:
-                    self.children[labelDirectory]= [Sequence("directory", directory+"/"+file, tokenizer)]
-        
-
-    def initFromDocument(self, documentPath, labelSubSequence, formatSubsequence, tokenizer):
-        '''
-        Initialize a Sequence from a document 
-
-        Args:
-            documentPath: the path of a document as string
-            labelSubSequence: the name of the children dictionary entry for the subsequence as string
-            formatSubSequence: the format of the subsequence in children dictionary entry as string
-        '''
-        self.format = "file"
-        with open(documentPath, "r") as f:
-            txt = f.read()
-        self.children[labelSubSequence] = [Sequence(formatSubsequence,token_src) for token_src in tokenizer.tokenize(txt)]
-        self.metadata["text"] = txt
-
-    def initFromString(self, srcString, labelSubSequence, formatSubsequence, tokenizer):
-        '''
-        Initialize a Sequence from a string 
-
-        Args:
-            srcString: source string of the sequence
-            labelSubSequence: the name of the children dictionary entry for the subsequence as string
-            formatSubSequence: the format of the subsequence in children dictionary entry as string
-
-        Raises:
-            ValueError: If srcString isn't a string .
-        '''
-        if not isinstance(srcString, str):
-            raise ValueError(f"{srcString} is not an instance of string")
-        self.format = "string"
-        self.children[labelSubSequence]= [Sequence(formatSubsequence,token_src) for token_src in tokenizer.tokenize(srcString)]
-        self.metadata["text"]= srcString
-
-
+        self.metadata={}
+        self.children={}
+        return self.format, self.metadata, self.children
+   
+    @abstractmethod
     def __str__(self):
         '''
          Convert a Sequence to a string
@@ -156,7 +73,8 @@ class Sequence:
            A string that contains the text of a Sequence  
         '''
         return str(self.metadata["text"])
-
+    
+    @abstractmethod
     def __repr__(self):
         '''
         Convert a Sequence to a string
@@ -173,6 +91,7 @@ class Sequence:
             ")"
         )
 
+    @abstractmethod
     def __len__(self):
         '''
         Calculate the length of a Sequence.
@@ -183,6 +102,7 @@ class Sequence:
         '''
         return len(self.children)
 
+    @abstractmethod
     def __iter__(self):
         '''
         Iterate in a Sequence
@@ -192,6 +112,7 @@ class Sequence:
         '''
         return SequenceIterator(list(self.children.values()))
     
+    @abstractmethod
     def __getitem__(self, idx):
         '''
         Get the value of a key from the dictionary of children 
@@ -218,13 +139,23 @@ class Sequence:
         else: # TODO: Should it support slices (e.g. [2:4])?
             raise ValueError(f"Sequence id '{idx}' not found in {self.children}")
 
+    @abstractmethod
     def __eq__(self, other):
+        '''
+        Check if a sequence it is the same that the current one.
+
+        Args:
+            other: a sequence to check if it is the same that the current one.
+        Returns:
+            True if the sequences are equals.
+            False in others cases.
+        '''
         if self.format == other.format and self.metadata == other.metadata and self.children == other.children:
             return True
         else:
             return False
 
-
+    @abstractmethod
     def depth(self,diccionaryList: Optional[list] = None):
         '''
         Calculate the maximum depth of a Sequence
@@ -253,7 +184,7 @@ class Sequence:
                         rutaMax = ruta
         return (profMax, rutaMax)
     
-
+    @abstractmethod
     def filter(self, level, criteria):
         '''
         Filter the children of a Sequence according to a criteria
@@ -282,8 +213,9 @@ class Sequence:
         for r in gen:
             yield gen[cont]
             cont+=1
-
-    def filterMetadata(self, level, criteria): #TODO
+    
+    @abstractmethod
+    def filterMetadata(self, level, criteria):
         '''
         Filter the children of a Sequence according to a criteria
 
@@ -298,21 +230,18 @@ class Sequence:
         children = [self.children]
         metadata = [self.metadata]
         results=[]
-        if len(ruta) == 1 and ruta[0] in metadata[0]:
-            results.append(metadata[0][ruta[0]])
-        else:
-            for r in ruta:
-                if r == ruta[-1]:
-                    for m in metadata:
-                        if r in m:
-                            results.append(m[r])
-                else:
-                    for child in children:
-                        if r in child:
-                            children = [c.children for c in child[r]]
-                            metadata = [c.metadata for c in child[r]]
-                        else:
-                            raise ValueError(f"Sequence level '{r}' not found in {child}")
+        for r in ruta:
+            if r == ruta[-1]:
+                for m in metadata:
+                    if r in m:
+                        results.append(m[r])
+            else:
+                for child in children:
+                    if r in child:
+                        children = [c.children for c in child[r]]
+                        metadata = [c.metadata for c in child[r]]
+                    else:
+                        raise ValueError(f"Sequence level '{r}' not found in {child}")
         cont=0
         gen = criteria(results)
         for r in gen:

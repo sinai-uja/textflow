@@ -7,6 +7,13 @@ from textflow.Analyzer import Analyzer
 spacy.cli.download("es_core_news_sm")
 
 class POSAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the part-of-speech(POS) of the text of a sequence.
+
+    Attributes:
+        nlp: a model of language.
+    """
+
     def __init__(self, nlp = spacy.load("es_core_news_sm")):
         """
         Create a POS analyzer from an input object.
