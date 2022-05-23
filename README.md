@@ -8,9 +8,9 @@ This class provides methods to create a sequence from directories, documents, st
 
 ### ./textFlow
 
-- ** [Analyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Analyzer.py):** This module provides an abstract class with methods for the calculation of different metrics on a sequence.
+- **[Analyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Analyzer.py):** This module provides an abstract class with methods for the calculation of different metrics on a sequence.
 
-- ** [ComplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides a class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
+- **[ComplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides a class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
 
 - **[CREA_5000.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Crea-5000.txt):** A dataset of 5000 spanish words ordered by its absolute frequency.
 
@@ -40,9 +40,9 @@ This class provides methods to create a sequence from directories, documents, st
 
 ### ./examples
 
-- **example_text.txt:** Simple .txt file to test the library.
+- **[example_text.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/ExampleDirectory/Documento%20sin%20t%C3%ADtulo.txt):** Simple .txt file to test the library.
 
-- **example.ipynb:** Colab notebook that shows how to use the different methods of textFlow.
+- **[example.ipynb](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/Example.ipynb):** Colab notebook that shows how to use the different methods of textFlow.
 
 # Metrics
 
