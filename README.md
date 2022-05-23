@@ -63,7 +63,7 @@ In this section, we introduce the different metrics offered in this Python libra
 
 - **Emotions:** Emotions score of a text
 
-# Requeriments
+# Dependencies
 
 - **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If do you want to use other package, you should implements the methods nlp, sents, pos_, lemma_ and text.
 
