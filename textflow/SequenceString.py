@@ -21,12 +21,13 @@ class SequenceString (Sequence):
         Initialize a Sequence from a string.
 
         Args:
-            srcString: source string of the sequence
-            labelSubSequence: the name of the children dictionary entry for the subsequence as string
-            formatSubSequence: the format of the subsequence in children dictionary entry as string
+            src: source string of the sequencesrc: the path of the directory
+            listLabel: a list with different labels to create new levels in the children dictionary
+            listClasses: a list with different classes that inicialize a sequence with sublevels
+            listTokenizer: a list with the tokenizer to inicialize the different subsequences
 
         Raises:
-            ValueError: If srcString isn't a string .
+            ValueError: If src isn't a string .
         '''
         self.inicializeSequence("string")
         if not isinstance(src, str):

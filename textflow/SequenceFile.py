@@ -22,9 +22,10 @@ class SequenceFile (Sequence):
         By default, create subsequences splitting the text of the file into words.
 
         Args:
-            srcString: source string of the sequence
-            labelSubSequence: the name of the children dictionary entry for the subsequence as string
-            formatSubSequence: the format of the subsequence in children dictionary entry as string
+            src: the path of the file
+            listLabel: a list with different labels to create new levels in the children dictionary
+            listClasses: a list with different classes that inicialize a sequence with sublevels
+            listTokenizer: a list with the tokenizer to inicialize the different subsequences
 
         '''
         self.inicializeSequence("file")
