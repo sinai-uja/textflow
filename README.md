@@ -46,7 +46,7 @@ This class provides methods to create a sequence from directories, documents, st
 
 # Metrics
 
-In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer in a dictionary.
+In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and store in the corresponding dictionary (metadata or children) of a sequence.
 
 
 - **Volumetry:** Here it calculates the number of words, number of unique words, number of characters and average word length for text.
