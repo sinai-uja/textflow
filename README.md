@@ -4,7 +4,7 @@ This class provides methods to create a sequence from directories, documents, st
 
 # Files
 
- - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md): ** A guide to make this project work on your local environment.
+ - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md):** A guide to make this project work on your local environment.
 
 ### ./textFlow
 
