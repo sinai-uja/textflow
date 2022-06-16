@@ -6,4 +6,4 @@ In order to make use of this library, install it as follows:
 
 2. Use this inside the project's folder: python -m pip install .
 
-This library has been tested in Python 3.8+
+This library has been tested in Python 3.7+
