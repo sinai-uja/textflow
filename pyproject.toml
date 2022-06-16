@@ -5,7 +5,7 @@ description = "A text analysis library for Python"
 authors = ["Jaime Collado <jcollado@ujaen.es>", "Estrella Vallecillo <mevr0003@red.ujaen.es>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.7"
 nltk = "^3.7"
 spacy = "^3.3.0"
 transformers = "^4.19.0"
