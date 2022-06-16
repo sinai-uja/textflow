@@ -52,7 +52,7 @@ class Sequence(ABC):
     """
 
     @abstractmethod
-    def inicializeSequence(self,format):
+    def initializeSequence(self,format):
         '''
         Initializes the attributes of a sequence.
 

@@ -28,7 +28,7 @@ class SequenceFile (Sequence):
             listTokenizer: a list with the tokenizer to inicialize the different subsequences
 
         '''
-        self.inicializeSequence("file")
+        self.initializeSequence("file")
         with open(src, "r") as f:
             txt = f.read()
         self.metadata["text"]= txt
@@ -40,14 +40,14 @@ class SequenceFile (Sequence):
         
 
 
-    def inicializeSequence(self, format):
+    def initializeSequence(self, format):
         '''
         Initializes the attributes of a sequence.
 
         Args:
             format: a string with the origin format of the sequence.
         '''
-        super().inicializeSequence(format)
+        super().initializeSequence(format)
 
     def __str__(self):
         '''

@@ -31,7 +31,7 @@ class SequenceDirectory(Sequence):
             listTokenizer: a list with the tokenizer to inicialize the different subsequences
 
         '''
-        self.inicializeSequence("directory")
+        self.initializeSequence("directory")
         self.metadata["nameFiles"] = []
         self.metadata["directoriesPath"] = []
         if not listTokenizer or listTokenizer == None:
@@ -55,14 +55,14 @@ class SequenceDirectory(Sequence):
 
         
 
-    def inicializeSequence(self, format):
+    def initializeSequence(self, format):
         '''
         Initializes the attributes of a sequence.
 
         Args:
             format: a string with the origin format of the sequence.
         '''
-        super().inicializeSequence(format)
+        super().initializeSequence(format)
 
     def __str__(self):
         '''

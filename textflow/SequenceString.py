@@ -29,7 +29,7 @@ class SequenceString (Sequence):
         Raises:
             ValueError: If src isn't a string .
         '''
-        self.inicializeSequence("string")
+        self.initializeSequence("string")
         if not isinstance(src, str):
             raise ValueError(f"{src} is not an instance of string")
         self.metadata["text"]= src
@@ -38,14 +38,14 @@ class SequenceString (Sequence):
                 listTokenizer = [WhitespaceTokenizer()]
             self.children[listLabel[0]] = [listClasses[0](token_src,listLabel[1:],listClasses[1:],listTokenizer[1:]) for token_src in listTokenizer[0].tokenize(src)]
 
-    def inicializeSequence(self, format):
+    def initializeSequence(self, format):
         '''
         Initializes the attributes of a sequence.
 
         Args:
             format: a string with the origin format of the sequence.
         '''
-        super().inicializeSequence(format)
+        super().initializeSequence(format)
 
     def __str__(self):
         '''

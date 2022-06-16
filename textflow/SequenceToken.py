@@ -26,10 +26,10 @@ class SequenceToken (Sequence):
             listTokenizer: a list with the tokenizer to inicialize the different subsequences
 
         '''
-        self.inicializeSequence("token")
+        self.initializeSequence("token")
         self.metadata["text"] = src
 
-    def inicializeSequence(self, format):
+    def initializeSequence(self, format):
         '''
         Initializes the attributes of a sequence.
 
