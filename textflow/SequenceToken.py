@@ -36,7 +36,7 @@ class SequenceToken (Sequence):
         Args:
             format: a string with the origin format of the sequence.
         '''
-        super().inicializeSequence(format)
+        super().initializeSequence(format)
 
     def __str__(self):
         '''

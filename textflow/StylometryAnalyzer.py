@@ -1,8 +1,6 @@
 import string
 from typing import Optional
 
-#import spacy
-#import spacy.cli
 from nltk.text import Text
 from nltk.tokenize import WhitespaceTokenizer
 import math

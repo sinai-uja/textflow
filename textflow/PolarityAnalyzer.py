@@ -1,7 +1,6 @@
 from typing import Optional
 from textflow.Analyzer import Analyzer
 from transformers import pipeline
-import torch
 
 class PolarityAnalyzer(Analyzer):
     """

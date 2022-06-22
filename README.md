@@ -36,6 +36,14 @@ This class provides methods to create a sequence from directories, documents, st
 
 - **[VolumetryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/VolumetryAnalyzer.py):** This module provides a class methods for the calculation of different volumetry metrics on a sequence. This class inherits from Analyzer.py
 
+- **[IronityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/IronityAnalyzer.py):** This module provides a class methods for the calculation of the ironity on a sequence. This class inherits from Analyzer.py
+
+- **[NERAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NERAnalyzer.py):** This module provides a class methods for the search of different NER on a sequence. This class inherits from Analyzer.py
+
+- **[NGramsAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides a class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
+
+- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
+
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
 ### ./examples
@@ -59,12 +67,22 @@ In this section, we introduce the different metrics offered in this Python libra
 
 - **Stylometry:** Number of different words, different lexical index (TTR,RTT, Herdan, Mass, Somers, Dugast, Honore), frequency of stopwords, frequency of punctuation marks, frequency of words.
 
-- **Polarity:** Polarity score of a text
+- **Polarity:** Polarity score of a text.
 
-- **Emotions:** Emotions score of a text
+- **Emotions:** Emotions score of a text.
+
+- **Emojis:** Number of emojis of the text, their frequence and the text with the words of the emojis instead of the emoji.
+
+- **NER:** the frequence of different entities, the entities grouped by each category and the text with entities instead of the words.
+
+- **N-Grams:** the different n-grams of the text and their frequence.
+
+- **Ironity:** Ironity score of a text.
 
 # Dependencies
 
-- **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If do you want to use other package, you should implements the methods nlp, sents, pos_, lemma_ and text.
+- **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer and NERAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If do you want to use other package, you should implements the methods nlp, sents, pos_, lemma_ and text.
 
-- **EmotionAnalyzer.py and PolarityAnalyzer.py:** These classes use models and pipelines of transformers, you can use different models to inference the emotion or the polarity of a text.
+- **IronityAnalizer.py, EmotionAnalyzer.py and PolarityAnalyzer.py:** These classes use models and pipelines of transformers, you can use different models to inference the emotion or the polarity of a text.
+
+- **EmojiAnalizer.py:** This class use emoji library.
