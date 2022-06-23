@@ -78,7 +78,6 @@ class NERAnalyzer(Analyzer):
                 textner.append(doc[i].ent_type_)
             else:
                 textner.append(doc[i].text)
-        print(textner)
         self.textNER = " ".join(textner) 
         for ent in doc.ents:
             #Guardamos el diccionario obtenido para la categoria de la palabra (si este existe)

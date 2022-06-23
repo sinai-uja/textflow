@@ -14,7 +14,7 @@ class IronityAnalyzer(Analyzer):
         maxEmbedding: The number of max_position_embedings in the config.json of the model selected.
     """
 
-    def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 512):
+    def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
         """
         Create an ironic analyzer.
 
@@ -28,8 +28,8 @@ class IronityAnalyzer(Analyzer):
             model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
             model.config.id2label = {0: 'NI', 1: 'I'}
             model.config.label2id = {'NI': 0, 'I': 1}
-            tokenizer = AutoTokenizer.from_pretrained(modelIronity, model_max_length=512)
-            self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores)
+            tokenizer = AutoTokenizer.from_pretrained(modelIronity)
+            self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
         else:
             self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
         self.maxEmbeding = maxEmbedding

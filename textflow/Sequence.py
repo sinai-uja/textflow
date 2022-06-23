@@ -199,10 +199,10 @@ class Sequence(ABC):
         ruta = level.split("/")
         children = [self.children]
         results=[]
-        for r in ruta:
+        for idx, r in enumerate(ruta):
             for child in children:
                 if r in child:
-                    if r == ruta[-1]:
+                    if r == ruta[-1] and idx == len(ruta)-1:
                         results.extend(child[r])
                     else:
                         children = [c.children for c in child[r]]
@@ -230,8 +230,8 @@ class Sequence(ABC):
         children = [self.children]
         metadata = [self.metadata]
         results=[]
-        for r in ruta:
-            if r == ruta[-1]:
+        for idx, r in enumerate(ruta):
+            if r == ruta[-1] and idx == len(ruta)-1:
                 for m in metadata:
                     if r in m:
                         results.append(m[r])
