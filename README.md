@@ -231,6 +231,7 @@ First, we have to call self.initializeSequence("format"), because this function 
 An example of a new stream initializer for a directory might look like this: 
         
 
+        
         def __init__(self,src,listLabel = ["directories","files","tokens"],listClasses=[SequenceFile,SequenceString],listTokenizer=[WhitespaceTokenizer()]):
             '''
             Initialize a Sequence from a directory path
@@ -277,11 +278,11 @@ An example of a new stream initializer for a directory might look like this:
 
 Create an analyzer is more easy than a sequence. The steps to create an analyzer are:
 
-1. **Create a class that inherits of Analyzer.py**
+- **Create a class that inherits of Analyzer.py**
 
-2. **Create the __init__ function of this class with the params to configurate this class**
+- **Create the __init__ function of this class with the params to configurate this class**
 
-3. **Create a function that analyze a list of thigs that we want to analyze. **
+- **Create a function that analyze a list of thigs that we want to analyze.**
 
 
     + For example, we want to create an analyzer of text, so we need a function that receives a list of texts and applies what it needs to each text. 
@@ -289,39 +290,40 @@ Create an analyzer is more easy than a sequence. The steps to create an analyzer
     + We can see an example of a ironityAnalyzer:
 
 
-        def ironity(self, arrayText):
-            """
-            Function that analyzes the ironity of a list of texts.
+        
+            def ironity(self, arrayText):
+                """
+                Function that analyzes the ironity of a list of texts.
+    
+                Args:
+                    arrayText: list that contains the texts that we want to analyze
+                Returns:
+                    A list with the dictionaries. Each dictionary contains the result
+                    of the analysis of the corresponding text.
+                """
+                arrayResults =[]
+                for text in arrayText:
+                    prediction = self.ironityClassifier(text[:self.maxEmbeding])
+                    arrayResults.append(prediction)
+                return arrayResults
 
-            Args:
-                arrayText: list that contains the texts that we want to analyze
-            Returns:
-                A list with the dictionaries. Each dictionary contains the result
-                of the analysis of the corresponding text.
-            """
-            arrayResults =[]
-            for text in arrayText:
-                prediction = self.ironityClassifier(text[:self.maxEmbeding])
-                arrayResults.append(prediction)
-            return arrayResults
 
+- **Create the analyze function:**
 
-4. **Create the analyze function: **
-
-    + Replace self.analyzeFunction with the analyzer function that we have implemented in point 3
+    + Replace self.analyzeFunction with the analyzer function that we have implemented.
     + The parameter "True" of the super().analyze is because this analyzer is a metadata analyzer. If do you want to create an analyzer of sequence, this parameter must be "False"
 
 
 
-        def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
-                """
-                Analyze a sequence with a ironic function.
-
-                Args:
-                    sequence: the Sequence we want to analyze.
-                    tag: the label to store the analysis result.
-                    levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
-                    levelOfResult: the path of the sequence level to store the result.
-                """
-                super().analyze(self.analyzeFunction,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+            def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
+                    """
+                    Analyze a sequence with a ironic function.
+    
+                    Args:
+                        sequence: the Sequence we want to analyze.
+                        tag: the label to store the analysis result.
+                        levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+                        levelOfResult: the path of the sequence level to store the result.
+                    """
+                    super().analyze(self.analyzeFunction,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
