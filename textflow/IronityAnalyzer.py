@@ -46,9 +46,9 @@ class IronityAnalyzer(Analyzer):
             levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
             levelOfResult: the path of the sequence level to store the result.
         """
-        super().analyze(self.polarity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+        super().analyze(self.ironity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
-    def polarity(self, arrayText):
+    def ironity(self, arrayText):
         """
         Function that analyzes the ironity of a list of texts.
 

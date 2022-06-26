@@ -235,6 +235,12 @@ class Sequence(ABC):
                 for m in metadata:
                     if r in m:
                         results.append(m[r])
+            elif idx == len(ruta)-2 and True in [r in c.keys() for c in metadata]:
+                aux=[]
+                metadata=[]
+                for c in metadata:
+                    aux.extend(c[r])
+                metadata.extend(aux)
             else:
                 for child in children:
                     if r in child:
