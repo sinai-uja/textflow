@@ -277,11 +277,11 @@ An example of a new stream initializer for a directory might look like this:
 
 Create an analyzer is more easy than a sequence. The steps to create an analyzer are:
 
-**1. Create a class that inherits of Analyzer.py**
+1. **Create a class that inherits of Analyzer.py**
 
-**2. Create the __init__ function of this class with the params to configurate this class**
+2. **Create the __init__ function of this class with the params to configurate this class**
 
-**3. Create a function that analyze a list of thigs that we want to analyze. **
+3. **Create a function that analyze a list of thigs that we want to analyze. **
 
 
     + For example, we want to create an analyzer of text, so we need a function that receives a list of texts and applies what it needs to each text. 
@@ -306,7 +306,7 @@ Create an analyzer is more easy than a sequence. The steps to create an analyzer
             return arrayResults
 
 
-**4. Create the analyze function: **
+4. **Create the analyze function: **
 
     + Replace self.analyzeFunction with the analyzer function that we have implemented in point 3
     + The parameter "True" of the super().analyze is because this analyzer is a metadata analyzer. If do you want to create an analyzer of sequence, this parameter must be "False"
