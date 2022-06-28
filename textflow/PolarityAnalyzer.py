@@ -18,10 +18,10 @@ class PolarityAnalyzer(Analyzer):
             task: the task defining which pipeline will be returned
             model: the model that will be used by the pipeline to make predictions
             allScores: True, if we want that the classifier returns all scores. False, in other case
-            maxEmbedding: The number of max_position_embedings in the config.json of the model selected.
+            maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
         """
         self.polarityClassifier = pipeline(task,model= modelPolarity, return_all_scores=allScores)
-        self.maxEmbeding = maxEmbedding
+        self.maxEmbedding = maxEmbedding
         
 
     
@@ -49,7 +49,7 @@ class PolarityAnalyzer(Analyzer):
         """
         arrayResults =[]
         for text in arrayText:
-            prediction = self.polarityClassifier(text[:self.maxEmbeding])
+            prediction = self.polarityClassifier(text[:self.maxEmbedding])
             #arrayResults.append(prediction[0][0])
             arrayResults.append(prediction)
         return arrayResults

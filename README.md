@@ -2,6 +2,28 @@
 
 This class provides methods to create a sequence from directories, documents, strings… To calculate different metrics from these sequences. It consists in a Python library for calculating different metrics from plain texts.
 
+# Introduction:
+
+In this library we have sequences and analyzers.
+
++ **Sequences:** are the main element of the library. A sequence have three main attributes:
+
+    + **Format:** the origin format of a sequence. This format can be a string, a file(.txt), a directory, a token....
+
+    + **Metadata:** This is a dictionary where we store the metadata of a sequence, like the source text of a sequence (if the origin of the sequence is a file of text), or the path of the directory (if the origin of the sequence is a directory). Different analyzers store the result of the analysis inside this dictionary, if the result of the analysis is metadata (the number of words, the label with the emotion of a text, the text source replacing words...).
+
+    + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequence of the key of the children dictionary. Each phrase can split in words too, that we will store in the children dictionary of the phrases sequences. So, inside of the original sequence(text) we have sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
+
+        + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
+            - Text
+                -Phrases
+                    -Words 
+
+        So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
+
++ **Analyzers:** the analyzers provides methods to analyze sequences and store the result in a sequence. These analyzers can analyze the metadata of a sequence or the children of a sequence. And can store the result in any of these dictionaries (metadata or children).
+
+
 # Files
 
  - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md):** A guide to make this project work on your local environment.
@@ -57,27 +79,95 @@ This class provides methods to create a sequence from directories, documents, st
 In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and store in the corresponding dictionary (metadata or children) of a sequence.
 
 
-- **Volumetry:** Here it calculates the number of words, number of unique words, number of characters and average word length for text.
+- **Volumetry:** Here it calculates different metrics that store in a dictionary:
 
-- **Lemmas:** Number of the lemmas that are uniques in the text, a list of lemma words and the average lemma length for text.
+    + **words:** The number of words in the text.
+    + **uniqueWords:** The number of uniqu words of the text.
+    + **chars:** The number of characters of the text.
+    + **avgWordsLen:** The average word length for text
 
-- **Part-of-speech (POS)**: a list with the POS of the text and the frequency of the different POS labels.
+- **Lemmas:** It calculates different metrics that store in a dictionary:
+    
+    + **srclemmas:** A list with the words of the text lemmatized.
+    + **uniqueLemmas:** The number of unique lemmas of the text.
+    + **avgLemmas:** The average lemma length for text.
 
-- **Complexity:** Number of sentences, complex sentences, punctuation marks, words, rare words,chars, syllabes, average sentence length, index of low frequency words, index of lexical distribution, lexical complexity, spaulding score, index of sentence complexity, auto readability, readability of Fernandez-Huerta, perspicuity of Flesh-Szigriszt , polaini compressibility, mu legibility, SOL readability,some indicators of age (min age, crawford) and different indicators of the embeddings depth.
+- **Part-of-speech (POS)**: It calculates different metrics that store in a dictionary: 
+    
+    + **srcPOS:** A list with the POS of the words of the text
+    + **FreqPOS:** The frequency of the different POS labels.
 
-- **Stylometry:** Number of different words, different lexical index (TTR,RTT, Herdan, Mass, Somers, Dugast, Honore), frequency of stopwords, frequency of punctuation marks, frequency of words.
+- **Complexity:**  index of low frequency words, lexical complexity, spaulding score, index of sentence complexity, some indicators of age (min age, crawford) and different indicators of the embeddings depth.
+
+    + **nSentences:** The number of sentences.
+    + **nComplexSentence:** The number of complex sentences.
+    + **avglenSentence:**  The average sentece length.
+    + **nPuntuationMarks:** The number of puntuation marks.
+    + **nWords:** The number of words.
+    + **nRareWords:** The number of rare words.
+    + **nSyllabes:** The number of syllabes.
+    + **nChar:** The number of characters.
+    + **ILFW:** The index of low frequency words.                   
+    + **LDI:** The index of lexical distribution.                     
+    + **LC:** The lexical complexity.
+    + **SSR:** The spaulding score.
+    + **SCI:** The index of sentence complexity
+    + **ARI:** The auto readability index.                    
+    + **huerta:** The readability of Fernandez-Huerta.   
+    + **IFSZ:** The perspicuity of Flesh-Szigriszt.     
+    + **polini:** The polaini compressibility. 
+    + **mu:** The mu legibility.       
+    + **minage:** A indicator of minimum age.          
+    + **SOL:** The SOL readability         
+    + **crawford:** A indicator of crawford's age 
+    + **min_depth:** minimum of maximum tree depths
+    + **max_depth:** maximum of maximum tree depths
+    + **mean_depth:** mean of maximum tree depths 
+
+- **Stylometry:** It calculates different metrics that store in a dictionary:
+    + **uniqueWords:** The number of different words. 
+    + **TTR:** The lexical index TTR
+    + **RTTR:** The lexical index RTTR
+    + **Herdan:** The lexical index Herdan
+    + **Mass:** The lexical index Mass
+    + **Somers:** The lexical index Somers
+    + **Dugast:** The lexical index Dugast
+    + **Honore:** The lexical index Honore
+    + **FreqStopWords:** The frequency of stopwords
+    + **FreqPuntuationMarks:** The frequency of punctuation marks
+    + **FreqWords:** The frequency of words
 
 - **Polarity:** Polarity score of a text.
 
+    + **label:** the label that predict the polarity model.
+    + **score:** the score to assing the label to the text.
+
 - **Emotions:** Emotions score of a text.
 
-- **Emojis:** Number of emojis of the text, their frequence and the text with the words of the emojis instead of the emoji.
+    + **label:** the label that predict the polarity model.
+    + **score:** the score to assing the label to the text.
 
-- **NER:** the frequence of different entities, the entities grouped by each category and the text with entities instead of the words.
+- **Emojis:** It calculates different metrics that store in a dictionary:
 
-- **N-Grams:** the different n-grams of the text and their frequence.
+    + **TextWithoutEmoji:** A string with the words of emojis instead of the emoji.
+    + **FreqEmoji:** The frequence of emojis
+    + **NumEmojis:** The number of emojis.
+
+- **NER:** It calculates different metrics that store in a dictionary:
+
+    + **srcNER:** The text with entities instead of the words
+    + **entidades:** The entities grouped by each category
+    + **freqEntidades:** The frequence of different entities. 
+
+- **N-Grams:** It calculates different metrics that store in a dictionary:
+
+    + **n-grams:** The different n-grams of the text
+    + **freqN-Grams:** The frequence of different n-grams
 
 - **Ironity:** Ironity score of a text.
+    
+    + **label:** the label that predict the polarity model.
+    + **score:** the score to assing the label to the text.
 
 # Dependencies
 
@@ -89,149 +179,168 @@ In this section, we introduce the different metrics offered in this Python libra
 
 # How to create a Sequence?
 
+If you want to create a class to initialize a sequence and there is no class for it, you can create your own. 
 
-If you want to create a class to initialize a sequence from a file and there is no class for it, you can create your own. We must create a class that inherits from Sequence.py and then create the following functions:
+- **We must create a class that inherits from Sequence.py**
+
+- **Inside of this class, we have to create the following functions, because these functions implement the basic functionality of a Sequence**. The basic functionality is like iterate in the sequence, filter in subsequences(children), print the sequence...:
+
+
+                def initializeSequence(self, format):
+                    '''
+                    Initializes the attributes of a sequence.
+
+                    Args:
+                        format: a string with the origin format of the sequence.
+                    '''
+                    super().initializeSequence(format)
+
+                def __str__(self):
+                    '''
+                    Convert a Sequence to a string
+                    
+                    Returns:
+                    A string that contains the text of a Sequence  
+                    '''
+                    return super().__str__()
+
+                def __repr__(self):
+                    '''
+                    Convert a Sequence to a string
+                    
+                    Returns:
+                    A string with the formal representation of a Sequence  
+                    '''
+                    return super().__repr__()
+
+                def __len__(self):
+                    '''
+                    Calculate the length of a Sequence.
+                    The length of a Sequence is the length of the children.
+
+                    Returns:
+                        A number with the length of the Sequence
+                    '''
+                    return super().__len__()
+
+                def __iter__(self):
+                    '''
+                    Iterate in a Sequence
+                    To do this, we iterates througth the children dictionary 
+                    Returns:
+                        A Sequence Iterator  
+                    '''
+                    return super().__iter__()
+
+                def __getitem__(self, idx):
+                    '''
+                    Get the value of a key from the dictionary of children 
+
+                    Args:
+                        idx: a string that represent the key of the children dictionary
+                            or an integer that represent the position of the key in children dictionary keys
+
+                    Returns:
+                        A List of Sequences 
+                    '''
+                    return super().__getitem__(idx)
+
+                def __eq__(self, other):
+                    '''
+                    Check if a sequence it is the same that the current one.
+
+                    Args:
+                        other: a sequence to check if it is the same that the current one.
+                    Returns:
+                        True if the sequences are equals.
+                        False in others cases.
+                    '''
+                    return super().__eq__(other)
+
+                def depth(self,dictionaryList: Optional[list] = None):
+                    '''
+                    Calculate the maximum depth of a Sequence
+
+                    Args:
+                        diccionaryList: the inicial list to calculate the depth.
+
+                    Returns:
+                        A tuple that contains a number (the depth of a Sequence) and a list (the route of the max depth) 
+                    '''
+                    return super().depth(dictionaryList)
+
+                def filter(self, level, criteria):
+                    '''
+                    Filter the children of a Sequence according to a criteria
+
+                    Args:
+                        level: the route of the level as string, separating each level with "/" 
+                        criteria: the filter function
+
+                    Returns:
+                        A generator with the result of the filter
+                    '''
+                    return super().filter(level,criteria)
+
+                def filterMetadata(self, level, criteria):
+                    '''
+                    Filter the children of a Sequence according to a criteria
+
+                    Args:
+                        level: the route of the level as string, separating each level with "/" 
+                        criteria: the filter function
+
+                    Returns:
+                        A generator with the result of the filter
+                    '''
+                    return super().filterMetadata(level,criteria)
+
+- **Now, we have to create the __init__ function in the class:**
+
+    def __init__(self):
+        pass
+
+    - **First of all, we have to call self.initializeSequence("format"), this function initialize the metadata, and children dictionary of a Sequence and put the format of a sequence.**
+
+        We are going to see, how to initialize a sequence from a directory.
+
+        def __init__(self):
+                
+                # Initializes the attributes of a sequence.
+                self.initializeSequence("directory") 
+
+    - **Then, we have to think about the metadata that we will have and how the children sequences are going to be built in that initializer.** 
+
+        In the example we have like metadata the name of the files of the directory and the path of the diferent subdirectories.
         
-- **initializeSequence**:
-
-        def initializeSequence(self, format):
+        def __init__(self,src):
             '''
-            Initializes the attributes of a sequence.
+            Initialize a Sequence from a directory path
+
+            By default, create subsequences for any directories and files in the source directory 
+            and for each file, create subsequence, splitting the text of the file into words.
 
             Args:
-                format: a string with the origin format of the sequence.
+                src: the path of the directory
             '''
-            super().initializeSequence(format)
+            # Initializes the attributes of a sequence.
+            self.initializeSequence("directory") 
 
-- **__str__**:
+            # Create the metadata and children of a Sequence
+            self.metadata["nameFiles"] = []
+            self.metadata["directoriesPath"] = []
+            contenido = os.listdir(src)
+            for file in contenido:
+                if os.path.isfile(src+"/"+file):
+                    self.metadata["nameFiles"].append(file)
+                
+                else:
+                    self.metadata["directoriesPath"].append(src+"/"+file)
 
-        def __str__(self):
-            '''
-            Convert a Sequence to a string
-            
-            Returns:
-            A string that contains the text of a Sequence  
-            '''
-            return super().__str__()
-    
-- **__repr__**:
+    - **Finally,we can create the sequences down to the lowest level by calling other sequence initializers and what labels they will have in the children dictionary.** 
 
-        def __repr__(self):
-            '''
-            Convert a Sequence to a string
-            
-            Returns:
-            A string with the formal representation of a Sequence  
-            '''
-            return super().__repr__()
+        Here, we can see how we add new parameters to create more sublevels in the original sequence.
 
-- **__len__**:
-
-        def __len__(self):
-            '''
-            Calculate the length of a Sequence.
-            The length of a Sequence is the length of the children.
-
-            Returns:
-                A number with the length of the Sequence
-            '''
-            return super().__len__()
-
-- **__iter__**:
-
-        def __iter__(self):
-            '''
-            Iterate in a Sequence
-            To do this, we iterates througth the children dictionary 
-            Returns:
-                A Sequence Iterator  
-            '''
-            return super().__iter__()
-
-- **__getitem__**:
-
-        def __getitem__(self, idx):
-            '''
-            Get the value of a key from the dictionary of children 
-
-            Args:
-                idx: a string that represent the key of the children dictionary
-                    or an integer that represent the position of the key in children dictionary keys
-
-            Returns:
-                A List of Sequences 
-            '''
-            return super().__getitem__(idx)
-
-- **__eq__**:
-
-        def __eq__(self, other):
-            '''
-            Check if a sequence it is the same that the current one.
-
-            Args:
-                other: a sequence to check if it is the same that the current one.
-            Returns:
-                True if the sequences are equals.
-                False in others cases.
-            '''
-            return super().__eq__(other)
-
-- **depth**:
-
-        def depth(self,dictionaryList: Optional[list] = None):
-            '''
-            Calculate the maximum depth of a Sequence
-
-            Args:
-                diccionaryList: the inicial list to calculate the depth.
-
-            Returns:
-                A tuple that contains a number (the depth of a Sequence) and a list (the route of the max depth) 
-            '''
-            return super().depth(dictionaryList)
-
-- **filter**:
-
-        def filter(self, level, criteria):
-            '''
-            Filter the children of a Sequence according to a criteria
-
-            Args:
-                level: the route of the level as string, separating each level with "/" 
-                criteria: the filter function
-
-            Returns:
-                A generator with the result of the filter
-            '''
-            return super().filter(level,criteria)
-
-- **filterMetadata**:
-
-        def filterMetadata(self, level, criteria):
-            '''
-            Filter the children of a Sequence according to a criteria
-
-            Args:
-                level: the route of the level as string, separating each level with "/" 
-                criteria: the filter function
-
-            Returns:
-                A generator with the result of the filter
-            '''
-            return super().filterMetadata(level,criteria)
-
-All of these functions are necesary for a sequence to function correctly, but the most important function isn't implemented. 
-Let's see how to implement it.
-
-- **__init__**:
-
-First, we have to call self.initializeSequence("format"), because this function initialize the metadata, and children dictionary of a Sequence and put the format of a sequence. Then, we have to think about the metadata that we will have and how the children sequences are going to be built in that initializer. Finally,we can create the sequences down to the lowest level by calling other sequence initializers and what labels they will have in the children dictionary. 
-
-An example of a new stream initializer for a directory might look like this: 
-        
-
-        
         def __init__(self,src,listLabel = ["directories","files","tokens"],listClasses=[SequenceFile,SequenceString],listTokenizer=[WhitespaceTokenizer()]):
             '''
             Initialize a Sequence from a directory path
@@ -273,21 +382,206 @@ An example of a new stream initializer for a directory might look like this:
                     else:
                         self.children[listLabel[0]] = [SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer)]
 
+- **The result of the new Initializer of a Sequence from directory is look like:**
+
+        class SequenceDirectory(Sequence):
+            """
+            A class that provides methods to create a sequence from a directory
+
+            Attributes:
+                format: a string with the origin format of a sequence.
+                metadata: a dictionary with the metadata of a sequence.
+                children: a dictionary with the subsequence of a sequence.
+            """
+
+
+            def __init__(self,src,listLabel = ["directories","files","tokens"],listClasses=[SequenceFile,SequenceString],listTokenizer=[WhitespaceTokenizer()]):
+                '''
+                Initialize a Sequence from a directory path
+
+                By default, create subsequences for any directories and files in the source directory 
+                and for each file, create subsequence, splitting the text of the file into words.
+
+                Args:
+                    src: the path of the directory
+                    listLabel: a list with different labels to create new levels in the children dictionary
+                    listClasses: a list with different classes that inicialize a sequence with sublevels
+                    listTokenizer: a list with the tokenizer to inicialize the different subsequences
+
+                '''
+                self.initializeSequence("directory")
+                self.metadata["nameFiles"] = []
+                self.metadata["directoriesPath"] = []
+                if not listTokenizer or listTokenizer == None:
+                        listTokenizer = [WhitespaceTokenizer()]
+                contenido = os.listdir(src)
+                for file in contenido:
+                    if os.path.isfile(src+"/"+file):
+                        self.metadata["nameFiles"].append(file)
+                        if listLabel and listClasses:
+                            if listLabel[1] in self.children:
+                                self.children[listLabel[1]].append(listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:]))
+                            else:
+                                self.children[listLabel[1]] = [listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:])]
+                    
+                    else:
+                        self.metadata["directoriesPath"].append(src+"/"+file)
+                        if listLabel[0] in self.children:
+                            self.children[listLabel[0]].append(SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer ))
+                        else:
+                            self.children[listLabel[0]] = [SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer)]
+
+                
+
+            def initializeSequence(self, format):
+                '''
+                Initializes the attributes of a sequence.
+
+                Args:
+                    format: a string with the origin format of the sequence.
+                '''
+                super().initializeSequence(format)
+
+            def __str__(self):
+                '''
+                Convert a Sequence to a string
+                
+                Returns:
+                A string that contains the text of a Sequence  
+                '''
+                return super().__str__()
+            
+
+            def __repr__(self):
+                '''
+                Convert a Sequence to a string
+                
+                Returns:
+                A string with the formal representation of a Sequence  
+                '''
+                return super().__repr__()
+
+            def __len__(self):
+                '''
+                Calculate the length of a Sequence.
+                The length of a Sequence is the length of the children.
+
+                Returns:
+                    A number with the length of the Sequence
+                '''
+                return super().__len__()
+
+            def __iter__(self):
+                '''
+                Iterate in a Sequence
+                To do this, we iterates througth the children dictionary 
+                Returns:
+                    A Sequence Iterator  
+                '''
+                return super().__iter__()
+            
+            def __getitem__(self, idx):
+                '''
+                Get the value of a key from the dictionary of children 
+
+                Args:
+                    idx: a string that represent the key of the children dictionary
+                        or an integer that represent the position of the key in children dictionary keys
+
+                Returns:
+                    A List of Sequences 
+                '''
+                return super().__getitem__(idx)
+
+            def __eq__(self, other):
+                '''
+                Check if a sequence it is the same that the current one.
+
+                Args:
+                    other: a sequence to check if it is the same that the current one.
+                Returns:
+                    True if the sequences are equals.
+                    False in others cases.
+                '''
+                return super().__eq__(other)
+
+            def depth(self,dictionaryList: Optional[list] = None):
+                '''
+                Calculate the maximum depth of a Sequence
+
+                Args:
+                    diccionaryList: the inicial list to calculate the depth.
+
+                Returns:
+                    A tuple that contains a number (the depth of a Sequence) and a list (the route of the max depth) 
+                '''
+                return super().depth(dictionaryList)
+            
+            def filter(self, level, criteria):
+                '''
+                Filter the children of a Sequence according to a criteria
+
+                Args:
+                    level: the route of the level as string, separating each level with "/" 
+                    criteria: the filter function
+
+                Returns:
+                    A generator with the result of the filter
+                '''
+                return super().filter(level,criteria)
+            
+            def filterMetadata(self, level, criteria):
+                '''
+                Filter the children of a Sequence according to a criteria
+
+                Args:
+                    level: the route of the level as string, separating each level with "/" 
+                    criteria: the filter function
+
+                Returns:
+                    A generator with the result of the filter
+                '''
+                return super().filterMetadata(level,criteria)
 
 # How to create an Analyzer?
 
-Create an analyzer is more easy than a sequence. The steps to create an analyzer are:
+The steps to create an analyzer are:
 
 - **Create a class that inherits of Analyzer.py**
 
 - **Create the __init__ function of this class with the params to configurate this class**
 
-- **Create a function that analyze a list of thigs that we want to analyze.**
+    + For example, if we want to do a ironity analyzer, we use a pipeline that need a task, a model, a maximum of Embedding and if return all the scores of only the label with the maximum score of the text. The analyzer must be as flexible as possible, so all of the parameters that need the pipeline are passed like params at the init function.
+
+        + Look that inside the __init__ function we modified the labels of the model, this is because the model by defect dont have the labels clearly defined. (NI = Non-Ironic and I = Ironic)   
 
 
-    + For example, we want to create an analyzer of text, so we need a function that receives a list of texts and applies what it needs to each text. 
+            def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
+            """
+            Create an ironic analyzer.
 
-    + We can see an example of a ironityAnalyzer:
+            Args:
+                task: the task defining which pipeline will be returned.
+                model: the model that will be used by the pipeline to make predictions.
+                allScores: True, if we want that the classifier returns all scores. False, in other case.
+                maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
+            """
+            if modelIronity == 'dtomas/roberta-base-bne-irony':
+                model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
+                model.config.id2label = {0: 'NI', 1: 'I'}
+                model.config.label2id = {'NI': 0, 'I': 1}
+                tokenizer = AutoTokenizer.from_pretrained(modelIronity)
+                self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
+            else:
+                self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
+            self.maxEmbedding = maxEmbedding
+
+- **Create a function that analyze a list of things that we want to analyze and return a list with the result of each text.**
+
+
+    + For example, we want to create an analyzer of text, so we need a function that receives a list of texts and applies what it needs to each text. This function have to return a list with the result of the analisys.
+
+    + We can see an example of a ironity function, that receives a list of text, for each text apply the ironity classifier and put the result in a list. This list is returned by the function:
 
 
         
@@ -303,15 +597,15 @@ Create an analyzer is more easy than a sequence. The steps to create an analyzer
                 """
                 arrayResults =[]
                 for text in arrayText:
-                    prediction = self.ironityClassifier(text[:self.maxEmbeding])
+                    prediction = self.ironityClassifier(text[:self.maxEmbedding])
                     arrayResults.append(prediction)
                 return arrayResults
 
 
-- **Create the analyze function:**
+- **Create the analyze function (inherit function of Analyzer.py):**
 
-    + Replace self.analyzeFunction with the analyzer function that we have implemented.
-    + The parameter "True" of the super().analyze is because this analyzer is a metadata analyzer. If do you want to create an analyzer of sequence, this parameter must be "False"
+    + Replace self.analyzeFunction with the analyzer function that we have implemented in the last point.
+    + The parameter "True" of the super().analyze is because this analyzer is a metadata analyzer. If do you want to create an analyzer of sequence, this parameter must be "False".
 
 
 
@@ -326,4 +620,84 @@ Create an analyzer is more easy than a sequence. The steps to create an analyzer
                         levelOfResult: the path of the sequence level to store the result.
                     """
                     super().analyze(self.analyzeFunction,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+
+        In our example this function looks like:
+
+
+            def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
+                    """
+                    Analyze a sequence with a ironic function.
+    
+                    Args:
+                        sequence: the Sequence we want to analyze.
+                        tag: the label to store the analysis result.
+                        levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+                        levelOfResult: the path of the sequence level to store the result.
+                    """
+                    super().analyze(self.ironity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+
+- **The result of the new analyzer is:**
+
+
+    class IronityAnalyzer(Analyzer):
+    """
+    A class that provides methods to analyze the ironity of the text of a sequence.
+
+    Attributes:
+       ironityClassifier: a pipeline that uses a model for inference the ironity of the text of a sequence. 
+                          By default, the label 'NI' is non-ironic and 'I' ironic.
+        maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
+    """
+
+    def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
+        """
+        Create an ironic analyzer.
+
+        Args:
+            task: the task defining which pipeline will be returned.
+            model: the model that will be used by the pipeline to make predictions.
+            allScores: True, if we want that the classifier returns all scores. False, in other case.
+            maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
+        """
+        if modelIronity == 'dtomas/roberta-base-bne-irony':
+            model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
+            model.config.id2label = {0: 'NI', 1: 'I'}
+            model.config.label2id = {'NI': 0, 'I': 1}
+            tokenizer = AutoTokenizer.from_pretrained(modelIronity)
+            self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
+        else:
+            self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
+        self.maxEmbedding = maxEmbedding
+        
+
+    
+    def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
+        """
+        Analyze a sequence with a ironic function.
+
+        Args:
+            sequence: the Sequence we want to analyze.
+            tag: the label to store the analysis result.
+            levelOfAnalyzer: the path of the sequence level to analyze inside of the result.
+            levelOfResult: the path of the sequence level to store the result.
+        """
+        super().analyze(self.ironity,sequence, tag, levelOfAnalyzer, levelOfResult, True)
+
+    def ironity(self, arrayText):
+        """
+        Function that analyzes the ironity of a list of texts.
+
+        Args:
+            arrayText: list that contains the texts that we want to analyze
+        Returns:
+            A list with the dictionaries. Each dictionary contains the result
+            of the analysis of the corresponding text.
+        """
+        arrayResults =[]
+        for text in arrayText:
+            prediction = self.ironityClassifier(text[:self.maxEmbedding])
+            arrayResults.append(prediction)
+        return arrayResults
+
+
 

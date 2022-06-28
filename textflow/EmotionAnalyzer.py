@@ -21,7 +21,7 @@ class EmotionAnalyzer(Analyzer):
             task: the task defining which pipeline will be returned.
             model: the model that will be used by the pipeline to make predictions.
             allScores: True, if we want that the classifier returns all scores. False, in other case.
-            maxEmbedding: The number of max_position_embedings in the config.json of the model selected.
+            maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
         """
         self.emotionsClassifier = pipeline(task,model=modelEmotions, return_all_scores=allScores)
         self.maxEmbedding = maxEmbedding

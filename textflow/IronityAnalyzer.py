@@ -11,7 +11,7 @@ class IronityAnalyzer(Analyzer):
     Attributes:
        ironityClassifier: a pipeline that uses a model for inference the ironity of the text of a sequence. 
                           By default, the label 'NI' is non-ironic and 'I' ironic.
-        maxEmbedding: The number of max_position_embedings in the config.json of the model selected.
+        maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
     """
 
     def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
@@ -22,7 +22,7 @@ class IronityAnalyzer(Analyzer):
             task: the task defining which pipeline will be returned.
             model: the model that will be used by the pipeline to make predictions.
             allScores: True, if we want that the classifier returns all scores. False, in other case.
-            maxEmbedding: The number of max_position_embedings in the config.json of the model selected.
+            maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
         """
         if modelIronity == 'dtomas/roberta-base-bne-irony':
             model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
@@ -32,7 +32,7 @@ class IronityAnalyzer(Analyzer):
             self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
         else:
             self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
-        self.maxEmbeding = maxEmbedding
+        self.maxEmbedding = maxEmbedding
         
 
     
@@ -60,7 +60,7 @@ class IronityAnalyzer(Analyzer):
         """
         arrayResults =[]
         for text in arrayText:
-            prediction = self.ironityClassifier(text[:self.maxEmbeding])
+            prediction = self.ironityClassifier(text[:self.maxEmbedding])
             arrayResults.append(prediction)
         return arrayResults
 
