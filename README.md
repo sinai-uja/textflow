@@ -16,8 +16,8 @@ In this library we have sequences and analyzers.
 
         + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
             - Text
-                -Phrases
-                    -Words 
+                - Phrases
+                    - Words 
 
         So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
@@ -297,90 +297,90 @@ If you want to create a class to initialize a sequence and there is no class for
 
 - **Now, we have to create the __init__ function in the class:**
 
-    def __init__(self):
-        pass
+        def __init__(self):
+            pass
 
     - **First of all, we have to call self.initializeSequence("format"), this function initialize the metadata, and children dictionary of a Sequence and put the format of a sequence.**
 
         We are going to see, how to initialize a sequence from a directory.
 
-        def __init__(self):
-                
-                # Initializes the attributes of a sequence.
-                self.initializeSequence("directory") 
+            def __init__(self):
+                    
+                    # Initializes the attributes of a sequence.
+                    self.initializeSequence("directory") 
 
     - **Then, we have to think about the metadata that we will have and how the children sequences are going to be built in that initializer.** 
 
         In the example we have like metadata the name of the files of the directory and the path of the diferent subdirectories.
         
-        def __init__(self,src):
-            '''
-            Initialize a Sequence from a directory path
-
-            By default, create subsequences for any directories and files in the source directory 
-            and for each file, create subsequence, splitting the text of the file into words.
-
-            Args:
-                src: the path of the directory
-            '''
-            # Initializes the attributes of a sequence.
-            self.initializeSequence("directory") 
-
-            # Create the metadata and children of a Sequence
-            self.metadata["nameFiles"] = []
-            self.metadata["directoriesPath"] = []
-            contenido = os.listdir(src)
-            for file in contenido:
-                if os.path.isfile(src+"/"+file):
-                    self.metadata["nameFiles"].append(file)
-                
-                else:
-                    self.metadata["directoriesPath"].append(src+"/"+file)
+            def __init__(self,src):
+                '''
+                Initialize a Sequence from a directory path
+    
+                By default, create subsequences for any directories and files in the source directory 
+                and for each file, create subsequence, splitting the text of the file into words.
+    
+                Args:
+                    src: the path of the directory
+                '''
+                # Initializes the attributes of a sequence.
+                self.initializeSequence("directory") 
+    
+                # Create the metadata and children of a Sequence
+                self.metadata["nameFiles"] = []
+                self.metadata["directoriesPath"] = []
+                contenido = os.listdir(src)
+                for file in contenido:
+                    if os.path.isfile(src+"/"+file):
+                        self.metadata["nameFiles"].append(file)
+                    
+                    else:
+                        self.metadata["directoriesPath"].append(src+"/"+file)
 
     - **Finally,we can create the sequences down to the lowest level by calling other sequence initializers and what labels they will have in the children dictionary.** 
 
         Here, we can see how we add new parameters to create more sublevels in the original sequence.
 
-        def __init__(self,src,listLabel = ["directories","files","tokens"],listClasses=[SequenceFile,SequenceString],listTokenizer=[WhitespaceTokenizer()]):
-            '''
-            Initialize a Sequence from a directory path
-
-            By default, create subsequences for any directories and files in the source directory 
-            and for each file, create subsequence, splitting the text of the file into words.
-
-            Args:
-                src: the path of the directory
-                listLabel: a list with different labels to create new levels in the children dictionary
-                listClasses: a list with different classes that inicialize a sequence with sublevels
-                listTokenizer: a list with the tokenizer to inicialize the different subsequences
-
-            '''
-            # Initializes the attributes of a sequence.
-            self.initializeSequence("directory") 
-
-            # Create the metadata and children of a Sequence
-            self.metadata["nameFiles"] = []
-            self.metadata["directoriesPath"] = []
-            if not listTokenizer or listTokenizer == None:
-                    listTokenizer = [WhitespaceTokenizer()]
-            contenido = os.listdir(src)
-            for file in contenido:
-                if os.path.isfile(src+"/"+file):
-                    self.metadata["nameFiles"].append(file)
-                    if listLabel and listClasses:
-                        if listLabel[1] in self.children:
-                        #Create a sublevel of sequence
-                            self.children[listLabel[1]].append(listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:])) 
-                        else:
-                        #Create a sublevel of sequence
-                            self.children[listLabel[1]] = [listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:])]
-                
-                else:
-                    self.metadata["directoriesPath"].append(src+"/"+file)
-                    if listLabel[0] in self.children:
-                        self.children[listLabel[0]].append(SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer ))
+            def __init__(self,src,listLabel = ["directories","files","tokens"],listClasses=[SequenceFile,SequenceString],listTokenizer=[WhitespaceTokenizer()]):
+                '''
+                Initialize a Sequence from a directory path
+    
+                By default, create subsequences for any directories and files in the source directory 
+                and for each file, create subsequence, splitting the text of the file into words.
+    
+                Args:
+                    src: the path of the directory
+                    listLabel: a list with different labels to create new levels in the children dictionary
+                    listClasses: a list with different classes that inicialize a sequence with sublevels
+                    listTokenizer: a list with the tokenizer to inicialize the different subsequences
+    
+                '''
+                # Initializes the attributes of a sequence.
+                self.initializeSequence("directory") 
+    
+                # Create the metadata and children of a Sequence
+                self.metadata["nameFiles"] = []
+                self.metadata["directoriesPath"] = []
+                if not listTokenizer or listTokenizer == None:
+                        listTokenizer = [WhitespaceTokenizer()]
+                contenido = os.listdir(src)
+                for file in contenido:
+                    if os.path.isfile(src+"/"+file):
+                        self.metadata["nameFiles"].append(file)
+                        if listLabel and listClasses:
+                            if listLabel[1] in self.children:
+                            #Create a sublevel of sequence
+                                self.children[listLabel[1]].append(listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:])) 
+                            else:
+                            #Create a sublevel of sequence
+                                self.children[listLabel[1]] = [listClasses[0](src+"/"+file,listLabel[1:],listClasses[1:],listTokenizer[1:])]
+                    
                     else:
-                        self.children[listLabel[0]] = [SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer)]
+                        self.metadata["directoriesPath"].append(src+"/"+file)
+                        if listLabel[0] in self.children:
+                            self.children[listLabel[0]].append(SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer ))
+                        else:
+                            self.children[listLabel[0]] = [SequenceDirectory(src+"/"+file,listLabel,listClasses,listTokenizer)]
 
 - **The result of the new Initializer of a Sequence from directory is look like:**
 
@@ -553,28 +553,31 @@ The steps to create an analyzer are:
 
     + For example, if we want to do a ironity analyzer, we use a pipeline that need a task, a model, a maximum of Embedding and if return all the scores of only the label with the maximum score of the text. The analyzer must be as flexible as possible, so all of the parameters that need the pipeline are passed like params at the init function.
 
-        + Look that inside the __init__ function we modified the labels of the model, this is because the model by defect dont have the labels clearly defined. (NI = Non-Ironic and I = Ironic)   
+        + Look that inside the init function we modified the labels of the model, this is because the model by defect dont have the labels clearly defined. (NI = Non-Ironic and I = Ironic)   
 
 
-            def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
-            """
-            Create an ironic analyzer.
 
-            Args:
-                task: the task defining which pipeline will be returned.
-                model: the model that will be used by the pipeline to make predictions.
-                allScores: True, if we want that the classifier returns all scores. False, in other case.
-                maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
-            """
-            if modelIronity == 'dtomas/roberta-base-bne-irony':
-                model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
-                model.config.id2label = {0: 'NI', 1: 'I'}
-                model.config.label2id = {'NI': 0, 'I': 1}
-                tokenizer = AutoTokenizer.from_pretrained(modelIronity)
-                self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
-            else:
-                self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
-            self.maxEmbedding = maxEmbedding
+                def __init__(self, task = "text-classification",modelIronity = 'dtomas/roberta-base-bne-irony', allScores = True, maxEmbedding = 514):
+                
+                """
+                Create an ironic analyzer.
+    
+                Args:
+                    task: the task defining which pipeline will be returned.
+                    model: the model that will be used by the pipeline to make predictions.
+                    allScores: True, if we want that the classifier returns all scores. False, in other case.
+                    maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
+                """
+                
+                if modelIronity == 'dtomas/roberta-base-bne-irony':
+                    model = AutoModelForSequenceClassification.from_pretrained(modelIronity)
+                    model.config.id2label = {0: 'NI', 1: 'I'}
+                    model.config.label2id = {'NI': 0, 'I': 1}
+                    tokenizer = AutoTokenizer.from_pretrained(modelIronity)
+                    self.ironityClassifier = pipeline(task,model= model, tokenizer=tokenizer,return_all_scores=allScores, truncation=True)
+                else:
+                    self.ironityClassifier = pipeline(task,model= modelIronity, return_all_scores=allScores)
+                self.maxEmbedding = maxEmbedding
 
 - **Create a function that analyze a list of things that we want to analyze and return a list with the result of each text.**
 
