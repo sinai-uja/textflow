@@ -14,10 +14,17 @@ In this library we have sequences and analyzers.
 
     + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequence of the key of the children dictionary. Each phrase can split in words too, that we will store in the children dictionary of the phrases sequences. So, inside of the original sequence(text) we have sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
 
-        + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
-            - Text
-                - Phrases
-                    - Words 
+        <ul> 
+            <li> The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
+            <ul>
+                <li> Text
+                <ul> 
+                    <li> Phrases
+                        <ul> 
+                            <li> Words 
+                        </ul>
+                </ul>
+            </ul>
 
         So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
