@@ -8,18 +8,16 @@ In this library we have sequences and analyzers.
 
 + **Sequences:** are the main element of the library. A sequence have three main attributes:
 
-    + **Format:** the origin format of a sequence. This format can be a string, a file(.txt), a directory, a token....
-
+    + **Format:** is a string with the origin format of a sequence. This format can be a string, a file(.txt), a directory, a token, etc.
     + **Metadata:** This is a dictionary where we store the metadata of a sequence, like the source text of a sequence (if the origin of the sequence is a file of text), or the path of the directory (if the origin of the sequence is a directory). Different analyzers store the result of the analysis inside this dictionary, if the result of the analysis is metadata (the number of words, the label with the emotion of a text, the text source replacing words...).
-
     + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequence of the key of the children dictionary. Each phrase can split in words too, that we will store in the children dictionary of the phrases sequences. So, inside of the original sequence(text) we have sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
+    
+        + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
+        + Text
+            + Phrases
+                + Words
 
-      + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
-        - Text
-          - Phrases
-            - Words
-
-        So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
+        + So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
 + **Analyzers:** the analyzers provides methods to analyze sequences and store the result in a sequence. These analyzers can analyze the metadata of a sequence or the children of a sequence. And can store the result in any of these dictionaries (metadata or children).
 
@@ -79,25 +77,25 @@ In this library we have sequences and analyzers.
 In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and store in the corresponding dictionary (metadata or children) of a sequence.
 
 
-- **Volumetry:** Here it calculates different metrics that store in a dictionary:
+- **Volumetry:** Here it calculates different metrics that store in a metadata dictionary:
 
     + **words:** The number of words in the text.
     + **uniqueWords:** The number of uniqu words of the text.
     + **chars:** The number of characters of the text.
     + **avgWordsLen:** The average word length for text
 
-- **Lemmas:** It calculates different metrics that store in a dictionary:
+- **Lemmas:** It calculates different metrics that store in a metadata dictionary:
     
     + **srclemmas:** A list with the words of the text lemmatized.
     + **uniqueLemmas:** The number of unique lemmas of the text.
     + **avgLemmas:** The average lemma length for text.
 
-- **Part-of-speech (POS)**: It calculates different metrics that store in a dictionary: 
+- **Part-of-speech (POS)**: It calculates different metrics that store in a metadata dictionary: 
     
     + **srcPOS:** A list with the POS of the words of the text
     + **FreqPOS:** The frequency of the different POS labels.
 
-- **Complexity:**  index of low frequency words, lexical complexity, spaulding score, index of sentence complexity, some indicators of age (min age, crawford) and different indicators of the embeddings depth.
+- **Complexity:**  It calculates different metrics that store in a metadata dictionary: 
 
     + **nSentences:** The number of sentences.
     + **nComplexSentence:** The number of complex sentences.
@@ -124,7 +122,7 @@ In this section, we introduce the different metrics offered in this Python libra
     + **max_depth:** maximum of maximum tree depths
     + **mean_depth:** mean of maximum tree depths 
 
-- **Stylometry:** It calculates different metrics that store in a dictionary:
+- **Stylometry:** It calculates different metrics that store in a metadata dictionary:
     + **uniqueWords:** The number of different words. 
     + **TTR:** The lexical index TTR
     + **RTTR:** The lexical index RTTR
@@ -147,19 +145,19 @@ In this section, we introduce the different metrics offered in this Python libra
     + **label:** the label that predict the polarity model.
     + **score:** the score to assing the label to the text.
 
-- **Emojis:** It calculates different metrics that store in a dictionary:
+- **Emojis:** It calculates different metrics that store in a metadata dictionary:
 
     + **TextWithoutEmoji:** A string with the words of emojis instead of the emoji.
     + **FreqEmoji:** The frequence of emojis
     + **NumEmojis:** The number of emojis.
 
-- **NER:** It calculates different metrics that store in a dictionary:
+- **NER:** It calculates different metrics that store in a metadata dictionary:
 
     + **srcNER:** The text with entities instead of the words
     + **entidades:** The entities grouped by each category
     + **freqEntidades:** The frequence of different entities. 
 
-- **N-Grams:** It calculates different metrics that store in a dictionary:
+- **N-Grams:** It calculates different metrics that store in a metadata dictionary:
 
     + **n-grams:** The different n-grams of the text
     + **freqN-Grams:** The frequence of different n-grams
