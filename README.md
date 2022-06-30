@@ -46,6 +46,8 @@ In this library we have sequences and analyzers.
 
 - **[LemmaAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LemmaAnalyzer.py):** This module provides a class methods for the calculation of different lemma metrics on a sequence. This class inherits from Analyzer.py
 
+- **[LexicalDiversityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LexicalDiversityAnalyzer.py):** This module provides a class methods for the calculation of different lexical diversity measures. This class inherits from Analyzer.py
+
 - **[POSAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/POSAnalyzer.py):** This module provides a class methods for the calculation of different Part-of-speech metrics on a sequence. This class inherits from Analyzer.py
 
 - **[PolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PolarityAnalyzer.py):** This module provides a class methods for the calculation of the polarity on a sequence. This class inherits from Analyzer.py
@@ -70,7 +72,7 @@ In this library we have sequences and analyzers.
 
 - **[NGramsAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides a class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
 
-- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
+- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
 
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
@@ -142,6 +144,18 @@ In this section, we introduce the different metrics offered in this Python libra
     + **FreqStopWords:** The frequency of stopwords
     + **FreqPuntuationMarks:** The frequency of punctuation marks
     + **FreqWords:** The frequency of words
+
+- **LexicalDiversity** It calculates different metrics on lexical diversity:
+    + **SimpleTTR:** Simple Token-Type Ratio.
+    + **RootTTR:** Root Token-Type Ratio.
+    + **LogTTR:** Log Token-Type Ratio.
+    + **MaasTTR:** Maas Token-Type Ratio.
+    + **MSTTR:** Mean segmental Token-Type Ratio. The segment size is 50 words. 
+    + **MATTR:** Moving average Token-Type Ratio. The window size is 50 words.
+    + **HDD:** Hypergeometric distribution D. A more straightforward and reliable implementation of vocD (Malvern, Richards, Chipere, & Duran, 2004) as per McCarthy and Jarvis (2007, 2010).
+    + **MTLD:** Measure of lexical textual diversity. Calculates MTLD based on McCarthy and Jarvis (2010).
+    + **MTLDMAWrap:** Measure of lexical textual diversity (moving average, wrap). Calculates MTLD using a moving window approach. Instead of calculating partial factors, it wraps to the beginning of the text to complete the last factors.
+    + **MTLDMABi:** Measure of lexical textual diversity (moving average, bi-directional). Calculates the average MTLD score by calculating MTLD in each direction using a moving window approach.
 
 - **Polarity:** Polarity score of a text.
 
