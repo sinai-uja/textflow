@@ -11,7 +11,6 @@ In this library we have sequences and analyzers.
     + **Format:** is a string with the origin format of a sequence. This format can be a string, a file(.txt), a directory, a token, etc.
     + **Metadata:** This is a dictionary where we store the metadata of a sequence, like the source text of a sequence (if the origin of the sequence is a file of text), or the path of the directory (if the origin of the sequence is a directory). Different analyzers store the result of the analysis inside this dictionary, if the result of the analysis is metadata (the number of words, the label with the emotion of a text, the text source replacing words...).
     + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequence of the key of the children dictionary. Each phrase can split in words too, that we will store in the children dictionary of the phrases sequences. So, inside of the original sequence(text) we have sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
-<<<<<<< HEAD
 
         <ul> 
             <li> The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
@@ -25,13 +24,6 @@ In this library we have sequences and analyzers.
                 </ul>
             </ul>
         </ul>
-=======
-    
-        + The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
-        + Text
-            + Phrases
-                + Words
->>>>>>> 79124549e22de0c552242f79253c54363fc2641a
 
         + So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
