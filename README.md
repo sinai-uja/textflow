@@ -25,6 +25,7 @@ In this library we have sequences and analyzers.
                         </ul>
                 </ul>
             </ul>
+        </ul>
 
         So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
