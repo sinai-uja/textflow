@@ -26,7 +26,7 @@ class LexicalDiversityAnalyzer(Analyzer):
     
     def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str]= ""):
         """
-        Analyze a sequence with a stylometry function.
+        Analyze a sequence with a lexical a diversity function.
 
         Args:
             sequence: the Sequence we want to analyze.
