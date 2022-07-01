@@ -82,6 +82,8 @@ In this library we have sequences and analyzers.
 
 - **[example.ipynb](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/Example.ipynb):** Colab notebook that shows how to use the different methods of textFlow.
 
+- **[AnalyzeADataframe.ipynb](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/AnalyzeADataframe.ipynb.ipynb):** Colab notebook that shows how to use textFlow with a Dataframe of pandas.
+
 # Metrics
 
 In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and store in the corresponding dictionary (metadata or children) of a sequence.
