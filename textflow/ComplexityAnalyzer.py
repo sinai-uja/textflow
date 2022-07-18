@@ -207,9 +207,14 @@ class ComplexityAnalyzer(Analyzer):
         
         avgLettersWords = numLetters/self.numWords
         listLenLetters = np.array(listLenLetters)
-        
-        self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/self.numSentences)        
-        self.muLegibility = (self.numWords/(self.numWords-1))*(avgLettersWords/listLenLetters.var())*100
+        if self.numSentences == 0:
+            self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/1)
+        else:    
+            self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/self.numSentences)        
+        if self.numWords < 2:
+            self.muLegibility = 0
+        else:    
+            self.muLegibility = (self.numWords/(self.numWords-1))*(avgLettersWords/listLenLetters.var())*100
         
     def lexicalIndex(self):
         """

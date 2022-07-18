@@ -70,15 +70,19 @@ class NGramsAnalyzer(Analyzer):
         Args:
             text: a string/text to analyze
         """
-        vect = sklearn.feature_extraction.text.CountVectorizer(ngram_range=(self.ngramsSize,self.ngramsSize),tokenizer=self.tokenizer.tokenize,stop_words= self.stopwords)
-        text=[text]
-        vect.fit(text)
-        self.listOfNGrams = vect.get_feature_names_out().tolist()
-        dicfreq={}
-        for i in self.listOfNGrams:
-            if i in dicfreq:
-                dicfreq[i] += 1
-            else:
-                dicfreq[i] = 1
-        self.freqNGrams = dicfreq
+        try:
+            vect = sklearn.feature_extraction.text.CountVectorizer(ngram_range=(self.ngramsSize,self.ngramsSize),tokenizer=self.tokenizer.tokenize,stop_words= self.stopwords)
+            text=[text]
+            vect.fit(text)
+            self.listOfNGrams = vect.get_feature_names_out().tolist()
+            dicfreq={}
+            for i in self.listOfNGrams:
+                if i in dicfreq:
+                    dicfreq[i] += 1
+                else:
+                    dicfreq[i] = 1
+            self.freqNGrams = dicfreq
+        except Exception:
+            self.listOfNGrams = []
+            self.freqNGrams = {}
 
