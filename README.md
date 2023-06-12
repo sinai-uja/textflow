@@ -74,7 +74,6 @@ In this library we have sequences and analyzers.
 
 - **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
 
-- **[TextEmojiPolarityAnalyzer.py]**
 
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
