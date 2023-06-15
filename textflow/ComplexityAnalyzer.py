@@ -44,7 +44,6 @@ class ComplexityAnalyzer(Analyzer):
         min_max_list: the minimum of maximum tree depths.
         max_max_list: the maximum of maximum tree depths.
         mean_max_list: the mean of maximum tree depths.
-        
     """
 
 
@@ -53,7 +52,7 @@ class ComplexityAnalyzer(Analyzer):
         Create a complexity analyzer from an input object.
 
         Args:
-            rutaArchivoCrea: the file that contains the most frequence words of spanish language
+            rutaArchivoCrea: the path of the file that contains the most frequence words of spanish language
             isMetadata: boolean, if the result of the analyzer is stored in metadata (True) or in children(False)
         """
         self.nlp = nlp

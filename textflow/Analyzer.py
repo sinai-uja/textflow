@@ -33,7 +33,7 @@ class Analyzer(ABC):
                 resultOfAnalisys= []
                 for i in analyzeResult:
                     resultOfAnalisys.append(i)
-                if isinstance(resultOfAnalisys[0], Sequence):
+                if len(resultOfAnalisys) >0 and isinstance(resultOfAnalisys[0], Sequence):
                     sequence.children[tag] = resultOfAnalisys        
                 else:
                     sequence.metadata[tag] = resultOfAnalisys

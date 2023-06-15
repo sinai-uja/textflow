@@ -9,8 +9,8 @@ class IronityAnalyzer(Analyzer):
     A class that provides methods to analyze the ironity of the text of a sequence.
 
     Attributes:
-       ironityClassifier: a pipeline that uses a model for inference the ironity of the text of a sequence. 
-                          By default, the label 'NI' is non-ironic and 'I' ironic.
+        ironityClassifier: a pipeline that uses a model for inference the ironity of the text of a sequence. 
+                           By default, the label 'NI' is non-ironic and 'I' ironic.
         maxEmbedding: The number of max_position_embeddings in the config.json of the model selected.
     """
 
