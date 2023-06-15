@@ -195,6 +195,18 @@ In this section, we introduce the different metrics offered in this Python libra
     + **label:** the label that predict the polarity model.
     + **score:** the score to assing the label to the text.
 
+- **TextEmojiPolarity:** It calculate the polarity of a text based on text emojis. (Martínez-Cámara, E., Jiménez-Zafra, S. M., Martin-Valdivia, M. T., & Lopez, L. A. U. (2014, August). SINAI: voting system for twitter sentiment analysis. *In Proceedings of the 8th International Workshop on Semantic Evaluation (SemEval 2014)* (pp. 572-577))
+    
+    + **numEmojisPolarity:** the number of positive and negative text emojis.
+    + **percentageEmojisPolarity:** the score to assing the label positive or negative to the text related to the text emojis that appear in the text.
+    + **distinctEmojiFounded:** the different positive and negative text emojis.
+
+- **EmojiPolarity:** It calculate the polarity of a text based on emojis.
+    
+    + **numEmojisPolarity:** the number of positive and negative emojis.
+    + **percentageEmojisPolarity:** the score to assing the label positive or negative to the text related to the emojis that appear in the text.
+    + **distinctEmojiFounded:** the different positive and negative emojis.
+
 # Dependencies
 
 - **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer and NERAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If do you want to use other package, you should implements the methods nlp, sents, pos_, lemma_ and text.
