@@ -74,6 +74,9 @@ In this library we have sequences and analyzers.
 
 - **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
 
+- **[TextEmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/TextEmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to text emojis on a sequence. This class inherits from Analyzer.py
+
+- **[EmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to emojis on a sequence. This class inherits from Analyzer.py
 
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
@@ -198,7 +201,7 @@ In this section, we introduce the different metrics offered in this Python libra
 
 - **IronityAnalizer.py, EmotionAnalyzer.py and PolarityAnalyzer.py:** These classes use models and pipelines of transformers, you can use different models to inference the emotion or the polarity of a text.
 
-- **EmojiAnalizer.py:** This class use emoji library.
+- **EmojiAnalizer.py, EmojiPolarityAnalyzer.py:** This class use emoji library.
 
 # How to create a Sequence?
 
