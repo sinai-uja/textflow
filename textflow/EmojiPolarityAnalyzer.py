@@ -11,7 +11,7 @@ class EmojiPolarityAnalyzer(Analyzer):
         negativeEmoji: a list with the negative emojis
     """
 
-    def __init__(self, positiveEmojiPath = "textflow\emoticons\emojiPositive.txt", negativeEmojiPath = 'textflow\emoticons\emojiNegative.txt'):
+    def __init__(self, positiveEmojiPath = "textflow\emojis\emojiPositive.txt", negativeEmojiPath = 'textflow\emojis\emojiNegative.txt'):
         """
         Create a text emoji polarity analyzer from an input object.
         Args:

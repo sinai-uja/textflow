@@ -2,7 +2,7 @@ from typing import Optional
 from textflow.Analyzer import Analyzer
 import re
 
-class TextEmojiPolarityAnalyzer(Analyzer):
+class EmoticonsPolarityAnalyzer(Analyzer):
     """
     A class that provides methods to analyze the polarity of the text of a sequence.
 
@@ -11,7 +11,7 @@ class TextEmojiPolarityAnalyzer(Analyzer):
         negativeEmoji: a list with the negative text emojis
     """
 
-    def __init__(self, positiveEmojiPath = "textflow\emoti-sp\emojiTextPositive.txt", negativeEmojiPath = 'textflow\emoti-sp\emojiTextNegative.txt'):
+    def __init__(self, positiveEmojiPath = "textflow\emoti-sp\emoticonsPositive.txt", negativeEmojiPath = 'textflow\emoti-sp\emoticonsNegative.txt'):
         """
         Create a text emoji polarity analyzer from an input object.
         Args:
