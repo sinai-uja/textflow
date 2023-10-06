@@ -137,3 +137,16 @@ class SequenceToken (Sequence):
             A generator with the result of the filter
         '''
         return super().filterMetadata(level,criteria)
+
+    def toDF(self,level):#, level, criteria):
+        '''
+        Filter the children of a Sequence according to a criteria
+
+        Args:
+            level: the route of the level as string, separating each level with "/" 
+            criteria: the filter function
+
+        Returns:
+            A generator with the result of the filter
+        '''
+        return super().toDF(level)

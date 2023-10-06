@@ -1,5 +1,7 @@
 from typing import Optional
 from abc import ABC, abstractmethod
+import pandas as pd
+from collections import defaultdict
 
 class SequenceIterator:
     """
@@ -253,4 +255,78 @@ class Sequence(ABC):
         for r in gen:
             yield gen[cont]
             cont+=1
-        
+    
+    @abstractmethod
+    def toDF(self, level= "metadata"):
+        '''
+        Convert a Sequence to a pandas DataFrame
+
+        #Args:
+        #    level: the route of the level as string, separating each level with "/" 
+
+        Returns:
+            A pandas DataFrame with the sequence information
+        '''
+        path = level.split("/")
+        children = [self.children]
+        metadata = [self.metadata]
+        columns = []
+        values = []
+        for idx, p in enumerate(path):
+            print(idx,p)
+            if p == "metadata":
+                print("Es metadata",metadata)
+                for metadataDic in metadata:
+                    for m in metadataDic:
+                        columns.append(m+str(idx))
+                        values.append({str(m)+str(idx):metadataDic[m]})
+            elif p == "children":
+                childrenAux=[]
+                for child in children: #Accedemos a los hijos
+                    for ch in child: #Cada hijo tiene un diccionario de valores
+                        #print(ch,child[ch])
+                        columns.append(ch+str(idx))
+                        auxDic={}
+                        for c in child[ch]: #Dentro de cada diccionario de valores tenemos más sequencias
+                            #print(c.metadata)
+                            #print(c.children)
+                            childrenAux.append(c.children)
+                            for metadataKey in c.metadata: #Cada Sequencia tiene sus metadatos, como todas las sequencias de este nivel pertenecen al mismo, todas deberían tener los mismos metadatos
+                                #print(metadataKey)
+                                if metadataKey not in auxDic:
+                                    auxDic[metadataKey]=[c.metadata[metadataKey]]
+                                else:
+                                    auxDic[metadataKey].append(c.metadata[metadataKey])                        
+                        values.append({str(ch)+str(idx):auxDic})
+                children = childrenAux
+
+        finalColumns = []
+        finalRows = {}
+        for value in values: #Recorremos la lista de valores (diccionarios)
+            for v in value: # Para cada clave en el diccionario
+                print(v,type(value))
+                if type(value[v]) == dict:
+                    for keyValue in value[v]:
+                        if v+keyValue not in finalColumns:
+                            finalColumns.append(v+keyValue)
+                            if type(value[v][keyValue]) == list:
+                                finalRows[v+keyValue]=value[v][keyValue]
+                            else:
+                                finalRows[v+keyValue]=[value[v][keyValue]]
+                        else:
+                            if type(value[v][keyValue]) == list and finalRows[v+keyValue][0] != list: #Solo se ejecutara una vez despues de haber creado el dataset
+                                newList=[]
+                                for element in finalRows[v+keyValue]:
+                                    newList.append(element)
+                                finalRows[v+keyValue]=[newList,value[v][keyValue]]
+
+                            else:
+                                finalRows[v+keyValue].append(value[v][keyValue])
+                else:
+                    if len(value[v]) != 0:
+                        if v not in finalColumns:
+                            finalColumns.append(v)
+                            finalRows[v]=value[v]
+        print(finalRows)
+        df = pd.DataFrame(finalRows)
+        return df
