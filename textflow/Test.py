@@ -1,16 +1,18 @@
 from typing import Optional
 from abc import ABC, abstractmethod
 import pandas as pd
+import numpy as np
 from collections import defaultdict
-from scipy.stats import shapiro, normaltest, kstest, anderson, chisquare, jarque_bera
+from scipy.stats import shapiro, normaltest, kstest, anderson, chisquare, jarque_bera, mannwhitneyu, wilcoxon, kruskal, ttest_ind, ttest_rel, f_oneway 
 from statsmodels.stats.diagnostic import lilliefors
 
 class Test():
     #https://towardsdatascience.com/normality-tests-in-python-31e04aa4f411
-    def __init__(self,normalityTest=["Shapiro","D'Agostino","Anderson-Darling","Chi-Square","Lilliefors","Jarque–Bera","Kolmogorov-Smirnov"], parametricTest=["mannwhitneyu","wilcoxon","kruskal"], nonParametricTest=["mannwhitneyu","wilcoxon","kruskal"]):
+    def __init__(self,normalityTest=["Shapiro","D'Agostino","Anderson-Darling","Chi-Square","Lilliefors","Jarque–Bera","Kolmogorov-Smirnov"], parametricTest=["Students t-test","Paired Students t-Test", "ANOVA"], nonParametricTest=["mannwhitneyu","wilcoxon","kruskal"],alpha=0.05):
         self.normalityTest = normalityTest
-        self.parametricTest = parametricTest
-        self.nonParametricTest = nonParametricTest
+        self.parametricTest = parametricTest #https://machinelearningmastery.com/parametric-statistical-significance-tests-in-python/
+        self.nonParametricTest = nonParametricTest #https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/
+        self.alpha = alpha
         
 
     def apply(self,df1,df2):
@@ -79,8 +81,84 @@ class Test():
                 for i in range(len(crit_val)):
                     print("Pass the test of "+t)
                     print(list(testFinal[testFinal[t+' stat'] < crit_val[i]].index),"at "+str(sig_level[i])+" level of significance")
-                    dicResult[t+' '+sig_level[i]+' sig_lev'] = list(testFinal[testFinal[t+' p-value'] > 0.05].index)
+                    dicResult[t+' '+str(sig_level[i])+' sig_lev'] = list(testFinal[testFinal[t+' stat'] < crit_val[i]].index)
         
         return testFinal, dicResult        
                 
-                
+    def applyNonParametricTest(self, df1, df2, criteriaColumn1,criteriaColumn2, contrastCriteriaColumns): #https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/
+        columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
+        dicResult = {}
+        for npt in self.nonParametricTest:
+            columnsDF.extend([npt+" stat", npt+" p-value"])
+            dfResult = pd.DataFrame(columns=columnsDF)
+            dicResult[npt] = {"Reject H0":[],"Fail to Reject H0": []} #Reject == Different distribution, Fail to Reject == Same distribution
+        for col in contrastCriteriaColumns:
+            row=[col, criteriaColumn1,criteriaColumn2]
+            if "mannwhitneyu" in self.nonParametricTest:
+                stat_mw, p_value_mw = mannwhitneyu(df1[col], df2[col])
+                if p_value_mw > self.alpha:
+                    dicResult["mannwhitneyu"]['Fail to Reject H0'].append(col)
+                else:
+                    dicResult["mannwhitneyu"]["Reject H0"].append(col)
+                row.extend([stat_mw, p_value_mw])
+            if "wilcoxon" in self.nonParametricTest:
+                if len(df1) == len(df2[col]):
+                    stat_wc, p_value_w = wilcoxon(df1[col], df2[col])
+                    if p_value_w > self.alpha:
+                        dicResult["wilcoxon"]['Fail to Reject H0'].append(col)
+                    else:
+                        dicResult["wilcoxon"]["Reject H0"].append(col)
+                    row.extend([stat_wc, p_value_w])
+                else:
+                    row.extend([np.nan, np.nan])
+            if "kruskal" in self.nonParametricTest:
+                stat_k, p_value_k = kruskal(df1[col], df2[col])
+                if p_value_k > self.alpha:
+                    dicResult["kruskal"]['Fail to Reject H0'].append(col)
+                else:
+                    dicResult["kruskal"]["Reject H0"].append(col)
+                row.extend([stat_k, p_value_k])    
+            dfResult = dfResult._append(pd.Series(row,index=dfResult.columns), ignore_index = True)
+        
+        print(dfResult)
+        print(dicResult)
+        return dfResult, dicResult
+
+    def applyParametricTest(self, df1, df2, criteriaColumn1,criteriaColumn2, contrastCriteriaColumns): #https://machinelearningmastery.com/parametric-statistical-significance-tests-in-python/ 
+        columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
+        dicResult = {}
+        for pt in self.parametricTest:
+            columnsDF.extend([pt+" stat", pt+" p-value"])
+            dfResult = pd.DataFrame(columns=columnsDF)
+            dicResult[pt] = {"Reject H0":[],"Fail to Reject H0": []} #Reject == Different distribution, Fail to Reject == Same distribution
+        for col in contrastCriteriaColumns:
+            row=[col, criteriaColumn1,criteriaColumn2]
+            if "Students t-test" in self.parametricTest:
+                stat_ttestInd, p_value_ttestInd = mannwhitneyu(df1[col], df2[col])
+                if p_value_ttestInd > self.alpha:
+                    dicResult["Students t-test"]['Fail to Reject H0'].append(col)
+                else:
+                    dicResult["Students t-test"]["Reject H0"].append(col)
+                row.extend([stat_ttestInd, p_value_ttestInd])
+            if "Paired Students t-Test" in self.parametricTest:
+                if len(df1) == len(df2[col]):
+                    stat_ttestRel, p_value_ttestRel = ttest_rel(df1[col], df2[col])
+                    if p_value_ttestRel > self.alpha:
+                        dicResult["Paired Students t-Test"]['Fail to Reject H0'].append(col)
+                    else:
+                        dicResult["Paired Students t-Test"]["Reject H0"].append(col)
+                    row.extend([stat_ttestRel, p_value_ttestRel])
+                else:
+                    row.extend([np.nan, np.nan])
+            if "ANOVA" in self.parametricTest:
+                stat_anova, p_value_anova = f_oneway(df1[col], df2[col])
+                if p_value_anova > self.alpha:
+                    dicResult["ANOVA"]['Fail to Reject H0'].append(col)
+                else:
+                    dicResult["ANOVA"]["Reject H0"].append(col)
+                row.extend([stat_anova, p_value_anova])    
+            dfResult = dfResult._append(pd.Series(row,index=dfResult.columns), ignore_index = True)
+        
+        print(dfResult)
+        print(dicResult)
+        return dfResult, dicResult                
