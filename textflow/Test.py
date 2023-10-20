@@ -15,7 +15,23 @@ class Test():
         self.alpha = alpha
         
 
-    def apply(self,df1,df2):
+    def apply(self,df1,df2,criteriaColumn1,criteriaColumn2, visualizer = None):
+        df = pd.concat([df1,df2], axis=1)
+        numeric_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != 'object']
+
+        print("---------------------------------------NORMALITY TEST---------------------------------------")
+        normal_results =self.applyNormalTest(df)
+        normal_features= set()
+        for key in normal_results[1]:
+            normal_features= normal_features | set(normal_results[key])
+        print("---------------------------------------PARAMETRIC TEST---------------------------------------")
+        parametricResults = self.applyParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, normal_features)
+        print("---------------------------------------NON-PARAMETRIC TEST---------------------------------------")    
+        nonParametricResults = self.applyNonParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, numeric_cols)
+        dicResults = {"normalTest":normal_results,"parametricTest":parametricResults,"nonParametricTes":nonParametricResults}
+        return dicResults
+
+
         #Hay que poner gráficas:
         #   qUARTIL QUARTIL
         #   Box Plot
