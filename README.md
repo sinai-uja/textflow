@@ -1,19 +1,19 @@
 # TextFlow class
 
-This class provides methods to create a sequence from directories, documents, strings… To calculate different metrics from these sequences. It consists in a Python library for calculating different metrics from plain texts.
+This class provides methods to create a sequence from directories, documents, strings… To calculate different metrics from these sequences. It consists of a Python library for calculating different metrics from plain texts.
 
 # Introduction:
 
-In this library we have sequences and analyzers.
+In this library, we have sequences and analyzers.
 
-+ **Sequences:** are the main element of the library. A sequence have three main attributes:
++ **Sequences:** are the main element of the library. A sequence has three main attributes:
 
     + **Format:** is a string with the origin format of a sequence. This format can be a string, a file(.txt), a directory, a token, etc.
-    + **Metadata:** This is a dictionary where we store the metadata of a sequence, like the source text of a sequence (if the origin of the sequence is a file of text), or the path of the directory (if the origin of the sequence is a directory). Different analyzers store the result of the analysis inside this dictionary, if the result of the analysis is metadata (the number of words, the label with the emotion of a text, the text source replacing words...).
-    + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequence of the key of the children dictionary. Each phrase can split in words too, that we will store in the children dictionary of the phrases sequences. So, inside of the original sequence(text) we have sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
+    + **Metadata:** This is a dictionary where we store the metadata of a sequence, like the source text of a sequence (if the origin of the sequence is a file of text), or the path of the directory (if the origin of the sequence is a directory). Different analyzers store the result of the analysis inside this dictionary if the result of the analysis is metadata (the number of words, the label with the emotion of a text, the text source replacing words...).
+    + **Children:** This is a dictionary where we store a list of sequences that came from the actual sequence. For example, if we have a text, we can split this text in phrases. "Phrases" will be the key in the dictionary and each phrase of the text will be a sequence inside the list of sequences of the key of the children's dictionary. Each phrase can be split into words too, that we will store in the children's dictionary of the phrase sequences. So, inside the original sequence(text) we have a sequence of phrases and inside of them sequences of words. This forms the different levels of a sequence.
 
         <ul> 
-            <li> The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter funtions. In our example we have:
+            <li> The level in a sequence is used like a path in a directory, to access the different subsequences in analyzers or filter functions. In our example, we have:
             <ul>
                 <li> Text
                 <ul> 
@@ -25,34 +25,34 @@ In this library we have sequences and analyzers.
             </ul>
         </ul>
 
-        So, to access children of level Words we can use "Phrases/Words" in filter or analyze. As the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
+        So, to access children of level Words we can use "Phrases/Words" in filter or analyze. In the same mode, we can use "Phrases/Words/text" to access a text(value of metadata dictionary) at the Words level in functions like filterMetadata or analyze.    
 
-+ **Analyzers:** the analyzers provides methods to analyze sequences and store the result in a sequence. These analyzers can analyze the metadata of a sequence or the children of a sequence. And can store the result in any of these dictionaries (metadata or children).
++ **Analyzers:** The analyzers provide methods to analyze sequences and store the result in a sequence. These analyzers can analyze the metadata of a sequence or the children of a sequence. And can store the result in any of these dictionaries (metadata or children).
 
 
 # Files
 
- - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md):** A guide to make this project work on your local environment.
+ - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md):** A guide to make this project work in your local environment.
 
 ### ./textFlow
 
 - **[Analyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Analyzer.py):** This module provides an abstract class with methods for the calculation of different metrics on a sequence.
 
-- **[ComplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides a class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
+- **[ComplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
 
-- **[CREA_5000.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Crea-5000.txt):** A dataset of 5000 spanish words ordered by its absolute frequency.
+- **[CREA_5000.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Crea-5000.txt):** A dataset of 5000 Spanish words ordered by its absolute frequency.
 
-- **[EmotionAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmotionAnalyzer.py):** This module provides a class methods for the calculation of the emotions on a sequence. This class inherits from Analyzer.py
+- **[EmotionAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmotionAnalyzer.py):** This module provides class methods for the calculation of the emotions on a sequence. This class inherits from Analyzer.py
 
-- **[LemmaAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LemmaAnalyzer.py):** This module provides a class methods for the calculation of different lemma metrics on a sequence. This class inherits from Analyzer.py
+- **[LemmaAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LemmaAnalyzer.py):** This module provides class methods for the calculation of different lemma metrics on a sequence. This class inherits from Analyzer.py
 
 - **[LexicalDiversityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LexicalDiversityAnalyzer.py):** This module provides a class methods for the calculation of different lexical diversity measures. This class inherits from Analyzer.py
 
 - **[POSAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/POSAnalyzer.py):** This module provides a class methods for the calculation of different Part-of-speech metrics on a sequence. This class inherits from Analyzer.py
 
-- **[PolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PolarityAnalyzer.py):** This module provides a class methods for the calculation of the polarity on a sequence. This class inherits from Analyzer.py
+- **[PolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PolarityAnalyzer.py):** This module provides class methods for the calculation of the polarity on a sequence. This class inherits from Analyzer.py
 
-- **[Sequence.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Sequence.py):** This module provides an abstract class with methods for creating sequences from dfferent sources. A sequence contains 2 dictionaries, one for metadata and other for the subsequence of this sequence.
+- **[Sequence.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Sequence.py):** This module provides an abstract class with methods for creating sequences from different sources. A sequence contains 2 dictionaries, one for metadata and the other for the subsequence of this sequence.
 
 - **[SequenceDirectory.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceDirectory.py):** This module provides methods for creating a sequence from a directory.
 
@@ -62,21 +62,23 @@ In this library we have sequences and analyzers.
 
 - **[SequenceToken.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceToken.py):** This module provides methods for creating a sequence from a token.
 
-- **[StylometryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/StylometryAnalyzer.py):** This module provides a class methods for the calculation of different stylometry metrics on a sequence. This class inherits from Analyzer.py
+- **[StylometryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/StylometryAnalyzer.py):** This module provides class methods for the calculation of different stylometry metrics on a sequence. This class inherits from Analyzer.py
 
-- **[VolumetryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/VolumetryAnalyzer.py):** This module provides a class methods for the calculation of different volumetry metrics on a sequence. This class inherits from Analyzer.py
+- **[VolumetryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/VolumetryAnalyzer.py):** This module provides class methods for the calculation of different volumetry metrics on a sequence. This class inherits from Analyzer.py
 
-- **[IronityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/IronityAnalyzer.py):** This module provides a class methods for the calculation of the ironity on a sequence. This class inherits from Analyzer.py
+- **[IronityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/IronityAnalyzer.py):** This module provides class methods for the calculation of the ironity on a sequence. This class inherits from Analyzer.py
 
-- **[NERAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NERAnalyzer.py):** This module provides a class methods for the search of different NER on a sequence. This class inherits from Analyzer.py
+- **[NERAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NERAnalyzer.py):** This module provides class methods for the search of different NER on a sequence. This class inherits from Analyzer.py
 
-- **[NGramsAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides a class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
+- **[NGramsAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
 
-- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides a class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
+- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
 
 - **[TextEmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/TextEmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to text emojis on a sequence. This class inherits from Analyzer.py
 
 - **[EmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to emojis on a sequence. This class inherits from Analyzer.py
+
+- **[PerplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PerplexityAnalyzer.py):** This module provides class methods to calculate the perplexity of a text. This class inherits from Analyzer.py
 
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
@@ -90,38 +92,38 @@ In this library we have sequences and analyzers.
 
 # Metrics
 
-In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and store in the corresponding dictionary (metadata or children) of a sequence.
+In this section, we introduce the different metrics offered in this Python library. These metrics are returned by the corresponding analyzer and stored in the corresponding dictionary (metadata or children) of a sequence.
 
 
-- **Volumetry:** Here it calculates different metrics that store in a metadata dictionary:
+- **Volumetry:** Here it calculates different metrics that are stored in a metadata dictionary:
 
     + **words:** The number of words in the text.
-    + **uniqueWords:** The number of uniqu words of the text.
+    + **uniqueWords:** The number of unique words in the text.
     + **chars:** The number of characters of the text.
     + **avgWordsLen:** The average word length for text
 
-- **Lemmas:** It calculates different metrics that store in a metadata dictionary:
+- **Lemmas:** It calculates different metrics that are stored in a metadata dictionary:
     
     + **srclemmas:** A list with the words of the text lemmatized.
     + **uniqueLemmas:** The number of unique lemmas of the text.
     + **avgLemmas:** The average lemma length for text.
 
-- **Part-of-speech (POS)**: It calculates different metrics that store in a metadata dictionary: 
+- **Part-of-speech (POS)**: It calculates different metrics that are stored in a metadata dictionary: 
     
     + **srcPOS:** A list with the POS of the words of the text
     + **FreqPOS:** The frequency of the different POS labels.
 
-- **Complexity:**  It calculates different metrics that store in a metadata dictionary: 
+- **Complexity:**  It calculates different metrics that are stored in a metadata dictionary: 
 
     + **nSentences:** The number of sentences.
     + **nComplexSentence:** The number of complex sentences.
-    + **avglenSentence:**  The average sentece length.
-    + **nPuntuationMarks:** The number of puntuation marks.
+    + **avglenSentence:**  The average sentence length.
+    + **nPuntuationMarks:** The number of punctuation marks.
     + **nWords:** The number of words.
     + **nRareWords:** The number of rare words.
     + **nSyllabes:** The number of syllabes.
     + **nChar:** The number of characters.
-    + **ILFW:** The index of low frequency words.                   
+    + **ILFW:** The index of low-frequency words.                   
     + **LDI:** The index of lexical distribution.                     
     + **LC:** The lexical complexity.
     + **SSR:** The spaulding score.
@@ -131,14 +133,14 @@ In this section, we introduce the different metrics offered in this Python libra
     + **IFSZ:** The perspicuity of Flesh-Szigriszt.     
     + **polini:** The polaini compressibility. 
     + **mu:** The mu legibility.       
-    + **minage:** A indicator of minimum age.          
+    + **minage:** An indicator of minimum age.          
     + **SOL:** The SOL readability         
-    + **crawford:** A indicator of crawford's age 
+    + **crawford:** An indicator of Crawford's age 
     + **min_depth:** minimum of maximum tree depths
     + **max_depth:** maximum of maximum tree depths
     + **mean_depth:** mean of maximum tree depths 
 
-- **Stylometry:** It calculates different metrics that store in a metadata dictionary:
+- **Stylometry:** It calculates different metrics that are stored in a metadata dictionary:
     + **uniqueWords:** The number of different words. 
     + **TTR:** The lexical index TTR
     + **RTTR:** The lexical index RTTR
@@ -165,63 +167,67 @@ In this section, we introduce the different metrics offered in this Python libra
 
 - **Polarity:** Polarity score of a text.
 
-    + **label:** the label that predict the polarity model.
-    + **score:** the score to assing the label to the text.
+    + **label:** the label that predicts the polarity model.
+    + **score:** the score to assign the label to the text.
 
 - **Emotions:** Emotions score of a text.
 
-    + **label:** the label that predict the polarity model.
-    + **score:** the score to assing the label to the text.
+    + **label:** the label that predicts the polarity model.
+    + **score:** the score to assign the label to the text.
 
-- **Emojis:** It calculates different metrics that store in a metadata dictionary:
+- **Emojis:** It calculates different metrics that are stored in a metadata dictionary:
 
     + **TextWithoutEmoji:** A string with the words of emojis instead of the emoji.
     + **FreqEmoji:** The frequence of emojis
     + **NumEmojis:** The number of emojis.
 
-- **NER:** It calculates different metrics that store in a metadata dictionary:
+- **NER:** It calculates different metrics that are stored in a metadata dictionary:
 
     + **srcNER:** The text with entities instead of the words
     + **entidades:** The entities grouped by each category
-    + **freqEntidades:** The frequence of different entities. 
+    + **freqEntidades:** The frequency of different entities. 
 
-- **N-Grams:** It calculates different metrics that store in a metadata dictionary:
+- **N-Grams:** It calculates different metrics that are stored in a metadata dictionary:
 
     + **n-grams:** The different n-grams of the text
-    + **freqN-Grams:** The frequence of different n-grams
+    + **freqN-Grams:** The frequency of different n-grams
 
 - **Ironity:** Ironity score of a text.
     
-    + **label:** the label that predict the polarity model.
-    + **score:** the score to assing the label to the text.
+    + **label:** the label that predicts the polarity model.
+    + **score:** the score to assign the label to the text.
 
-- **TextEmojiPolarity:** It calculate the polarity of a text based on text emojis. (Martínez-Cámara, E., Jiménez-Zafra, S. M., Martin-Valdivia, M. T., & Lopez, L. A. U. (2014, August). SINAI: voting system for twitter sentiment analysis. *In Proceedings of the 8th International Workshop on Semantic Evaluation (SemEval 2014)* (pp. 572-577))
+- **TextEmojiPolarity:** It calculates a text's polarity based on text emojis. (Martínez-Cámara, E., Jiménez-Zafra, S. M., Martin-Valdivia, M. T., & Lopez, L. A. U. (2014, August). SINAI: voting system for twitter sentiment analysis. *In Proceedings of the 8th International Workshop on Semantic Evaluation (SemEval 2014)* (pp. 572-577))
     
     + **numEmojisPolarity:** the number of positive and negative text emojis.
-    + **percentageEmojisPolarity:** the score to assing the label positive or negative to the text related to the text emojis that appear in the text.
+    + **percentageEmojisPolarity:** the score to assign the label positive or negative to the text related to the text emojis that appear in the text.
     + **distinctEmojiFounded:** the different positive and negative text emojis.
 
-- **EmojiPolarity:** It calculate the polarity of a text based on emojis.
+- **EmojiPolarity:** It calculates a text's polarity based on emojis.
     
     + **numEmojisPolarity:** the number of positive and negative emojis.
-    + **percentageEmojisPolarity:** the score to assing the label positive or negative to the text related to the emojis that appear in the text.
+    + **percentageEmojisPolarity:** the score to assign the label positive or negative to the text related to the emojis that appear in the text.
     + **distinctEmojiFounded:** the different positive and negative emojis.
+
+- **Perplexity:** It calculates the perplexity of a text.
+    
+    + **perplexity:** the perplexity of a text. Perplexity is defined as the exponentiated average negative log-likelihood of a sequence.
 
 # Dependencies
 
-- **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer and NERAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If do you want to use other package, you should implements the methods nlp, sents, pos_, lemma_ and text.
+- **ComplexityAnalyzer.py, POSAnalyzer, LemmaAnalyzer, and NERAnalyzer:** In these classes, spacy is used to calculate the different metrics of the analyzers. If you want to use other packages, you should implement the methods nlp, sents, pos_, lemma_, and text.
 
-- **IronityAnalizer.py, EmotionAnalyzer.py and PolarityAnalyzer.py:** These classes use models and pipelines of transformers, you can use different models to inference the emotion or the polarity of a text.
+- **IronityAnalizer.py, EmotionAnalyzer.py, PolarityAnalyzer, and PerplexityAnalyzer.py:** These classes use models and pipelines of transformers, you can use different models to infer the emotion, the polarity, or the perplexity of a text.
 
 - **EmojiAnalizer.py, EmojiPolarityAnalyzer.py:** This class use emoji library.
 
 # How to create a Sequence?
 
-If you want to create a class to initialize a sequence and there is no class for it, you can create your own. 
+If you want to create a class to initialize a sequence without a class for it, you can create your own. 
 
 - **We must create a class that inherits from Sequence.py**
 
-- **Inside of this class, we have to create the following functions, because these functions implement the basic functionality of a Sequence**. The basic functionality is like iterate in the sequence, filter in subsequences(children), print the sequence...:
+- **Inside of this class, we have to create the following functions, because these functions implement the basic functionality of a Sequence**. The basic functionality is like iterating in the sequence, filtering in subsequences(children), printing the sequence...:
 
 
                 def initializeSequence(self, format):
