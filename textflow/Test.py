@@ -5,43 +5,88 @@ import numpy as np
 from collections import defaultdict
 from scipy.stats import shapiro, normaltest, kstest, anderson, chisquare, jarque_bera, mannwhitneyu, wilcoxon, kruskal, ttest_ind, ttest_rel, f_oneway 
 from statsmodels.stats.diagnostic import lilliefors
+from IPython.display import display, Markdown
+from textflow.Visualization import Visualization
 
 class Test():
+    """
+    A class that provides methods to analyze the polarity of the text of a sequence.
+
+    Attributes:
+        normalityTest: a list with the normal tests to apply
+        parametricTest: a list with the parametric tests to apply
+        nonParametricTest: a list with the non parametric tests to apply
+        alpha: chosen significance level to interpret the p-value in parametric/non parametric tests 
+    """
     #https://towardsdatascience.com/normality-tests-in-python-31e04aa4f411
     def __init__(self,normalityTest=["Shapiro","D'Agostino","Anderson-Darling","Chi-Square","Lilliefors","Jarque–Bera","Kolmogorov-Smirnov"], parametricTest=["Students t-test","Paired Students t-Test", "ANOVA"], nonParametricTest=["mannwhitneyu","wilcoxon","kruskal"],alpha=0.05):
+        """
+        Initialize the Test class.
+
+        Args:
+            normalityTest: a list with the normal tests to apply
+            parametricTest: a list with the parametric tests to apply
+            nonParametricTest: a list with the non parametric tests to apply
+            alpha: chosen significance level to interpret the p-value in parametric/non parametric tests
+        """
         self.normalityTest = normalityTest
         self.parametricTest = parametricTest #https://machinelearningmastery.com/parametric-statistical-significance-tests-in-python/
         self.nonParametricTest = nonParametricTest #https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/
         self.alpha = alpha
         
 
-    def apply(self,df1,df2,criteriaColumn1,criteriaColumn2, visualizer = None):
-        df = pd.concat([df1,df2], axis=1)
+    def report(self,df1,df2,criteriaColumn1,criteriaColumn2, visualizer = None, kdeColumn = None, boxPlotX= None, boxPlotHue=None, saveImages= False, nameFiles= None,listGraphics= ["distplot","probplot","kde","boxplot"]):
+        df = pd.concat([df1,df2])
         numeric_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != 'object']
-
         print("---------------------------------------NORMALITY TEST---------------------------------------")
-        normal_results =self.applyNormalTest(df)
+        normal_results =self.applyNormalTest(df[numeric_cols])
         normal_features= set()
         for key in normal_results[1]:
-            normal_features= normal_features | set(normal_results[key])
+            normal_features= normal_features | set(normal_results[1][key])
         print("---------------------------------------PARAMETRIC TEST---------------------------------------")
         parametricResults = self.applyParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, normal_features)
         print("---------------------------------------NON-PARAMETRIC TEST---------------------------------------")    
         nonParametricResults = self.applyNonParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, numeric_cols)
         dicResults = {"normalTest":normal_results,"parametricTest":parametricResults,"nonParametricTes":nonParametricResults}
+        if visualizer != None:
+            if "distplot" in listGraphics:
+                print("---------------------------------------DISTPLOT GRAPHICS---------------------------------------")
+                nf = nameFiles['displot'] if saveImages==True else None
+                visualizer.show_distplots(df, numeric_cols,saveImages,nf)
+            if "probplot" in listGraphics:
+                print("---------------------------------------PROBPLOT GRAPHICS---------------------------------------")
+                nf = nameFiles['probplot'] if saveImages==True else None
+                visualizer.show_probplots(df, numeric_cols,saveImages, nf)
+            if "kde" in listGraphics: #KDE COLUMN TIENE QUE SER != NONE
+                print("---------------------------------------KDE GRAPHICS---------------------------------------")
+                if type(kdeColumn)== list:
+                    for c in kdeColumn:
+                        nf = nameFiles['kde'][c] if saveImages==True else None
+                        visualizer.show_kde(df, numeric_cols, kdeColumn[c],saveImages,nf)
+                else:
+                    nf = nameFiles['kde'] if saveImages==True else None
+                    visualizer.show_kde(df, numeric_cols, kdeColumn,saveImages, nf)
+            if "boxplot" in listGraphics:
+                print("---------------------------------------BOXPLOT GRAPHICS---------------------------------------")
+                if type(boxPlotX) == list and type(boxPlotHue) == list:
+                    if len(boxPlotX)==len(boxPlotHue):
+                        for x in range(len(boxPlotX)):
+                            nf = nameFiles['boxplot'][x] if saveImages==True else None
+                            visualizer.show_boxplot(df, numeric_cols,boxPlotX[x], boxPlotHue[x], saveImages, nf)
+                elif type(boxPlotX) == list and boxPlotHue == None:
+                    for x in range(len(boxPlotX)):  
+                        nf = nameFiles['boxplot'][x] if saveImages==True else None 
+                        visualizer.show_boxplot(df, numeric_cols,boxPlotX[x], boxPlotHue, saveImages, nf)
+                else:
+                    nf = nameFiles['boxplot'] if saveImages==True else None
+                    visualizer.show_boxplot(df, numeric_cols,boxPlotX, boxPlotHue, saveImages, nf)
         return dicResults
-
-
-        #Hay que poner gráficas:
-        #   qUARTIL QUARTIL
-        #   Box Plot
-        #   Histograma
-        pass
 
     def applyNormalTest(self,df):
         testFinal = pd.DataFrame()
         testFinal.index = list(df.columns)
         dicResult={}
+        print("Columnas", len(df.columns))
         for i in self.normalityTest:
             if i == "Shapiro":
                 test = df.apply(lambda x: shapiro(x), axis=0)
@@ -136,7 +181,7 @@ class Test():
                 row.extend([stat_k, p_value_k])    
             dfResult = dfResult._append(pd.Series(row,index=dfResult.columns), ignore_index = True)
         
-        print(dfResult)
+        display(dfResult)
         print(dicResult)
         return dfResult, dicResult
 
@@ -175,6 +220,6 @@ class Test():
                 row.extend([stat_anova, p_value_anova])    
             dfResult = dfResult._append(pd.Series(row,index=dfResult.columns), ignore_index = True)
         
-        print(dfResult)
+        display(dfResult)
         print(dicResult)
         return dfResult, dicResult                
