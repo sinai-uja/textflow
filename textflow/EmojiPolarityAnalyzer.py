@@ -67,7 +67,7 @@ class EmojiPolarityAnalyzer(Analyzer):
                     emojiFounded['positive'].add(dictEmoji['emoji'])
                 elif dictEmoji['emoji'] in self.negativeEmoji:
                     dicNumEmoji['negative'] += 1
-                    emojiFounded['negativetive'].add(dictEmoji['emoji'])
+                    emojiFounded['negative'].add(dictEmoji['emoji'])
 
             if(dicNumEmoji['positive'] > 0 or dicNumEmoji['negative'] >0):
                 percentagePolarity = {"positive": dicNumEmoji['positive']/(dicNumEmoji['positive']+dicNumEmoji['negative']), "negative": dicNumEmoji['negative']/(dicNumEmoji['positive']+dicNumEmoji['negative'])}

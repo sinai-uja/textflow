@@ -42,7 +42,7 @@ class Inference():
             self.clfs = classifiers
         
     def removeLowVarianceEntities(self,X, varianceThreshold= VarianceThreshold(threshold=0)):
-        sel = VarianceThreshold
+        sel = varianceThreshold
         arr = sel.fit_transform(X)
         df = pd.DataFrame(arr, columns=sel.get_feature_names_out(X.columns.values))
         display(df)
@@ -60,13 +60,14 @@ class Inference():
         print("KBest Mutual Information", kbest_mi_columns)
         return kbest_classif_columns, kbest_mi_columns
     
-    def featureSelectionSelectFromModel(self,X,y, lsvc= LinearSVC(C=0.01, penalty="l1", dual=False), prefit = True):
-        lsvc = lsvc.fit(X, y)
-        model = SelectFromModel(lsvc, prefit=prefit)
+    def featureSelectionSelectFromModel(self,X,y, lsvc= LinearSVC(C=0.01, penalty="l1", dual=False)):
+        
+        lsvcFitted = lsvc.fit(X, y)
+        model = SelectFromModel(lsvcFitted, prefit=True)
         X_new = model.transform(X)
         print(X_new.shape)
-        print(model.get_feature_names_out(X.columns.values))
-        display(pd.DataFrame(X_new))
+        print(X.columns[model.get_support(indices=True)])
+        display(pd.DataFrame(X_new, columns=X.columns[model.get_support(indices=True)]))
         return X_new
     
     def sequentialFeatureSelection(self,X,y, num_features,ridgecv= RidgeCV(alphas=np.logspace(-6, 6, num=5))):
