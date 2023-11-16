@@ -119,7 +119,7 @@ class Inference():
             sdf = ext_df[ext_numeric_cols]
             scaler = MinMaxScaler()
             X = scaler.fit_transform(sdf)
-            y = sdf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
+            y = ext_df[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
             allResult['all']=self.eval_classifiers(X, y)
 
         if group_by != None:
@@ -133,14 +133,12 @@ class Inference():
         return allResult
     
     def classificationDeepVectors(self,ddf, label2id, column_to_apply, text_column, group_by, binary= False):
-        tokenizer = tokenizer
-        model = model
         groupValues = list(ddf[group_by].unique())
         allResults = {}
         for group in groupValues:
             sddf = ddf[ddf[group_by] == group] if binary==False else ddf[ddf[group_by] == group].dropna()
             X = np.stack(sddf['encoding'])
-            y = sddf[column_to_apply].progress_apply(lambda x: label2id[x]).to_numpy()
+            y = sddf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
             allResults[group]=self.eval_classifiers(X, y)
         return allResults
 
