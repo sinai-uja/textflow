@@ -159,9 +159,10 @@ class Inference():
         Xf = sdf[numeric_cols]
         scaler = MinMaxScaler()
         Xf = scaler.fit_transform(Xf)
-        Xt = vectorizer.fit_transform(sdf[text_colummn]).todense()
+        Xt = vectorizer.fit_transform(sdf[text_colummn]).toarray()
         Xd = np.stack(sdf['encoding'])
         y = sdf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
         print(Xf.shape, Xt.shape, Xd.shape)
         X = np.concatenate((Xf, Xt, Xd), axis=1)
         return self.eval_classifiers(X, y)
+    
