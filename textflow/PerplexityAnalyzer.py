@@ -2,7 +2,7 @@ from typing import Optional
 from textflow.Analyzer import Analyzer
 import re
 import torch
-import tqdm
+from tqdm import tqdm
 from transformers import GPT2LMHeadModel, GPT2TokenizerFast
 
 class PerplexityAnalyzer(Analyzer):
