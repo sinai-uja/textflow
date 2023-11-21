@@ -47,12 +47,14 @@ class POSAnalyzer(Analyzer):
         arrayResults = []
         for text in arrayText:
             srcPOS = []
+            srcPOSTag = []
             dicFreqPOS = {}
             dicRelFreqPOS = {}
             dicPOSTokens = {}
             doc = self.nlp(text)
             for token in doc:
                 srcPOS.append(token.pos_)
+                srcPOSTag.append((str(token).lower(),token.pos_))
                 dicPOSTokens[token.pos_] = dicPOSTokens.get(token.pos_, {})
                 if token.pos_ in dicFreqPOS:
                     dicPOSTokens[token.pos_][token.text] = dicPOSTokens[token.pos_].get(token.text, 0) + 1
@@ -64,6 +66,7 @@ class POSAnalyzer(Analyzer):
                 dicRelFreqPOS[tag] = dicFreqPOS[tag] / len(doc)
             pos = {
                 "srcPOS": srcPOS,
+                "srcPOSTag": srcPOSTag,
                 "FreqPOS": dicFreqPOS,
                 "RelFreqPOS": dicRelFreqPOS,
                 "POSTokens": dicPOSTokens

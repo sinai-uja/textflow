@@ -95,11 +95,14 @@ class Test():
                 testFinal['Shapiro stat'] = list(test['Shapiro stat'])
                 testFinal['Shapiro p-value'] = list(test['Shapiro p-value'])
             elif i == "D'Agostino":
-                test = df.apply(lambda x: normaltest(x), axis=0)
-                test.index = ["D'Agostino stat", "D'Agostino p-value"]
-                test = test.transpose()
-                testFinal["D'Agostino stat"] = list(test["D'Agostino stat"])
-                testFinal["D'Agostino p-value"] = list(test["D'Agostino p-value"])
+                try:
+                    test = df.apply(lambda x: normaltest(x), axis=0)
+                    test.index = ["D'Agostino stat", "D'Agostino p-value"]
+                    test = test.transpose()
+                    testFinal["D'Agostino stat"] = list(test["D'Agostino stat"])
+                    testFinal["D'Agostino p-value"] = list(test["D'Agostino p-value"])
+                except: 
+                    print("No se puede aplicar D'Agostino")
             elif i == "Anderson-Darling": 
                 test = df.apply(lambda x: anderson(x), axis=0)
                 test.index = ['Anderson-Darling stat', 'Anderson-Darling crit_val', 'Anderson-Darling sig_level']
