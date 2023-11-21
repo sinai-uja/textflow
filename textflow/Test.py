@@ -173,7 +173,10 @@ class Test():
                 else:
                     row.extend([np.nan, np.nan])
             if "kruskal" in self.nonParametricTest:
-                stat_k, p_value_k = kruskal(df1[col], df2[col])
+                try:
+                    stat_k, p_value_k = kruskal(df1[col], df2[col])
+                except:
+                    stat_k, p_value_k = np.nan, np.nan
                 if p_value_k > self.alpha:
                     dicResult["kruskal"]['Fail to Reject H0'].append(col)
                 else:

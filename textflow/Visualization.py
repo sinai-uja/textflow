@@ -21,7 +21,7 @@ class Visualization():
         n_cols: the number of columns of the subplot grid.
         cmap: a colormap that is apply to the images.
     """
-    def __init__(self, savePath, n_cols=6, cmap=sns.diverging_palette(230, 20, as_cmap=True)):
+    def __init__(self, savePath='.', n_cols=6, cmap=sns.diverging_palette(230, 20, as_cmap=True)):
         """
     Create the class Visualization.
 
@@ -178,97 +178,90 @@ class Visualization():
                 plt.savefig(self.savePath+pictureName)
             plt.show()
 
-    def show_wordCloud(self,df,textColumns, stopwords= None, titleGraphic= None, groupby=None, savePicture= False, pictureName=None):
+    def show_wordCloud(self,df,textColumns, stopwords= None, titleGraphic= None, hspace= 0.5,titleGraphicSize= 7, groupby=None, savePicture= False, pictureName=None):
         """
         Function that show wordcloud, opcionlly save this plot.
 
         Args:
             df,textColumns, stopwords= None, titleGraphic= None, groupby
-            df: the pandas DataFrame that contains the data to visualize
+            df: the pandas DataFrame that contains the data to visualize. This dataframe must to be filteren before pass for it
             textColumns: a list with the name of the columns of the dataframe that contain the sample data (text or a dictionary frequence) from which the wordCloud is created.
             stopwords: a list with the stopwords
             titleGraphic: a string with the title of the wordcloud
+            titleGraphicSize : a integer that indicates the size of the title graphic
             groupby: a specific column of a DataFrame. The purpose of this variable is to indicate which column in the DataFrame will be used to group the data before performing the histogram.
             savePicture: a boolean value. True indicate that you want to save the pictura and False that the picture will not save. 
             pictureName: the name of the picture in the save path. By defect is None, because if the picture will not save, this variable will not be used.
         Returns:
             A WordCloud shows in the notebook or an imagen saved in the corresponding path.
         """
-        if groupby != None:
-            groupValues = list(df[groupby].unique())
-            for numGroup, group in enumerate(groupValues):
-                for tc in textColumns:
-                    if type(df[tc].iloc[0]) == dict:
-                        print(f'{group} / {titleGraphic}')
-                        newDF= df[df[groupby]== group].reset_index(drop=True)
-                        result = {}
-                        for  i, r in newDF.iterrows():
-                            for k, v in r[tc]:
-                                result[k] = result.get(k, 0) + v
-                        if len(result) > 1:
-                            plt.subplot(1, self.n_cols, int(numGroup)+1)
-                            plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
-                                        .fit_words(dict(result)))
+        for tc in textColumns:
+            if type(df[tc].iloc[0]) == dict:
+                plt.subplots_adjust(hspace=hspace)
+                if groupby != None:
+                    for i, r in df.reset_index().iterrows():
+                        if len(r[tc])> 0:
+                            if stopwords != None:
+                                for key in r[tc]:
+                                    if key in stopwords:
+                                        del r[tc][key]
+                            stringGroupBy= groupby
+                            if type(groupby) == list:
+                                groupColumnValues= [r[gb] for gb in groupby]
+                                stringGroupBy = ', '.join(groupColumnValues)
+                            ncols = len(textColumns)
+                            nrows = math.ceil(len(df)/ncols)
+                            plt.subplot(nrows,ncols, int(i)+1)
+                            plt.imshow(WordCloud(background_color='white', width=500, height=600)
+                                        .fit_words(r[tc]))
                             plt.axis("off")
-                            plt.title(f"+frecuentes ({group})")
-
-                        plt.subplots_adjust(wspace=1.5)
-                        if savePicture:
-                            plt.savefig(self.savePath+pictureName)
-                        plt.show()
-                    else:
-                        print(f'{group} / {titleGraphic}')
-                        newDF= df[df[groupby]== group].reset_index(drop=True)
-                        result = ""
-                        for  i, r in newDF.iterrows():
-                            result = ' '.join(r[tc])
-                        if result != "":
-                            plt.subplot(1, self.n_cols, int(numGroup)+1)
-                            plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
-                                        .generate(result))
-                            plt.axis("off")
-                            plt.title(f"+frecuentes ({group})")
-
-                        plt.subplots_adjust(wspace=1.5)
-                        if savePicture:
-                            plt.savefig(self.savePath+pictureName)
-                        plt.show()
-        else:
-            for tc in textColumns:
-                if type(df[tc].iloc[0]) == dict:
-                    print(f'{titleGraphic}')
-                    newDF= df.reset_index(drop=True)
-                    result = {}
-                    for i, r in newDF.iterrows():
-                        for k, v in r[tc]:
-                            result[k] = result.get(k, 0) + v
-                    if len(result) > 1:
-                        plt.subplot(1, self.n_cols,1)
-                        plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
-                                    .fit_words(dict(result)))
-                        plt.axis("off")
-                        plt.title(f"+frecuentes")
-
-                    plt.subplots_adjust(wspace=1.5)
+                            plt.title(f"{tc} +frecuentes ({stringGroupBy})",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
                 else:
-                    print(f'{titleGraphic}')
-                    newDF= df.reset_index(drop=True)
-                    result = ""
-                    for  i, r in newDF.iterrows():
-                        result = ' '.join(r[tc])
-                    if result != "":
-                        plt.subplot(1, self.n_cols, 1)
-                        plt.imshow(WordCloud(background_color='white', width=500, height=600)
-                                .generate(result))
-                        plt.axis("off")
-                        plt.title(f"+frecuentes ({group})")
-
-                    plt.subplots_adjust(wspace=1.5)
+                    for i, r in df.reset_index().iterrows():
+                        if len(r[tc]) > 0:
+                            if stopwords != None:
+                                for key in r[tc]:
+                                    if key in stopwords:
+                                        del r[tc][key]
+                            ncols = len(textColumns)
+                            nrows = math.ceil(len(df)/ncols)
+                            plt.subplot(nrows,ncols, int(i)+1)
+                            plt.imshow(WordCloud(background_color='white', width=500, height=600)
+                                        .fit_words(r[tc]))
+                            plt.axis("off")
+                            plt.title(f"{tc} +frecuentes",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
-        
-    
+            else: #Es texto
+                if groupby != None:
+                    for i, r in df.reset_index().iterrows():
+                        stringGroupBy= groupby
+                        if type(groupby) == list:
+                            groupColumnValues= [r[gb] for gb in groupby]
+                            stringGroupBy = ', '.join(groupColumnValues)
+                        ncols = len(textColumns)
+                        nrows = math.ceil(len(df)/ncols)
+                        plt.subplot(nrows,ncols, int(i)+1)
+                        plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
+                                    .generate(r[tc]))
+                        plt.axis("off")
+                        plt.title(f"{tc} +frecuentes ({stringGroupBy})",fontsize=titleGraphicSize)
+                    if savePicture:
+                        plt.savefig(self.savePath+pictureName)
+                    plt.show()
+                else:
+                    for i, r in df.reset_index().iterrows():
+                        ncols = len(textColumns)
+                        nrows = math.ceil(len(df)/ncols)
+                        plt.subplot(nrows,ncols, int(i)+1)
+                        plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
+                                    .generate(r[tc]))
+                        plt.axis("off")
+                        plt.title(f"{tc} +frecuentes",fontsize=titleGraphicSize)
+                    if savePicture:
+                        plt.savefig(self.savePath+pictureName)
+                    plt.show()
