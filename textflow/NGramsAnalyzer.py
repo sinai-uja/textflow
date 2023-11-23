@@ -3,6 +3,7 @@ from textflow.Analyzer import Analyzer
 from nltk.tokenize import WhitespaceTokenizer
 from nltk.corpus import stopwords
 import sklearn.feature_extraction.text
+from nltk import ngrams
 
 class NGramsAnalyzer(Analyzer):
     """
@@ -57,13 +58,13 @@ class NGramsAnalyzer(Analyzer):
         for text in arrayText:
             self.countFreqNGrams(text)
             prediction = {
-                'n-grams': self.listOfNGrams,
+                'n-grams': self.listOfNGrams, #unique n-grams
                 'freqN-Grams': self.freqNGrams
             }
             arrayResults.append(prediction)
         return arrayResults
 
-    def countFreqNGrams(self,text):
+    def countFreqNGrams(self,textOriginal):
         """
         Function that divide the text in n-grams, and count the frequence of them.
     
@@ -72,15 +73,17 @@ class NGramsAnalyzer(Analyzer):
         """
         try:
             vect = sklearn.feature_extraction.text.CountVectorizer(ngram_range=(self.ngramsSize,self.ngramsSize),tokenizer=self.tokenizer.tokenize,stop_words= self.stopwords)
-            text=[text]
+            text=[textOriginal]
             vect.fit(text)
             self.listOfNGrams = vect.get_feature_names_out().tolist()
             dicfreq={}
-            for i in self.listOfNGrams:
-                if i in dicfreq:
-                    dicfreq[i] += 1
+
+            ngramsText= [token.lower() for token in self.tokenizer.tokenize(textOriginal) if token.lower() not in self.stopwords]
+            for i in ngrams(ngramsText, self.ngramsSize):
+                if ' '.join(i) in dicfreq:
+                    dicfreq[' '.join(i)] += 1
                 else:
-                    dicfreq[i] = 1
+                    dicfreq[' '.join(i)] = 1
             self.freqNGrams = dicfreq
         except Exception:
             self.listOfNGrams = []
