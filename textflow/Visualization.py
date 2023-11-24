@@ -178,7 +178,7 @@ class Visualization():
                 plt.savefig(self.savePath+pictureName)
             plt.show()
 
-    def show_wordCloud(self,df,textColumns, stopwords= None, titleGraphic= None, hspace= 0.5,titleGraphicSize= 7, groupby=None, savePicture= False, pictureName=None):
+    def show_wordCloud(self,df,textColumns, stopwords= None, titleGraphic= "+frecuentes", widthGraphic = 10,heightGraphic=6, hspace= 0.5,titleGraphicSize= 7, groupby=None, savePicture= False, pictureName=None):
         """
         Function that show wordcloud, opcionlly save this plot.
 
@@ -198,6 +198,7 @@ class Visualization():
         for tc in textColumns:
             if type(df[tc].iloc[0]) == dict:
                 plt.subplots_adjust(hspace=hspace)
+                plt.figure(figsize=(widthGraphic,heightGraphic))
                 if groupby != None:
                     for i, r in df.reset_index().iterrows():
                         if len(r[tc])> 0:
@@ -209,13 +210,13 @@ class Visualization():
                             if type(groupby) == list:
                                 groupColumnValues= [r[gb] for gb in groupby]
                                 stringGroupBy = ', '.join(groupColumnValues)
-                            ncols = len(textColumns)
+                            ncols = len(df[groupby[0]].unique())
                             nrows = math.ceil(len(df)/ncols)
                             plt.subplot(nrows,ncols, int(i)+1)
-                            plt.imshow(WordCloud(background_color='white', width=500, height=600)
+                            plt.imshow(WordCloud(background_color='white', width=1000, height=1000)
                                         .fit_words(r[tc]))
                             plt.axis("off")
-                            plt.title(f"{tc} +frecuentes ({stringGroupBy})",fontsize=titleGraphicSize)
+                            plt.title(f"{tc} {titleGraphic} \n ({stringGroupBy})",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
@@ -232,7 +233,7 @@ class Visualization():
                             plt.imshow(WordCloud(background_color='white', width=500, height=600)
                                         .fit_words(r[tc]))
                             plt.axis("off")
-                            plt.title(f"{tc} +frecuentes",fontsize=titleGraphicSize)
+                            plt.title(f"{tc} {titleGraphic}",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
@@ -249,7 +250,7 @@ class Visualization():
                         plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
                                     .generate(r[tc]))
                         plt.axis("off")
-                        plt.title(f"{tc} +frecuentes ({stringGroupBy})",fontsize=titleGraphicSize)
+                        plt.title(f"{tc} {titleGraphic} ({stringGroupBy})",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
@@ -261,7 +262,7 @@ class Visualization():
                         plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
                                     .generate(r[tc]))
                         plt.axis("off")
-                        plt.title(f"{tc} +frecuentes",fontsize=titleGraphicSize)
+                        plt.title(f"{tc} {titleGraphic}",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
