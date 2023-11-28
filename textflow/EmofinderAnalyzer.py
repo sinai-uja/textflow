@@ -61,8 +61,8 @@ class EmofinderAnalyzer(Analyzer):
             dir_f = {}
             for i in elms:
                 dir_f[str(i[0])] = [i[1], i[2], i[3], i[4]]
+                ar_res = []
                 try:
-                    ar_res = []
                     lst_arrays = list(dir_f.values())
                     ar_max = list(np.max(lst_arrays, axis = 0))
                     ar_min = list(np.min(lst_arrays, axis = 0))
