@@ -89,11 +89,19 @@ class Test():
         print("Columnas", len(df.columns))
         for i in self.normalityTest:
             if i == "Shapiro":
-                test = df.apply(lambda x: shapiro(x), axis=0)
-                test.index = ['Shapiro stat', 'Shapiro p-value']
-                test = test.transpose()
-                testFinal['Shapiro stat'] = list(test['Shapiro stat'])
-                testFinal['Shapiro p-value'] = list(test['Shapiro p-value'])
+                try:
+                  test = df.apply(lambda x: shapiro(x), axis=0)
+                  test.index = ['Shapiro stat', 'Shapiro p-value']
+                  test = test.transpose()
+                  testFinal['Shapiro stat'] = list(test['Shapiro stat'])
+                  testFinal['Shapiro p-value'] = list(test['Shapiro p-value'])
+                except:
+                    print("No se puede aplicar Shapiro")
+                    test = df.apply(lambda x: (np.nan,np.nan), axis=0)
+                    test.index = ['Shapiro stat', 'Shapiro p-value']
+                    test = test.transpose()
+                    testFinal['Shapiro stat'] = list(test['Shapiro stat'])
+                    testFinal['Shapiro p-value'] = list(test['Shapiro p-value'])
             elif i == "D'Agostino":
                 try:
                     test = df.apply(lambda x: normaltest(x), axis=0)
@@ -123,11 +131,19 @@ class Test():
                 testFinal['Chi-Square stat'] = list(test['Chi-Square stat'])
                 testFinal['Chi-Square p-value'] = list(test['Chi-Square p-value'])
             elif i == "Lilliefors": 
-                test = df.apply(lambda x: lilliefors(x), axis=0)
-                test.index = ['Lilliefors stat', 'Lilliefors p-value']
-                test = test.transpose()
-                testFinal['Lilliefors stat'] = list(test['Lilliefors stat'])
-                testFinal['Lilliefors p-value'] = list(test['Lilliefors p-value'])
+                try:
+                  test = df.apply(lambda x: lilliefors(x), axis=0)
+                  test.index = ['Lilliefors stat', 'Lilliefors p-value']
+                  test = test.transpose()
+                  testFinal['Lilliefors stat'] = list(test['Lilliefors stat'])
+                  testFinal['Lilliefors p-value'] = list(test['Lilliefors p-value'])
+                except:
+                  print("No se puede aplicar Lilliefors")
+                  test = df.apply(lambda x: (np.nan,np.nan), axis=0)
+                  test.index = ['Lilliefors stat', 'Lilliefors p-value']
+                  test = test.transpose()
+                  testFinal['Lilliefors stat'] = list(test['Lilliefors stat'])
+                  testFinal['Lilliefors p-value'] = list(test['Lilliefors p-value'])
             elif i == "Jarque–Bera": 
                 test = df.apply(lambda x: jarque_bera(x), axis=0)
                 test.index = ['Jarque–Bera stat', 'Jarque–Bera p-value']
@@ -171,9 +187,15 @@ class Test():
                 else:
                     dicResult["mannwhitneyu"]["Reject H0"].append(col)
                 row.extend([stat_mw, p_value_mw])
+                print(row)
             if "wilcoxon" in self.nonParametricTest:
+                stat_wc = np.nan
+                p_value_w = np.nan
                 if len(df1) == len(df2[col]):
-                    stat_wc, p_value_w = wilcoxon(df1[col], df2[col])
+                    try:
+                        stat_wc, p_value_w = wilcoxon(df1[col], df2[col])
+                    except:
+                        print("zero_method 'wilcox' and 'pratt' do not work if x - y is zero for all elements")
                     if p_value_w > self.alpha:
                         dicResult["wilcoxon"]['Fail to Reject H0'].append(col)
                     else:
@@ -181,10 +203,13 @@ class Test():
                     row.extend([stat_wc, p_value_w])
                 else:
                     max_len = min(len(df1), len(df2))
-                    if (max_len == 0):
-                        row.extend([np.nan, np.nan])
-                    else:
-                        stat_wc, p_value_w = wilcoxon(df1[col][:max_len], df2[col][:max_len])
+                    if (max_len != 0):
+                      try:
+                          stat_wc, p_value_w = wilcoxon(df1[col][:max_len], df2[col][:max_len])
+                      except:
+                          print("zero_method 'wilcox' and 'pratt' do not work if x - y is zero for all elements")
+                    row.extend([stat_wc, p_value_w])
+
             if "kruskal" in self.nonParametricTest:
                 try:
                     stat_k, p_value_k = kruskal(df1[col], df2[col])
@@ -195,6 +220,8 @@ class Test():
                 else:
                     dicResult["kruskal"]["Reject H0"].append(col)
                 row.extend([stat_k, p_value_k])    
+            print(row)
+            print(dfResult)
             dfResult = dfResult._append(pd.Series(row,index=dfResult.columns), ignore_index = True)
         
         display(dfResult)
