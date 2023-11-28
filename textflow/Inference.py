@@ -100,13 +100,18 @@ class Inference():
         return results.sort_values(by='f-score', ascending=False)
     
 
-    def classificationBoW(self,tdf, column_to_apply, label2id, group_by):
+    def classificationBoW(self,tdf, text_column, column_to_apply, label2id, group_by, calculate_for_all_group=True):
         vectorizer = TfidfVectorizer()
         groupValues = list(tdf[group_by].unique())
         allResults = {}
+        if calculate_for_all_group:
+            stdf = tdf.dropna()
+            X = vectorizer.fit_transform(stdf[text_column])
+            y = stdf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
+            allResults['all']=self.eval_classifiers(X, y)
         for group in groupValues:
             stdf = tdf[tdf[group_by] == group].dropna()
-            X = vectorizer.fit_transform(stdf['text'])
+            X = vectorizer.fit_transform(stdf[text_column])
             y = stdf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
             allResults[group]=self.eval_classifiers(X, y)
         return allResults
@@ -132,9 +137,14 @@ class Inference():
                 allResult[group]=self.eval_classifiers(X, y)
         return allResult
     
-    def classificationDeepVectors(self,ddf, label2id, column_to_apply, text_column, group_by, binary= False):
+    def classificationDeepVectors(self,ddf, label2id, column_to_apply, text_column, group_by, binary= False,calculate_for_all_group=True):
         groupValues = list(ddf[group_by].unique())
         allResults = {}
+        if calculate_for_all_group:
+            sddf = ddf.copy()
+            X = np.stack(sddf['encoding'])
+            y = sddf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
+            allResults['all']=self.eval_classifiers(X, y)
         for group in groupValues:
             sddf = ddf[ddf[group_by] == group] if binary==False else ddf[ddf[group_by] == group].dropna()
             X = np.stack(sddf['encoding'])

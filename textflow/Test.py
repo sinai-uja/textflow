@@ -180,7 +180,11 @@ class Test():
                         dicResult["wilcoxon"]["Reject H0"].append(col)
                     row.extend([stat_wc, p_value_w])
                 else:
-                    row.extend([np.nan, np.nan])
+                    max_len = min(len(df1), len(df2))
+                    if (max_len == 0):
+                        row.extend([np.nan, np.nan])
+                    else:
+                        stat_wc, p_value_w = wilcoxon(df1[col][:max_len], df2[col][:max_len])
             if "kruskal" in self.nonParametricTest:
                 try:
                     stat_k, p_value_k = kruskal(df1[col], df2[col])
