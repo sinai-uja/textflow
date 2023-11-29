@@ -61,16 +61,16 @@ class IsalAnalyzer(Analyzer):
             dir_f = {}
             for i in elms:
                 dir_f[str(i[0])] = [i[1], i[2], i[3], i[4]]
-                ar_res = []
-                try:
-                    lst_arrays = list(dir_f.values())
-                    ar_max = list(np.max(lst_arrays, axis = 0))
-                    ar_min = list(np.min(lst_arrays, axis = 0))
-                    ar_std_dev = list(np.std(lst_arrays, axis = 0))
-                    ar_avg = list(np.mean(lst_arrays, axis = 0))
-                    ar_res = [ar_max, ar_min, ar_std_dev, ar_avg]
-                except:
-                    ar_res = [[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0]]
+            ar_res = []
+            try:
+                lst_arrays = list(dir_f.values())
+                ar_max = list(np.max(lst_arrays, axis = 0))
+                ar_min = list(np.min(lst_arrays, axis = 0))
+                ar_std_dev = list(np.std(lst_arrays, axis = 0))
+                ar_avg = list(np.mean(lst_arrays, axis = 0))
+                ar_res = [ar_max, ar_min, ar_std_dev, ar_avg]
+            except:
+                ar_res = [[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0]]
             arrayResults.append(ar_res)
         return arrayResults
 
