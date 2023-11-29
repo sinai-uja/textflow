@@ -85,13 +85,13 @@ class Inference():
         toc_bwd = time()
         return sfs_forward, sfs_backward
     
-    def eval_classifiers(self, X, y):
+    def eval_classifiers(self, X, y,cv=5):
 
         # Vamos devolver los resultados como una tabla
         # Cada fila un algoritmo, cada columna un resultado
         results = pd.DataFrame(columns=['accuracy', 'precision', 'recall', 'f-score'])
         for alg, clf in  self.clfs:
-            scores = cross_validate(clf, X, y, cv=5,
+            scores = cross_validate(clf, X, y, cv=cv,
                                     scoring=('accuracy', 'precision_weighted', 'recall_weighted', 'f1_weighted')) # leave-one-out cross validation
             results.loc[alg,:] = [np.mean(scores['test_accuracy']),
                                 np.mean(scores['test_precision_weighted']),

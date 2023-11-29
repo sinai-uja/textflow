@@ -47,7 +47,7 @@ class Test():
         parametricResults = self.applyParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, normal_features)
         print("---------------------------------------NON-PARAMETRIC TEST---------------------------------------")    
         nonParametricResults = self.applyNonParametricTest(df1, df2, criteriaColumn1,criteriaColumn2, numeric_cols)
-        dicResults = {"normalTest":normal_results,"parametricTest":parametricResults,"nonParametricTes":nonParametricResults}
+        dicResults = {"normalTest":normal_results,"parametricTest":parametricResults,"nonParametricTest":nonParametricResults}
         if visualizer != None:
             if "distplot" in listGraphics:
                 print("---------------------------------------DISTPLOT GRAPHICS---------------------------------------")
@@ -191,7 +191,7 @@ class Test():
             if "wilcoxon" in self.nonParametricTest:
                 stat_wc = np.nan
                 p_value_w = np.nan
-                if len(df1) == len(df2[col]):
+                if len(df1) == len(df2):
                     try:
                         stat_wc, p_value_w = wilcoxon(df1[col], df2[col])
                     except:
@@ -245,7 +245,7 @@ class Test():
                     dicResult["Students t-test"]["Reject H0"].append(col)
                 row.extend([stat_ttestInd, p_value_ttestInd])
             if "Paired Students t-Test" in self.parametricTest:
-                if len(df1) == len(df2[col]):
+                if len(df1) == len(df2):
                     stat_ttestRel, p_value_ttestRel = ttest_rel(df1[col], df2[col])
                     if p_value_ttestRel > self.alpha:
                         dicResult["Paired Students t-Test"]['Fail to Reject H0'].append(col)
@@ -253,7 +253,14 @@ class Test():
                         dicResult["Paired Students t-Test"]["Reject H0"].append(col)
                     row.extend([stat_ttestRel, p_value_ttestRel])
                 else:
-                    row.extend([np.nan, np.nan])
+                    max_len = min(len(df1), len(df2))
+                    if (max_len != 0):
+                      try:
+                          stat_ttestRel, p_value_ttestRel = ttest_rel(df1[col][:max_len], df2[col][:max_len])
+                          row.extend([stat_ttestRel, p_value_ttestRel])
+                      except:
+                          row.extend([np.nan, np.nan])
+                    
             if "ANOVA" in self.parametricTest:
                 stat_anova, p_value_anova = f_oneway(df1[col], df2[col])
                 if p_value_anova > self.alpha:
