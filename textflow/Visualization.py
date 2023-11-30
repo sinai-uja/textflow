@@ -23,13 +23,13 @@ class Visualization():
     """
     def __init__(self, savePath='.', n_cols=6, cmap=sns.diverging_palette(230, 20, as_cmap=True)):
         """
-    Create the class Visualization.
+        Create the class Visualization.
 
-    Attributes:
-        savePath: an string with the path where different graphics where be saved.
-        n_cols: the number of columns of the subplot grid.
-        cmap: a colormap that is apply to the images.
-    """
+        Attributes:
+            savePath: an string with the path where different graphics where be saved.
+            n_cols: the number of columns of the subplot grid.
+            cmap: a colormap that is apply to the images.
+        """
         self.n_cols=n_cols
         self.cmap = cmap
         if savePath[-1] == '/' or savePath[-1] == '\"':
@@ -183,11 +183,13 @@ class Visualization():
         Function that show wordcloud, opcionlly save this plot.
 
         Args:
-            df,textColumns, stopwords= None, titleGraphic= None, groupby
             df: the pandas DataFrame that contains the data to visualize. This dataframe must to be filteren before pass for it
             textColumns: a list with the name of the columns of the dataframe that contain the sample data (text or a dictionary frequence) from which the wordCloud is created.
             stopwords: a list with the stopwords
-            titleGraphic: a string with the title of the wordcloud
+            titleGraphic: a string with the title of the wordcloud. By defect it will be "+ frecuentes"
+            widthGraphic: an integer that represent the width of the graphic
+            heightGraphic: an integer that represent the height of the graphic
+            hspace: the height of the padding between subplots, as a fraction of the average Axes height.
             titleGraphicSize : a integer that indicates the size of the title graphic
             groupby: a specific column of a DataFrame. The purpose of this variable is to indicate which column in the DataFrame will be used to group the data before performing the histogram.
             savePicture: a boolean value. True indicate that you want to save the pictura and False that the picture will not save. 

@@ -4,7 +4,7 @@ from transformers import pipeline
 from transformers import AutoModelForSequenceClassification,AutoTokenizer
 
 
-class IronityAnalyzer(Analyzer):
+class IronyAnalyzer(Analyzer):
     """
     A class that provides methods to analyze the ironity of the text of a sequence.
 

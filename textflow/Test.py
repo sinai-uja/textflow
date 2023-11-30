@@ -36,6 +36,27 @@ class Test():
         
 
     def report(self,df1,df2,criteriaColumn1,criteriaColumn2, visualizer = None, kdeColumn = None, boxPlotX= None, boxPlotHue=None, saveImages= False, nameFiles= None,listGraphics= ["distplot","probplot","kde","boxplot"]):
+        """
+        A function that apply normality test, parametric and nin-parametric tests. Moreover, it generate different graphic to visualize the data.
+
+        Args:
+            df1: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            df2: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            criteriaColumn1: an string with the value to distinct the df1 of df2
+            criteriaColumn2: an string with the value to distinct the df2 of df1
+            visualizer: a visualizer object of TextFlow
+            kdeColumn: a string or a list with the name of the columns of the dataframe that contain the sample data from which the kde plot is created.
+            boxPlotX: a list of string or a string that indicate the name of the column used to make the boxplot. If you use a list, you will generate as many boxplots as the length of this list 
+            boxPlotHue: a list of string or a string that indicate the name of the column used to make the boxplot name of variable in the DataFrame. This variable represent the input for plotting long-form data
+            saveImages: a booblean that indicates if we want to save the graphic.
+            nameFiles= a list with the names of the files to save the graphics.
+            listGraphics: a list with the name of different function to visualize the data. The name of these graphic funtions is:
+                          distplot: histogram (using density normalization) and a superimposed kernel density estimated
+                          probplot: probability plot
+                          kde: kernel density estimate (KDE) plot
+                          boxplot: box plot
+                          By defect the value is ["distplot","probplot","kde","boxplot"].
+            """
         df = pd.concat([df1,df2])
         numeric_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != 'object']
         print("---------------------------------------NORMALITY TEST---------------------------------------")
@@ -83,6 +104,12 @@ class Test():
         return dicResults
 
     def applyNormalTest(self,df):
+        """
+        A function that apply normality test.
+
+        Args:
+            df: the Pandas DataFrame that will used to apply the normal tests
+        """
         testFinal = pd.DataFrame()
         testFinal.index = list(df.columns)
         dicResult={}
@@ -172,6 +199,16 @@ class Test():
         return testFinal, dicResult        
                 
     def applyNonParametricTest(self, df1, df2, criteriaColumn1,criteriaColumn2, contrastCriteriaColumns): #https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/
+        """
+        A function that apply non parametric significant tests.
+
+        Args:
+            df1: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            df2: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            criteriaColumn1: an string with the value to distinct the df1 of df2
+            criteriaColumn2: an string with the value to distinct the df1 of df2
+            contrastCriteriaColumns: a list with the name of the columns to apply the significant tests
+        """
         columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
         dicResult = {}
         for npt in self.nonParametricTest:
@@ -229,6 +266,16 @@ class Test():
         return dfResult, dicResult
 
     def applyParametricTest(self, df1, df2, criteriaColumn1,criteriaColumn2, contrastCriteriaColumns): #https://machinelearningmastery.com/parametric-statistical-significance-tests-in-python/ 
+        """
+        A function that apply parametric significant tests.
+
+        Args:
+            df1: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            df2: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            criteriaColumn1: an string with the value to distinct the df1 of df2
+            criteriaColumn2: an string with the value to distinct the df1 of df2
+            contrastCriteriaColumns: a list with the name of the columns to apply the significant tests
+        """
         columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
         dicResult = {}
         for pt in self.parametricTest:
