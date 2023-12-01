@@ -24,7 +24,7 @@ import warnings
 from sklearn.feature_extraction.text import TfidfVectorizer
 from transformers import AutoTokenizer, AutoModel
 from IPython.display import display
-
+from xgboost import XGBClassifier
 
 class Inference():
     """
@@ -49,8 +49,12 @@ class Inference():
                 ('RandomForest', RandomForestClassifier(n_estimators=20, random_state=45)),
                 ('SGD', SGDClassifier(max_iter=1000, tol=1e-4, random_state=45)),
                 ('KNN', KNeighborsClassifier()),
-                ('MLP', MLPClassifier(max_iter=1000))
-            ]
+                ('MLP', MLPClassifier(max_iter=1000)),
+                ('XGBOOST', XGBClassifier({'objective':'binary:logistic',
+                                            'max_depth': 4,
+                                            'alpha': 10,
+                                            'learning_rate': 1.0,
+                                            'n_estimators':100}))]
         else:
             self.clfs = classifiers
         

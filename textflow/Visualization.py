@@ -9,6 +9,12 @@ import matplotlib.pyplot as plt
 from numpy import linalg as LA
 import math
 from wordcloud import WordCloud, STOPWORDS
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+from sklearn.metrics import mean_squared_error
+from sklearn.decomposition import NMF
+from sklearn import preprocessing as pre
 
 
 
@@ -268,3 +274,109 @@ class Visualization():
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
+
+    def show_pca(self, X, y, labelColumn= None, biplot = True, palette=None, savePicture= False, pictureName=None):
+        
+        scaler = StandardScaler()
+        x = scaler.fit_transform(X)
+        pca = PCA(n_components=2)
+        components = pca.fit_transform(x)
+        pca.components_
+
+        #Varianza explicada
+        cumVar = pd.DataFrame(np.cumsum(pca.explained_variance_ratio_)*100,
+                            columns=["cumVarPerc"])
+        expVar = pd.DataFrame(pca.explained_variance_ratio_*100, columns=["VarPerc"])
+        pd.concat([expVar, cumVar], axis=1)\
+            .rename(index={0: "PC1", 1: "PC2"})
+
+        #Visualización
+        componentsDf = pd.DataFrame(data = components, columns = ['PC1', 'PC2'])
+        pcaDf = pd.concat([componentsDf, y], axis=1)
+
+        plt.figure(figsize=(12, 6))
+        sns.scatterplot(data=pcaDf, x="PC1", y="PC2", hue=labelColumn,palette=palette)
+        if savePicture:
+            plt.savefig(self.savePath+pictureName)
+        plt.show()
+        if biplot == True:
+            score = components
+            coeff = np.transpose(pca.components_)
+            labels = list(X.columns)
+            plt.figure(figsize=(12, 6))
+            xs = score[:,0]
+            ys = score[:,1]
+            n = coeff.shape[0]
+            scalex = 1.0/(xs.max() - xs.min())
+            scaley = 1.0/(ys.max() - ys.min())
+            plt.scatter(xs * scalex,ys * scaley,s=5)
+            for i in range(n):
+                plt.arrow(0, 0, coeff[i,0], coeff[i,1],color = 'r',alpha = 0.5)
+                if labels is None:
+                    plt.text(coeff[i,0]* 1.15, coeff[i,1] * 1.15, "Var"+str(i+1), color = 'green', ha = 'center', va = 'center')
+                else:
+                    plt.text(coeff[i,0]* 1.15, coeff[i,1] * 1.15, labels[i], color = 'g', ha = 'center', va = 'center')
+
+            plt.xlabel("PC{}".format(1))
+            plt.ylabel("PC{}".format(2))
+            plt.grid()
+        return pcaDf
+
+    def show_tsne(self, X, tsne=TSNE(random_state = 0), label = None, savePicture= False, pictureName=None):
+        
+        data_t = tsne.fit_transform(X)
+        sns.scatterplot(x=data_t[:, 0], y=data_t[:, 1], hue = label)
+        if savePicture:
+            plt.savefig(self.savePath+pictureName)
+        plt.show()
+
+    def show_nnmf(self, k, X, labels = None, iters=100, verbose=True, savePicture= False, pictureName=None):
+        X = pre.MinMaxScaler().fit_transform(X)
+        X = X/X.std(axis=0)
+        # if X has any negative entries, stop:
+        if (X < 0).any():
+            raise ValueError('X must be non-negative.')
+
+        n, dims = X.shape
+        # initialize W, the measurement by cluster matrix
+        W = np.random.uniform(0, 1, (n, k))
+        # initialize H, the cluster by genes matrix
+        H = np.random.uniform(0, 1, (k, dims))
+        # initialize a vector to store errors
+        error = np.empty(iters)
+
+        # iteratively update W and H
+        for i in np.arange(iters):
+            newH = np.empty(H.shape)
+            # calculate W.T * X (matrix multiply)
+            N = np.dot(W.transpose(), X)
+            # calculate W.T * W * H (matrix multiply)
+            D = np.dot(np.dot(W.transpose(), W), H)
+            # calculate H*N/D by element-wise multiplication
+            newH = np.multiply(H, np.multiply(N, 1/D))
+            H=newH.copy()
+            # initialize a new W
+            newW = np.empty(W.shape)
+            N = X.dot(H.T)
+            D = W.dot(H).dot(H.T)
+            # element-wise multiply
+            newW = np.multiply(W, np.multiply(N, 1/D))
+            W = newW
+
+            e = np.sqrt(np.sum((X - W.dot(H))**2))
+            e_rel = e/np.sqrt(np.sum(X**2))
+            error[i] = e_rel
+            if not verbose:
+                continue
+            if i % 10 == 0:
+                print('error is {0:.2f}'.format(e_rel))
+        
+        sns.scatterplot(x=W[:, 0], y=W[:, 1], hue = labels)
+        plt.plot(error)
+        plt.xlabel('iterations')
+        plt.ylabel('relative error')
+        sns.clustermap(W)
+        if savePicture:
+            plt.savefig(self.savePath+pictureName)
+        plt.show()
+        return W, H, error
