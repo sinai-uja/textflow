@@ -153,29 +153,19 @@ class Inference():
         # Cada fila un algoritmo, cada columna un resultado
         results = pd.DataFrame(columns=['accuracy', 'precision', 'recall', 'f-score'])
         results2 = pd.DataFrame(columns=['accuracy', 'precision', 'recall', 'f-score'])
-        if cv==1:
-            for alg, clf in  self.clfs:
-                results.loc[alg,:] = [np.nan,
-                                    np.nan,
-                                    np.nan,
-                                    np.nan]
-                results2.loc[alg,:] = [np.nan,
-                                    np.nan,
-                                    np.nan,
-                                    np.nan]
-        else:
-            for alg, clf in  self.clfs:
-                scores = cross_validate(clf, X, y, cv=cv,
-                                        scoring=('accuracy', 'precision_weighted', 'recall_weighted', 'f1_weighted')) # leave-one-out cross validation
-                results.loc[alg,:] = [np.mean(scores['test_accuracy']),
-                                    np.mean(scores['test_precision_weighted']),
-                                    np.mean(scores['test_recall_weighted']),
-                                    np.mean(scores['test_f1_weighted'])]
-                results2.loc[alg,:] = [np.std(scores['test_accuracy']),
-                                    np.std(scores['test_precision_weighted']),
-                                    np.std(scores['test_recall_weighted']),
-                                    np.std(scores['test_f1_weighted'])]
-        return results.sort_values(by='f-score', ascending=False), result2.sort_values(by='f-score', ascending=False)
+        
+        for alg, clf in  self.clfs:
+            scores = cross_validate(clf, X, y, cv=cv,
+                                    scoring=('accuracy', 'precision_weighted', 'recall_weighted', 'f1_weighted')) # leave-one-out cross validation
+            results.loc[alg,:] = [np.mean(scores['test_accuracy']),
+                                np.mean(scores['test_precision_weighted']),
+                                np.mean(scores['test_recall_weighted']),
+                                np.mean(scores['test_f1_weighted'])]
+            results2.loc[alg,:] = [np.std(scores['test_accuracy']),
+                                np.std(scores['test_precision_weighted']),
+                                np.std(scores['test_recall_weighted']),
+                                np.std(scores['test_f1_weighted'])]
+        return results.sort_values(by='f-score', ascending=False), results2.sort_values(by='f-score', ascending=False)
     
 
     def classificationBoW(self,tdf, text_column, column_to_apply, label2id, group_by, calculate_for_all_group=True):
@@ -261,7 +251,7 @@ class Inference():
             X = np.stack(sddf['encoding'])
             y = sddf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
             if len(X) < 5:
-                    allResults[group]=self.eval_classifiers(X, y,len(X))
+                allResults[group]=self.eval_classifiers(X, y,len(X))
             else:
                 allResults[group]=self.eval_classifiers(X, y)
         return allResults
