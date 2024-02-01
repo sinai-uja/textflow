@@ -65,6 +65,8 @@ class Inference():
         Attributes:
             X: an array-like of shape (n-samples,n-features). This array represent the input samples to select the features and remove the low variance features.
             varianceThreshold: the varianceThreshold function. By defect it is used VarianceThreshold(threshold=0)
+        Returns:
+            df: 
         """
         sel = varianceThreshold
         arr = sel.fit_transform(X)
@@ -132,6 +134,7 @@ class Inference():
             ridge, n_features_to_select=num_features, direction="backward"
         ).fit(X, y)
         toc_bwd = time()
+        
         return sfs_forward, sfs_backward
     
     def eval_classifiers(self, X, y,cv=5):
@@ -142,6 +145,9 @@ class Inference():
             X: array-like of shape (n_samples, n_features). The training input samples.
             y: array-like of shape (n_samples,)
             cv: integer that determines the cross-validation splitting strategy. By defect we use 5.
+        Returns:
+            results: a pandas DataFrame sorted by f-score with 4 columns ('accuracy', 'precision', 'recall', 'f-score'). The rows of the Dataframe
+            are the name of the different classifiers that are used.
         """
         # Vamos devolver los resultados como una tabla
         # Cada fila un algoritmo, cada columna un resultado
@@ -238,7 +244,10 @@ class Inference():
             sddf = ddf[ddf[group_by] == group] if binary==False else ddf[ddf[group_by] == group].dropna()
             X = np.stack(sddf['encoding'])
             y = sddf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
-            allResults[group]=self.eval_classifiers(X, y)
+            if len(X) < 5:
+                allResults[group]=self.eval_classifiers(X, y,len(X))
+            else:
+                allResults[group]=self.eval_classifiers(X, y)
         return allResults
 
 
