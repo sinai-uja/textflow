@@ -275,7 +275,21 @@ class Visualization():
                     plt.show()
 
     def show_pca(self, X, y, labelColumn= None, biplot = True, palette=None, savePicture= False, pictureName=None):
-        
+        """
+        Function that show Principal Component Analysis graphic.
+
+        Args:
+            X: a pandas DataFrame with numeric values.
+            y: a list with the labels associated to each row of X.
+            labelColumn: a string with the name of the label column of X DataFrame. 
+            biplot: bolean that indicate if a biplot graphic is shown. A biplot includes both the scatter plot and arrows indicating the direction and magnitude of the original features in the reduced space.
+            palette: a string, list, dict, or matplotlib.colors.Colormap Method for choosing the colors to use when mapping the hue semantic.
+            savePicture: a boolean value. True indicate that you want to save the pictura and False that the picture will not save. 
+            pictureName: the name of the picture in the save path. By defect is None, because if the picture will not save, this variable will not be used.
+        Returns:
+            A PCA graphic shows in the notebook or an imagen saved in the corresponding path.
+            A a DataFrame that contains the principal component analysis (PCA) results.
+        """
         scaler = StandardScaler()
         x = scaler.fit_transform(X)
         pca = PCA(n_components=2)
@@ -323,7 +337,18 @@ class Visualization():
         return pcaDf
 
     def show_tsne(self, X, tsne=TSNE(random_state = 0), label = None, savePicture= False, pictureName=None):
-        
+        """
+        Function that show t-Distributed Stochastic Neighbor Embedding graphic.
+
+        Args:
+            X: a pandas DataFrame with the input data needs to be transformed and visualized t-SNE graphic.
+            tsne:  The t-SNE algorithm.
+            label: a list or pandas Series with the associated label of each row of X. 
+            savePicture: a boolean value. True indicate that you want to save the pictura and False that the picture will not save. 
+            pictureName: the name of the picture in the save path. By defect is None, because if the picture will not save, this variable will not be used.
+        Returns:
+            A TNSE graphic shows in the notebook or an imagen saved in the corresponding path.
+        """
         data_t = tsne.fit_transform(X)
         sns.scatterplot(x=data_t[:, 0], y=data_t[:, 1], hue = label)
         if savePicture:
@@ -331,6 +356,23 @@ class Visualization():
         plt.show()
 
     def show_nnmf(self, k, X, labels = None, iters=100, verbose=True, savePicture= False, pictureName=None):
+        """
+        Function that show Non-Negative Matrix Factorization graphic.
+
+        Args:
+            k: The number of components to factorize the input matrix X into.
+            X: A pandas DataFrame with the input data to be factorized.
+            labels: a list or pandas.Series with the labels for coloring the points in the scatter plot.
+            iters: The number of iterations for the NNMF algorithm.
+            verbose: A bolean that if is equal to True, print the relative error at every 10 iterations during the NNMF process.
+            savePicture: a boolean value. True indicate that you want to save the pictura and False that the picture will not save. 
+            pictureName: the name of the picture in the save path. By defect is None, because if the picture will not save, this variable will not be used.
+        Returns:
+            A NNMF graphic shows in the notebook or an imagen saved in the corresponding path.
+            The factorized matrices W and H
+            An array with the relative error at each iteration.
+        """
+        
         X = pre.MinMaxScaler().fit_transform(X)
         X = X/X.std(axis=0)
         # if X has any negative entries, stop:

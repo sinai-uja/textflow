@@ -57,8 +57,8 @@ class Test():
                           boxplot: box plot
                           By defect the value is ["distplot","probplot","kde","boxplot"].
         Returns:
-            dictResults: a dictionary that have as keys 'normalTest', 'parametricTest', 'nonParametricTest'.
-                         Each key have as value the result of apply the methods applyNormalTest, applyParametricTest and applyNonParametricTest
+            A dictionary that have as keys 'normalTest', 'parametricTest', 'nonParametricTest'.
+            Each key have as value the result of apply the methods applyNormalTest, applyParametricTest and applyNonParametricTest
             """
         df = pd.concat([df1,df2])
         numeric_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != 'object']
