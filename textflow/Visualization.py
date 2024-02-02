@@ -320,6 +320,7 @@ class Visualization():
             plt.xlabel("PC{}".format(1))
             plt.ylabel("PC{}".format(2))
             plt.grid()
+            plt.show()
         return pcaDf
 
     def show_tsne(self, X, tsne=TSNE(random_state = 0), label = None, savePicture= False, pictureName=None):
@@ -370,11 +371,15 @@ class Visualization():
                 continue
             if i % 10 == 0:
                 print('error is {0:.2f}'.format(e_rel))
-        
+        plt.figure()
         sns.scatterplot(x=W[:, 0], y=W[:, 1], hue = labels)
+        plt.show()
+
+        plt.figure()
         plt.plot(error)
         plt.xlabel('iterations')
         plt.ylabel('relative error')
+        plt.show()
         sns.clustermap(W)
         if savePicture:
             plt.savefig(self.savePath+pictureName)
