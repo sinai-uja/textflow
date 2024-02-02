@@ -203,7 +203,7 @@ class Visualization():
         Returns:
             A WordCloud shows in the notebook or an imagen saved in the corresponding path.
         """
-        for tc in textColumns:
+        for numTc, tc in enumerate(textColumns):
             if type(df[tc].iloc[0]) == dict:
                 plt.subplots_adjust(hspace=hspace)
                 plt.figure(figsize=(widthGraphic,heightGraphic))
@@ -247,30 +247,29 @@ class Visualization():
                     plt.show()
             else: #Es texto
                 if groupby != None:
-                    for i, r in df.reset_index().iterrows():
-                        stringGroupBy= groupby
+                    for i, row in df.groupby(groupby)[tc].agg(lambda x: ' '.join(x)).reset_index().iterrows():
+                        stringGroupBy = row[groupby]
                         if type(groupby) == list:
                             groupColumnValues= [r[gb] for gb in groupby]
                             stringGroupBy = ', '.join(groupColumnValues)
                         ncols = len(textColumns)
-                        nrows = math.ceil(len(df)/ncols)
+                        nrows = math.ceil(len(df.groupby(groupby)[tc].agg(lambda x: ' '.join(x)).reset_index())/ncols)
                         plt.subplot(nrows,ncols, int(i)+1)
-                        plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
-                                    .generate(r[tc]))
+                        plt.imshow(WordCloud(background_color='white', width=1000, stopwords=stopwords, height=1000).generate(row[tc]))
                         plt.axis("off")
-                        plt.title(f"{tc} {titleGraphic} ({stringGroupBy})",fontsize=titleGraphicSize)
+                        plt.title(f"{tc} {titleGraphic} ({stringGroupBy})", fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
                 else:
-                    for i, r in df.reset_index().iterrows():
-                        ncols = len(textColumns)
-                        nrows = math.ceil(len(df)/ncols)
-                        plt.subplot(nrows,ncols, int(i)+1)
-                        plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
-                                    .generate(r[tc]))
-                        plt.axis("off")
-                        plt.title(f"{tc} {titleGraphic}",fontsize=titleGraphicSize)
+                    textWc=' '.join(list(df[tc]))
+                    ncols = len(textColumns)
+                    nrows = 1
+                    plt.subplot(nrows,ncols, int(numTc)+1)
+                    plt.imshow(WordCloud(background_color='white', width=500, stopwords = stopwords, height=600)
+                                .generate(textWc))
+                    plt.axis("off")
+                    plt.title(f"{tc} {titleGraphic}",fontsize=titleGraphicSize)
                     if savePicture:
                         plt.savefig(self.savePath+pictureName)
                     plt.show()
