@@ -65,7 +65,7 @@ class Inference():
             X: an array-like of shape (n-samples,n-features). This array represent the input samples to select the features and remove the low variance features.
             varianceThreshold: the varianceThreshold function. By defect it is used VarianceThreshold(threshold=0)
         Returns:
-            df: 
+            df: pandas DataFrame with selectedFeatures
         """
         sel = varianceThreshold
         arr = sel.fit_transform(X)
@@ -81,6 +81,11 @@ class Inference():
             X: array-like of shape (n_samples, n_features). The training input samples.
             y: array-like of shape (n_samples,)
             k: an integer that represent the number of top features to select. By defect, we use 10. 
+        Returns:
+            kbest_classif_columns: a list with the selected characteristics by analysis of variance (ANOVA). 
+                                   ANOVA measures the difference between the means of several classes.
+            kbest_mi_columns: a list with the selected features by the mutual information selection method between features and labels.
+                              Mutual information measures the dependence between two variables and selects features according to their ability to provide information about the target variable.
         """
         kbest_classif = SelectKBest(f_classif, k=k) # Elimina todo menos las k características de puntuación más alta
         kbest_classif.fit(X, y)
@@ -102,6 +107,10 @@ class Inference():
             y: array-like of shape (n_samples,)
             model: The base estimator from which the transformer is built. This must be non-fitted estimator because inside of the function we are going to fit it. 
                    The estimator should have a fit method and feature_importances_ or coef_ attribute after fitting. By defect we use a LinearSVC(C=0.01, penalty="l1", dual=False)
+        Return:
+            X_new:  a pandas DataFrame with the result of apply the estimator defined in the attributes of a function. 
+                    This DataFrame only contain the selected features by the classifier.
+            
         """
         lsvcFitted = estimator.fit(X, y)
         model = SelectFromModel(lsvcFitted, prefit=True)
@@ -120,6 +129,11 @@ class Inference():
             y: array-like of shape (n_samples,)
             num_features: an integer with the number of features that were selected,
             estimator: an unfitted estimator
+        Return:
+            sfs_forward: Object that safe information about the selected features during the forward selection features.
+                         This object include information about the selection features, the score associated to these metrics, etc.
+            sfs_backward: Object that safe information about the selected features during the backward selection features.
+                         This object include information about the selection features, the score associated to these metrics, etc.
         """
         ridge = estimator.fit(X,range(0,len(y))) # Errores
         tic_fwd = time()
@@ -145,13 +159,12 @@ class Inference():
             y: array-like of shape (n_samples,)
             cv: integer that determines the cross-validation splitting strategy. By defect we use 5.
         Returns:
-            results: a pandas DataFrame sorted by f-score with 4 columns ('accuracy', 'precision', 'recall', 'f-score'). The rows of the Dataframe
-            are the name of the different classifiers that are used.
+            results: a pandas DataFrame that contains the average performance metrics ('accuracy', 'precision_weighted', 'recall_weighted', 'f1_weighted') and standard deviation for each classifier after cross-validation. 
+                     This DataFrame is sorted by f-score (Mean). The rows of the Dataframe are the name of the different classifiers that are used.
         """
         # Vamos devolver los resultados como una tabla
         # Cada fila un algoritmo, cada columna un resultado
-        results = pd.DataFrame(columns=['accuracy', 'precision', 'recall', 'f-score'])
-        results2 = pd.DataFrame(columns=['accuracy', 'precision', 'recall', 'f-score'])
+        results = pd.DataFrame(columns=['accuracy (Mean)', 'precision (Mean)', 'recall (Mean)', 'f-score (Mean)', 'accuracy (Std)', 'precision (Std)', 'recall (Std)', 'f-score (Std)'])
         
         for alg, clf in  self.clfs:
             scores = cross_validate(clf, X, y, cv=cv,
@@ -159,12 +172,11 @@ class Inference():
             results.loc[alg,:] = [np.mean(scores['test_accuracy']),
                                 np.mean(scores['test_precision_weighted']),
                                 np.mean(scores['test_recall_weighted']),
-                                np.mean(scores['test_f1_weighted'])]
-            results2.loc[alg,:] = [np.std(scores['test_accuracy']),
+                                np.mean(scores['test_f1_weighted']),np.std(scores['test_accuracy']),
                                 np.std(scores['test_precision_weighted']),
                                 np.std(scores['test_recall_weighted']),
                                 np.std(scores['test_f1_weighted'])]
-        return results.sort_values(by='f-score', ascending=False), results2.sort_values(by='f-score', ascending=False)
+        return results.sort_values(by='f-score (Mean)', ascending=False)
     
 
     def classificationBoW(self,tdf, text_column, column_to_apply, label2id, group_by, calculate_for_all_group=True):
@@ -178,6 +190,10 @@ class Inference():
             label2id: a label2id vector
             group_by: an string with the name of the column of the DataFrame to use for the groupby. 
             calculate_for_all_group: a boolean that indicates if do you want to calculate BoW for all of the dataframe.
+        Return:
+            allResult: a dictionary with the results of apply different classifier to the text with the BoW features. 
+                       The keys of the dictionary are each group of the group_by and 'all' in case that calculate_for_all_group==True.
+                       The values are the pandas DataFrame returned by eval_classifier method using BoW characteristics calculated.  
         """
         vectorizer = TfidfVectorizer()
         groupValues = list(tdf[group_by].unique())
@@ -196,7 +212,7 @@ class Inference():
 
     def classificationWithFeatures(self, ext_df, ext_numeric_cols, column_to_apply, label2id, group_by= None, calculate_for_all_group = True):
         """
-        A function that classify the text using aditional features
+        A function that classify the text using aditional features calculated with the textflow analyzers.
 
         Attributes:
             ext_df: the Pandas DataFrame that contains the data to classify 
@@ -205,6 +221,10 @@ class Inference():
             label2id: a label2id vector
             group_by: an string with the name of the column of the DataFrame to use for the groupby. 
             calculate_for_all_group: a boolean that indicates if do you want to calculate BoW for all of the dataframe.
+        Return:
+            allResult: a dictionary with the results of apply different classifier to the text and the application of MinMaxScaler to the numerics features. 
+                       The keys of the dictionary are each group of the group_by and 'all' in case that calculate_for_all_group==True.
+                       The values are the pandas DataFrame returned by eval_classifier method using MinMaxScaler to the numeric features. 
         """
         warnings.filterwarnings('ignore')
         allResult = {}
@@ -237,6 +257,10 @@ class Inference():
             group_by: an string with the name of the column of the DataFrame to use for the groupby. 
             binary: a boolean value use to indicate if it is a binary classification
             calculate_for_all_group: a boolean that indicates if do you want to calculate BoW for all of the dataframe.
+        Return:
+            allResult: a dictionary with the results of apply different classifier to the text and deep vectors. 
+                       The keys of the dictionary are each group of the group_by and 'all' in case that calculate_for_all_group==True.
+                       The values are the pandas DataFrame returned by eval_classifier method using deep vectors. 
         """
         groupValues = list(ddf[group_by].unique())
         allResults = {}
@@ -264,6 +288,8 @@ class Inference():
             text: an string of which we want to codify 
             tokenizer: the Transformer tokenizer to use. By defect the tokenizer is: AutoTokenizer.from_pretrained("PlanTL-GOB-ES/roberta-base-bne")
             model: the Transformer model to use. By defect the model is AutoModel.from_pretrained("PlanTL-GOB-ES/roberta-base-bne")
+        Return:
+             poolerOutput: atahe first element of the last layer hidden-state. 
         """
         input = tokenizer.encode_plus(text,
                                         add_special_tokens = True,
@@ -272,7 +298,8 @@ class Inference():
                                         return_attention_mask = True,
                                         return_tensors = "pt")
         output = model(**input)
-        return output.pooler_output.detach().numpy()[0]
+        poolerOutput=output.pooler_output.detach().numpy()[0]
+        return poolerOutput
     
     def combine_all_features (self, label2id, all_df, numeric_cols,column_to_group, value, text_colummn ,column_to_apply):
         """
@@ -286,6 +313,9 @@ class Inference():
             value: the exact value of the column_to_group for each we want to filter
             text_colummn: an string with the name of the text column of the DataFrame.
             column_to_apply: an string with the name of the column where label2id is going to apply
+        Returns:
+            dfResult: a pandas DataFrame with the result of apply the different classifiers to the combination of scaled numeric features, 
+                      TF-IDF transformed text features, and stacked encoding features for a specific group (determined by column_to_group and value).
         """
         vectorizer = TfidfVectorizer()
         sdf = all_df[all_df[column_to_group] == value].dropna()
@@ -297,5 +327,6 @@ class Inference():
         y = sdf[column_to_apply].apply(lambda x: label2id[x]).to_numpy()
         print(Xf.shape, Xt.shape, Xd.shape)
         X = np.concatenate((Xf, Xt, Xd), axis=1)
-        return self.eval_classifiers(X, y)
+        dfResult= self.eval_classifiers(X, y)
+        return dfResult
     
