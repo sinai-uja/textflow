@@ -56,6 +56,9 @@ class Test():
                           kde: kernel density estimate (KDE) plot
                           boxplot: box plot
                           By defect the value is ["distplot","probplot","kde","boxplot"].
+        Returns:
+            dictResults: a dictionary that have as keys 'normalTest', 'parametricTest', 'nonParametricTest'.
+                         Each key have as value the result of apply the methods applyNormalTest, applyParametricTest and applyNonParametricTest
             """
         df = pd.concat([df1,df2])
         numeric_cols = [col for col, dtype in zip(df.columns, df.dtypes) if dtype != 'object']
@@ -109,6 +112,9 @@ class Test():
 
         Args:
             df: the Pandas DataFrame that will used to apply the normal tests
+        Returns:
+            A tuple that have at the first position a DataFrame with the results of apply the defined tests to the each numerical feature of the DataFrame.
+            The second position of the tuple have a dictionary with key of the applied Test as key and as value the list of features that pass the associated test.
         """
         testFinal = pd.DataFrame()
         testFinal.index = list(df.columns)
@@ -203,11 +209,14 @@ class Test():
         A function that apply non parametric significant tests.
 
         Args:
-            df1: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
-            df2: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            df1: the Pandas DataFrame that will used to compare in non-parametric significance tests
+            df2: the Pandas DataFrame that will used to compare in non-parametric significance tests
             criteriaColumn1: an string with the value to distinct the df1 of df2
             criteriaColumn2: an string with the value to distinct the df1 of df2
             contrastCriteriaColumns: a list with the name of the columns to apply the significant tests
+        Returns:
+            A tuple that have at the first position a DataFrame with the results of apply the defined tests to the each numerical feature of the DataFrame.
+            The second position of the tuple have a dictionary with key of the applied Test as key and as value a dictionary that have as key if 'Fail to reject' or 'Reject' the H0 and as value the list of features that belong to each category.
         """
         columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
         dicResult = {}
@@ -270,11 +279,14 @@ class Test():
         A function that apply parametric significant tests.
 
         Args:
-            df1: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
-            df2: the Pandas DataFrame that will used to compare in significance tests(parametric and non-parametric)
+            df1: the Pandas DataFrame that will used to compare in parametric significance tests
+            df2: the Pandas DataFrame that will used to compare in parametric significance tests
             criteriaColumn1: an string with the value to distinct the df1 of df2
             criteriaColumn2: an string with the value to distinct the df1 of df2
             contrastCriteriaColumns: a list with the name of the columns to apply the significant tests
+        Return:
+            A tuple that have at the first position a DataFrame with the results of apply the defined tests to the each numerical feature of the DataFrame.
+            The second position of the tuple have a dictionary with key of the applied Test as key and as value a dictionary that have as key if 'Fail to reject' or 'Reject' the H0 and as value the list of features that belong to each category.
         """
         columnsDF=['Feature', 'Criteria_1', 'Criteria_2']
         dicResult = {}
