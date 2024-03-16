@@ -746,6 +746,9 @@ The steps to create an analyzer are:
             arrayResults.append(prediction)
         return arrayResults
 
+# Contact:
+If you have any questions about the use of the library, you can contact with Estrella Vallecillo (mevallec@ujaen.es).
+
 # Acknowledgements:
 
 This work has been partially supported by the CONSENSO (PID2021-122263OB-C21), MODERATES (TED2021-130145B-I00), SocialTOX (PDC2022-133146-C21) projects financed by the Plan Nacional I+D+i of the Government of Spain, and the PRECOM (SUBV-00016) project financed by the Ministry of Consumer Affairs of the Government of Spain.
