@@ -53,7 +53,7 @@ class ComplexityAnalyzer(Analyzer):
 
         Args:
             rutaArchivoCrea: the path of the file that contains the most frequence words of spanish language
-            isMetadata: boolean, if the result of the analyzer is stored in metadata (True) or in children(False)
+            nlp: spacy model used to calculate the analizer metrics
         """
         self.nlp = nlp
         #Vamos a cargar CREA:
