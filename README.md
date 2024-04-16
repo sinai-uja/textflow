@@ -32,63 +32,63 @@ In this library, we have sequences and analyzers.
 
 # Files
 
- - **[INSTALL.md](https://gitlab.ujaen.es/jcollado/textflow/blob/master/INSTALL.md):** A guide to make this project work in your local environment.
+ - **[INSTALL.md](https://github.com/sinai-uja/textflow/blob/master/INSTALL.md):** A guide to make this project work in your local environment.
 
 ### ./textFlow
 
-- **[Analyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Analyzer.py):** This module provides an abstract class with methods for the calculation of different metrics on a sequence.
+- **[Analyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/Analyzer.py):** This module provides an abstract class with methods for the calculation of different metrics on a sequence.
 
-- **[ComplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
+- **[ComplexityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/ComplexityAnalyzer.py):** This module provides class methods for the calculation of different complexity metrics on a sequence. This class inherits from Analyzer.py
 
-- **[CREA_5000.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Crea-5000.txt):** A dataset of 5000 Spanish words ordered by its absolute frequency.
+- **[CREA_5000.txt](https://github.com/sinai-uja/textflow/blob/master/textflow/Crea-5000.txt):** A dataset of 5000 Spanish words ordered by its absolute frequency.
 
-- **[EmotionAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmotionAnalyzer.py):** This module provides class methods for the calculation of the emotions on a sequence. This class inherits from Analyzer.py
+- **[EmotionAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/EmotionAnalyzer.py):** This module provides class methods for the calculation of the emotions on a sequence. This class inherits from Analyzer.py
 
-- **[LemmaAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LemmaAnalyzer.py):** This module provides class methods for the calculation of different lemma metrics on a sequence. This class inherits from Analyzer.py
+- **[LemmaAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/LemmaAnalyzer.py):** This module provides class methods for the calculation of different lemma metrics on a sequence. This class inherits from Analyzer.py
 
-- **[LexicalDiversityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/LexicalDiversityAnalyzer.py):** This module provides a class methods for the calculation of different lexical diversity measures. This class inherits from Analyzer.py
+- **[LexicalDiversityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/LexicalDiversityAnalyzer.py):** This module provides a class methods for the calculation of different lexical diversity measures. This class inherits from Analyzer.py
 
-- **[POSAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/POSAnalyzer.py):** This module provides a class methods for the calculation of different Part-of-speech metrics on a sequence. This class inherits from Analyzer.py
+- **[POSAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/POSAnalyzer.py):** This module provides a class methods for the calculation of different Part-of-speech metrics on a sequence. This class inherits from Analyzer.py
 
-- **[PolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PolarityAnalyzer.py):** This module provides class methods for the calculation of the polarity on a sequence. This class inherits from Analyzer.py
+- **[PolarityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/PolarityAnalyzer.py):** This module provides class methods for the calculation of the polarity on a sequence. This class inherits from Analyzer.py
 
-- **[Sequence.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/Sequence.py):** This module provides an abstract class with methods for creating sequences from different sources. A sequence contains 2 dictionaries, one for metadata and the other for the subsequence of this sequence.
+- **[Sequence.py](https://github.com/sinai-uja/textflow/blob/master/textflow/Sequence.py):** This module provides an abstract class with methods for creating sequences from different sources. A sequence contains 2 dictionaries, one for metadata and the other for the subsequence of this sequence.
 
-- **[SequenceDirectory.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceDirectory.py):** This module provides methods for creating a sequence from a directory.
+- **[SequenceDirectory.py](https://github.com/sinai-uja/textflow/blob/master/textflow/SequenceDirectory.py):** This module provides methods for creating a sequence from a directory.
 
-- **[SequenceFile.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceFile.py):** This module provides methods for creating a sequence from a file or a document.
+- **[SequenceFile.py](https://github.com/sinai-uja/textflow/blob/master/textflow/SequenceFile.py):** This module provides methods for creating a sequence from a file or a document.
 
-- **[SequenceString.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceString.py):** This module provides methods for creating a sequence from a string.
+- **[SequenceString.py](https://github.com/sinai-uja/textflow/blob/master/textflow/SequenceString.py):** This module provides methods for creating a sequence from a string.
 
-- **[SequenceToken.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/SequenceToken.py):** This module provides methods for creating a sequence from a token.
+- **[SequenceToken.py](https://github.com/sinai-uja/textflow/blob/master/textflow/SequenceToken.py):** This module provides methods for creating a sequence from a token.
 
-- **[StylometryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/StylometryAnalyzer.py):** This module provides class methods for the calculation of different stylometry metrics on a sequence. This class inherits from Analyzer.py
+- **[StylometryAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/StylometryAnalyzer.py):** This module provides class methods for the calculation of different stylometry metrics on a sequence. This class inherits from Analyzer.py
 
-- **[VolumetryAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/VolumetryAnalyzer.py):** This module provides class methods for the calculation of different volumetry metrics on a sequence. This class inherits from Analyzer.py
+- **[VolumetryAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/VolumetryAnalyzer.py):** This module provides class methods for the calculation of different volumetry metrics on a sequence. This class inherits from Analyzer.py
 
-- **[IronityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/IronityAnalyzer.py):** This module provides class methods for the calculation of the ironity on a sequence. This class inherits from Analyzer.py
+- **[IronityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/IronityAnalyzer.py):** This module provides class methods for the calculation of the ironity on a sequence. This class inherits from Analyzer.py
 
-- **[NERAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NERAnalyzer.py):** This module provides class methods for the search of different NER on a sequence. This class inherits from Analyzer.py
+- **[NERAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/NERAnalyzer.py):** This module provides class methods for the search of different NER on a sequence. This class inherits from Analyzer.py
 
-- **[NGramsAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
+- **[NGramsAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/NGramsAnalyzer.py):** This module provides class methods for the calculation of n-grams and their frequence on a sequence. This class inherits from Analyzer.py
 
-- **[EmojiAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
+- **[EmojiAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/EmojiAnalyzer.py):** This module provides class methods for the calculation of different emojis metrics on a sequence. This class inherits from Analyzer.py
 
-- **[TextEmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/TextEmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to text emojis on a sequence. This class inherits from Analyzer.py
+- **[TextEmojiPolarityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/TextEmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to text emojis on a sequence. This class inherits from Analyzer.py
 
-- **[EmojiPolarityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/EmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to emojis on a sequence. This class inherits from Analyzer.py
+- **[EmojiPolarityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/EmojiPolarityAnalyzer.py):** This module provides class methods to calculate the polarity of a text related to emojis on a sequence. This class inherits from Analyzer.py
 
-- **[PerplexityAnalyzer.py](https://gitlab.ujaen.es/jcollado/textflow/blob/master/textflow/PerplexityAnalyzer.py):** This module provides class methods to calculate the perplexity of a text. This class inherits from Analyzer.py
+- **[PerplexityAnalyzer.py](https://github.com/sinai-uja/textflow/blob/master/textflow/PerplexityAnalyzer.py):** This module provides class methods to calculate the perplexity of a text. This class inherits from Analyzer.py
 
 **Note:** All of the analyzers implemented by default are applied to plain text.
 
 ### ./examples
 
-- **[example_text.txt](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/ExampleDirectory/Documento%20sin%20t%C3%ADtulo.txt):** Simple .txt file to test the library.
+- **[example_text.txt](https://github.com/sinai-uja/textflow/blob/master/Examples/ExampleDirectory/Documento%20sin%20t%C3%ADtulo.txt):** Simple .txt file to test the library.
 
-- **[example.ipynb](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/Example.ipynb):** Colab notebook that shows how to use the different methods of textFlow.
+- **[example.ipynb](https://github.com/sinai-uja/textflow/blob/master/Examples/Example.ipynb):** Colab notebook that shows how to use the different methods of textFlow.
 
-- **[AnalyzeADataframe.ipynb](https://gitlab.ujaen.es/jcollado/textflow/blob/master/Examples/AnalyzeADataframe.ipynb.ipynb):** Colab notebook that shows how to use textFlow with a Dataframe of pandas.
+- **[AnalyzeADataframe.ipynb](https://github.com/sinai-uja/textflow/blob/master/Examples/AnalyzeADataframe.ipynb.ipynb):** Colab notebook that shows how to use textFlow with a Dataframe of pandas.
 
 # Metrics
 

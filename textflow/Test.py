@@ -10,7 +10,7 @@ from textflow.Visualization import Visualization
 
 class Test():
     """
-    A class that provides methods to analyze the polarity of the text of a sequence.
+    A class that provides methods to calculate normality tests, parametric tests and non-parametric tests to the features of a DataFrame.
 
     Attributes:
         normalityTest: a list with the normal tests to apply
