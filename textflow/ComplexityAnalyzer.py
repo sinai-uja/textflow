@@ -167,6 +167,7 @@ class ComplexityAnalyzer(Analyzer):
         numWords = 0
         numWord3Syllabes = 0
         numSyllabes = 0
+        numChars = 0
         for token in doc:
             if token.pos_ == "PUNCT":
                 numPunt+=1
