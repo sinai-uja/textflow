@@ -99,7 +99,7 @@ class StylometryAnalyzer(Analyzer):
         self.TTR = len(self.uniqueWords) / len(text)
         self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
 
-        if len(self.uniqueWords) == 0: 
+        if len(self.uniqueWords) == 0 or len(text) == 0: 
             self.TTR = 0
             self.RTTR = 0
             self.herdan = 0
@@ -116,7 +116,9 @@ class StylometryAnalyzer(Analyzer):
                 self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
             else:
                 self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10)) /  pow(math.log(len(self.uniqueWords),10),2)
-            if len(text) == 10:
+            if len(self.uniqueWords) == 1:
+                self.somers = 0
+            elif len(text) == 10 or len(text) == 1:
                 self.somers = math.log(math.log(len(self.uniqueWords),10),10)
             else:
                 self.somers = math.log(math.log(len(self.uniqueWords),10),10) / math.log(math.log(len(text),10),10)
