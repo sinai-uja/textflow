@@ -98,28 +98,36 @@ class StylometryAnalyzer(Analyzer):
         self.numWordFreqOne = len( [token[0] for token in self.freqWord if token[1] == 1 ])
         self.TTR = len(self.uniqueWords) / len(text)
         self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
-        if len(text)== 1:
-            self.herdan = math.log(len(self.uniqueWords),10)
-        else:
-            self.herdan = math.log(len(self.uniqueWords),10) / math.log(len(text),10)
-        if pow(math.log(len(self.uniqueWords),10),2) == 0:
-            self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
-        else:
-            self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10)) /  pow(math.log(len(self.uniqueWords),10),2)
-        if len(text) == 10:
-            self.somers = math.log(math.log(len(self.uniqueWords),10),10)
-        elif len(self.uniqueWords) == 10 or len(self.uniqueWords) == 1:
+
+        if len(self.uniqueWords) == 0: 
+            self.TTR = 0
+            self.RTTR = 0
+            self.herdan = 0
+            self.mass = 0
             self.somers = 0
+            self.dugast = 0
+            self.honore = 0
         else:
-            self.somers = math.log(math.log(len(self.uniqueWords),10),10) / math.log(math.log(len(text),10),10)
-        if math.log(len(text),10)- math.log(len(self.uniqueWords),10) == 0:
-            self.dugast = pow(math.log(len(text),10),2)
-        else:
-            self.dugast = pow(math.log(len(text),10),2) / (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
-        if 1-(self.numWordFreqOne/len(self.uniqueWords)) == 0:
-            self.honore = 100*(math.log(len(text),10))
-        else:
-            self.honore = 100*(math.log(len(text),10)/(1-(self.numWordFreqOne/len(self.uniqueWords))))    
+            if len(text)== 1:
+                self.herdan = math.log(len(self.uniqueWords),10)
+            else:
+                self.herdan = math.log(len(self.uniqueWords),10) / math.log(len(text),10)
+            if pow(math.log(len(self.uniqueWords),10),2) == 0:
+                self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
+            else:
+                self.mass = (math.log(len(text),10)- math.log(len(self.uniqueWords),10)) /  pow(math.log(len(self.uniqueWords),10),2)
+            if len(text) == 10:
+                self.somers = math.log(math.log(len(self.uniqueWords),10),10)
+            else:
+                self.somers = math.log(math.log(len(self.uniqueWords),10),10) / math.log(math.log(len(text),10),10)
+            if math.log(len(text),10)- math.log(len(self.uniqueWords),10) == 0:
+                self.dugast = pow(math.log(len(text),10),2)
+            else:
+                self.dugast = pow(math.log(len(text),10),2) / (math.log(len(text),10)- math.log(len(self.uniqueWords),10))
+            if 1-(self.numWordFreqOne/len(self.uniqueWords)) == 0:
+                self.honore = 100*(math.log(len(text),10))
+            else:
+                self.honore = 100*(math.log(len(text),10)/(1-(self.numWordFreqOne/len(self.uniqueWords))))    
 
 
     def freqWords(self,tokens, stopWords, puntuationMarks):
