@@ -96,8 +96,6 @@ class StylometryAnalyzer(Analyzer):
         """
         self.uniqueWords = [token[0] for token in self.freqWord]
         self.numWordFreqOne = len( [token[0] for token in self.freqWord if token[1] == 1 ])
-        self.TTR = len(self.uniqueWords) / len(text)
-        self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
 
         if len(self.uniqueWords) == 0 or len(text) == 0: 
             self.TTR = 0
@@ -108,6 +106,8 @@ class StylometryAnalyzer(Analyzer):
             self.dugast = 0
             self.honore = 0
         else:
+            self.TTR = len(self.uniqueWords) / len(text) if len(text)
+            self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
             if len(text)== 1:
                 self.herdan = math.log(len(self.uniqueWords),10)
             else:
