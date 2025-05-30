@@ -106,7 +106,7 @@ class StylometryAnalyzer(Analyzer):
             self.dugast = 0
             self.honore = 0
         else:
-            self.TTR = len(self.uniqueWords) / len(text) if len(text)
+            self.TTR = len(self.uniqueWords) / len(text)
             self.RTTR = len(self.uniqueWords) / math.sqrt(len(text))
             if len(text)== 1:
                 self.herdan = math.log(len(self.uniqueWords),10)
