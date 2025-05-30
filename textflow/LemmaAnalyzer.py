@@ -64,7 +64,7 @@ class LemmaAnalyzer(Analyzer):
             lemma={
                 "srclemmas" : sequenceLemmas,
                 "uniqueLemmas" : len(setLemmas),
-                "avgLemmas" : round(sumaLenLemmas/len(sequenceLemmas)) 
+                "avgLemmas" : round(sumaLenLemmas/len(sequenceLemmas)) if len(sequenceLemmas) != 0 else 0
             }
             arrayResult.append(lemma)
         return arrayResult
