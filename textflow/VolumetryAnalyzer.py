@@ -31,13 +31,13 @@ class VolumetryAnalyzer(Analyzer):
             of the analysis of the corresponding text.
         """
         arrayResults =[]
-        for texts in arrayText:
+        for texts in arrayText:                
             text = self.tokenizer.tokenize(texts)
             dicResults = { 
                 "words" : len(text),
                 "uniqueWords" : len(set(text)),
                 "chars" : len(texts),
-                "avgWordsLen" : round(len(texts) / len(text))         
+                "avgWordsLen" : round(len(texts) / len(text)) if len(text) != 0 else 0
             }
             arrayResults.append(dicResults)
         return arrayResults
