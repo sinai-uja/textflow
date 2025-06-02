@@ -195,8 +195,6 @@ class ComplexityAnalyzer(Analyzer):
         Args:
             doc: a sequence of tokens.
         """
-        self.readabilityFH = 206.84 - 0.60*(self.numSyllabes/self.numWords) - 1.02*(self.numWords/self.numSentences)
-        self.perspicuityIFSZ = 206.835 - ((62.3*self.numSyllabes)/self.numWords) - (self.numWords/self.numSentences)
         
         numLetters = 0
         listLenLetters =[]
@@ -208,9 +206,15 @@ class ComplexityAnalyzer(Analyzer):
         avgLettersWords = numLetters/self.numWords
         listLenLetters = np.array(listLenLetters)
         if self.numSentences == 0:
+            self.readabilityFH = 206.84 - 0.60*(self.numSyllabes/self.numWords) - 1.02*(self.numWords/1)
+            self.perspicuityIFSZ = 206.835 - ((62.3*self.numSyllabes)/self.numWords) - (self.numWords/1)
             self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/1)
         else:    
-            self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/self.numSentences)        
+            self.poliniComprensibility = 95.2 - (9.7 * avgLettersWords) - ((0.35*self.numWords)/self.numSentences) 
+            
+            self.readabilityFH = 206.84 - 0.60*(self.numSyllabes/self.numWords) - 1.02*(self.numWords/self.numSentences)
+            self.perspicuityIFSZ = 206.835 - ((62.3*self.numSyllabes)/self.numWords) - (self.numWords/self.numSentences)   
+
         if self.numWords < 2:
             self.muLegibility = 0
         else:    
