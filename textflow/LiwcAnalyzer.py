@@ -60,7 +60,7 @@ class LiwcAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[1])] = [float(x.replace(',', '.')) for x in [i[2], i[3], i[4], i[5], i[6]]]
+                dir_f[str(i[0])] = [float(x.replace(',', '.')) for x in [i[1], i[2], i[3], i[4], i[5]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
