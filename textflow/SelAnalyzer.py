@@ -27,6 +27,10 @@ class SelAnalyzer(Analyzer):
         self.selFile = pd.read_csv(pathFile).drop(['Unnamed: 0'],axis=1)
         self.tokenizer = tokenizer
 
+    def to_float(x):
+        if isinstance(x, str):
+            x = x.replace(',', '.')
+        return float(x)
     
     def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
         """
@@ -60,7 +64,7 @@ class SelAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[0])] = [float(x.replace(',', '.')) for x in [i[1], i[2], i[3], i[4]]]
+                dir_f[str(i[0])] = [self.tofloat(x) for x in [i[1], i[2], i[3], i[4]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
