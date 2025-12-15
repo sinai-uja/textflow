@@ -27,6 +27,16 @@ class IsalAnalyzer(Analyzer):
         self.isalFile = pd.read_csv(pathFile).drop(['Unnamed: 0'],axis=1)
         self.tokenizer = tokenizer
 
+    def to_float(self, x):
+        """
+        Convert a string argument to float.
+
+        Args:
+            x: the string to convert.
+        """
+        if isinstance(x, str):
+            x = x.replace(',', '.')
+        return float(x)
     
     def analyze(self, sequence, tag, levelOfAnalyzer, levelOfResult:Optional[str] = ""): 
         """
@@ -60,7 +70,7 @@ class IsalAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[0])] = [float(x.replace(',', '.')) for x in [i[1], i[2], i[3], i[4]]]
+                dir_f[str(i[0])] = [to_float(x) for x in [i[1], i[2], i[3], i[4]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
