@@ -27,7 +27,7 @@ class SelAnalyzer(Analyzer):
         self.selFile = pd.read_csv(pathFile).drop(['Unnamed: 0'],axis=1)
         self.tokenizer = tokenizer
 
-    def to_float(self,x):
+    def tofloat(self,x):
         if isinstance(x, str):
             x = x.replace(',', '.')
         return float(x)
