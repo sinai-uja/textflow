@@ -40,6 +40,17 @@ class NcrAnalyzer(Analyzer):
         """
         super().analyze(self.search_terms,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
+    def to_float(self, x):
+        """
+        Convert a string argument to float.
+
+        Args:
+            x: the string to convert.
+        """
+        if isinstance(x, str):
+            x = x.replace(',', '.')
+        return float(x)
+    
     def search_terms(self, arrayText):
         """
         Function that analyzes a list of texts to extract the Ncr metrics.
@@ -60,7 +71,7 @@ class NcrAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[0])] = [float(x.replace(',', '.')) for x in [i[1], i[2], i[3], i[4]]]
+                dir_f[str(i[0])] = [self.tofloat(x)) for x in [i[1], i[2], i[3], i[4]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
