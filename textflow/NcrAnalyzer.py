@@ -71,7 +71,7 @@ class NcrAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[0])] = [self.tofloat(x)) for x in [i[1], i[2], i[3], i[4]]]
+                dir_f[str(i[0])] = [self.tofloat(x) for x in [i[1], i[2], i[3], i[4]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
