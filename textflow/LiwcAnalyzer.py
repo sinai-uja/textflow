@@ -51,7 +51,7 @@ class LiwcAnalyzer(Analyzer):
         """
         arrayResults =[]
         for text in arrayText:
-            tkn_phrase = self.tokenizer.tokenize(text)
+            tkn_phrase = self.tokenizer.tokenize(text.lower())
             lst_terms = self.liwcFile['Términos'].tolist()
             elms = []
             for i in tkn_phrase:
@@ -60,14 +60,14 @@ class LiwcAnalyzer(Analyzer):
                     elms.append(elm)
             dir_f = {}
             for i in elms:
-                dir_f[str(i[0])] = [i[1], i[2], i[3], i[4], i[5]]
+                dir_f[str(i[1])] = [float(x.replace(',', '.')) for x in [i[2], i[3], i[4], i[5], i[6]]]
             ar_res = []
             try:
                 lst_arrays = list(dir_f.values())
-                ar_max = list(np.max(lst_arrays, axis = 0))
-                ar_min = list(np.min(lst_arrays, axis = 0))
-                ar_std_dev = list(np.std(lst_arrays, axis = 0))
-                ar_avg = list(np.mean(lst_arrays, axis = 0))
+                ar_max = np.max(lst_arrays, axis = 0).tolist()
+                ar_min = np.min(lst_arrays, axis = 0).tolist()
+                ar_std_dev = np.std(lst_arrays, axis = 0).tolist()
+                ar_avg = np.mean(lst_arrays, axis = 0).tolist()
                 ar_res = [ar_max, ar_min, ar_std_dev, ar_avg]
             except:
                 ar_res = [[0.0, 0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0, 0.0]]
