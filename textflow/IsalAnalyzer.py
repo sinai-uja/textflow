@@ -27,7 +27,7 @@ class IsalAnalyzer(Analyzer):
         self.isalFile = pd.read_csv(pathFile).drop(['Unnamed: 0'],axis=1)
         self.tokenizer = tokenizer
 
-    def to_float(self, x):
+    def tofloat(self, x):
         """
         Convert a string argument to float.
 
