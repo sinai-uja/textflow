@@ -40,7 +40,7 @@ class NcrAnalyzer(Analyzer):
         """
         super().analyze(self.search_terms,sequence, tag, levelOfAnalyzer, levelOfResult, True)
 
-    def to_float(self, x):
+    def tofloat(self, x):
         """
         Convert a string argument to float.
 
